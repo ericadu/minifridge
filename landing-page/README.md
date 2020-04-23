@@ -1,4 +1,4 @@
-# Fridge 
+# minifridge Landing Page
 Ingest grocery receipts, get alerted to when your food is going bad.
 
 ## Development
