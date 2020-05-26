@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomePage extends StatelessWidget {
 
   Future<void> _signOut() async {
     try {
@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+      body: Center(child: Text('Welcome!')),
     );
   }
 }

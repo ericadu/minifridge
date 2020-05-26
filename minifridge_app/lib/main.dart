@@ -1,7 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/screens/login.dart';
-import 'package:minifridge_app/screens/home.dart';
+import 'package:minifridge_app/pages/landing.dart';
+import 'package:minifridge_app/pages/login.dart';
+import 'package:minifridge_app/pages/home.dart';
+import 'package:minifridge_app/pages/register.dart';
+import 'package:minifridge_app/pages/signup.dart';
 
 void main() {
   runApp(MyApp());
@@ -29,31 +31,14 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: LandingScreen(),
+      home: LandingPage(),
+      routes: <String, WidgetBuilder> {
+        '/home': (BuildContext contect) => HomePage(),
+        '/login': (BuildContext context) => LoginPage(),
+        '/register': (BuildContext context) => RegisterPage(),
+        '/signup': (BuildContext context) => SignupPage(),
+      }
     );
   }
 }
 
-class LandingScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return StreamBuilder<FirebaseUser>(
-      stream: FirebaseAuth.instance.onAuthStateChanged,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          FirebaseUser user = snapshot.data;
-          if (user == null) {
-            return LoginScreen();
-          }
-          return HomeScreen();
-        } else {
-          return Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
-      },
-    );
-  }
-}
