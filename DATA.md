@@ -32,6 +32,24 @@ Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write 
 | `description`    | Unsure if needed?         |    `string` |
 |`shelf_life` | shelf life for item in many states | has_many `ShelfLife`|
 |`default_shelf_life` | the most common?| has_one `ShelfLife` |
+| `category` | Food category | `enum` |
+
+#### Category enum
+| Enum           | Description      | 
+| -------------  |------------------| 
+| `produce`      | fruits, veg, herb   | 
+| `byproduct`    |  milk, eggs, honey products  | 
+| `meat`      | animal products  | 
+| `fish`      | seafood  | 
+
+
+### Extension
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `current`        | How food currently stored   | has_one `ShelfLife`|
+| `target` | How food will be transformed    | has_one `ShelfLife` |
+| `steps`         | How to get there  | `string` |
+
 
 
 ### ShelfLife
@@ -41,6 +59,8 @@ Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write 
 | `state`        | State of food    | `enum`|
 | `storage_type` | How stored       | has_one `Storage` |
 | `time`         | Time to spoil    | `number` |
+| `range_min`    | Low end of time to spoil          | `number` |  
+| `range_max`    | High end of time to spoil          | `number` |  
 
 #### State enum
 
@@ -64,6 +84,8 @@ Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write 
 | Property       | Description      | Type  |
 | -------------  |------------------| ------|
 | `produce_item` |   What the item is  | has_one `ProduceItem` |
+| `quantity`     | Amount       | `number` |
+| `unit`         | unit         | `string` |
 | `buy_date`     | Date bought | `date` |
 | `buy_state`    | state it was bought |   `enum` |
 | `freshness`    | where it is on its journey | `enum` |
@@ -75,3 +97,16 @@ Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write 
 | `underripe`      | Can't eat it yet    | 
 | `ripe`          | Ready to eat    | 
 | `overripe`      | Safe to eat but past its prime  | 
+
+### Dietary Preferences
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `strict` |   Restriction or preference| `bool`|
+| `diet`  | Name of common diets | `enum` |
+
+#### Diet enum
+| Enum           | Description      | 
+| -------------  |------------------| 
+| `vegan`      | no meat, fish, or animal byproduct  | 
+| `vegetarian`          | no meat or fish | 
+| `pescatarian`      | no meat | 
