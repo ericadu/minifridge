@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
       ),
       home: LandingPage(),
       routes: <String, WidgetBuilder> {
-        '/home': (BuildContext contect) => HomePage(),
+        HomePage.routeName: (BuildContext context) => HomePage(),
         '/login': (BuildContext context) => LoginPage(),
         '/register': (BuildContext context) => RegisterPage(),
         '/signup': (BuildContext context) => SignupPage(),
