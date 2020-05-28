@@ -21,14 +21,59 @@ Seems to be a distinction between food item concept, and also food item once it 
 
 Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write a script to load data into firebase.
 
-## Models
+## Models V1
+### ProduceItem
+
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `name`           | Commonly used name    | `string` |
+|`shelf_life` | shelf life for item in many states | has_many `ShelfLife`|
+|`default_shelf_life` | the most common?| has_one `ShelfLife` |
+| `category` | Food category | `enum` |
+
+### MyItem
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `produce_item` |   What the item is  | has_one `ProduceItem` |
+| `quantity`     | Amount       | `number` |
+| `unit`         | unit         | `string` |
+| `buy_date`     | Date bought | `date` |
+| `buy_state`    | state it was bought |   `enum` |
+| `storage`      | where stored   |   `Storage` |
+| `shelf_life`   | Shelf life fom buy date. | has_one `ShelfLife` |
+
+#### State enum
+| Enum           | Description      | 
+| -------------  |------------------| 
+| `whole`        | Entire item as is    | 
+| `cut`          | Item cut or chopped      | 
+| `cooked`       | Prepared item    | 
+| `frozen`       | Frozen  | 
+
+### Storage
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `slug`       |   Name of method  | `string` |
+| `display_name` | How displayed  | `string` |
+| `temp`         | temp range in F |   `number[]` |
+| `notes`       | extra notes, characteristics | `string ` |
+
+### ShelfLife
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `identifier`    | state _ storage | `string`|
+| `state`        | State of food    | `enum`|
+| `storage_type` | How stored       | has_one `Storage` |
+| `time`         | Time to spoil    | `number` |
+
+## Models (Longer Term Planning)
 
 ### ProduceItem
 
 | Property       | Description      | Type  |
 | -------------  |------------------| ------|
 | `name`           | Commonly used name    | `string` |
-| `other_names`   | Other colloquial names people might search         |   `string[]` |
+| `other_names`   | Other colloquial names people might search  |   `string[]` |
 | `description`    | Unsure if needed?         |    `string` |
 |`shelf_life` | shelf life for item in many states | has_many `ShelfLife`|
 |`default_shelf_life` | the most common?| has_one `ShelfLife` |
@@ -51,9 +96,7 @@ Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write 
 | `steps`         | How to get there  | `string` |
 
 
-
 ### ShelfLife
-
 | Property       | Description      | Type  |
 | -------------  |------------------| ------|
 | `state`        | State of food    | `enum`|
@@ -90,6 +133,7 @@ Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write 
 | `buy_state`    | state it was bought |   `enum` |
 | `freshness`    | where it is on its journey | `enum` |
 | `storage`      |    where stored   |   has_one `Storage` |
+| `shelf_life`   | Shelf life fom buy date. | has_one `ShelfLife` |
 
 #### Freshness enum
 | Enum           | Description      | 
