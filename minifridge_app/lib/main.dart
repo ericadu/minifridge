@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/pages/landing.dart';
-import 'package:minifridge_app/pages/login.dart';
-import 'package:minifridge_app/pages/home.dart';
-import 'package:minifridge_app/pages/register.dart';
-import 'package:minifridge_app/pages/signup.dart';
+import 'package:minifridge_app/screens/landing.dart';
+import 'package:minifridge_app/screens/login.dart';
+import 'package:minifridge_app/screens/home.dart';
+import 'package:minifridge_app/screens/register.dart';
+import 'package:minifridge_app/screens/signup.dart';
+import 'package:minifridge_app/theme.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,22 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Minifridge',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.indigo,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
+      theme: AppTheme.lightTheme,
       home: LandingPage(),
       routes: <String, WidgetBuilder> {
         HomePage.routeName: (BuildContext context) => HomePage(),

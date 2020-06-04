@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/pages/home.dart';
+import 'package:minifridge_app/screens/home.dart';
 
-class LoginPage extends StatefulWidget {
+class SignupPage extends StatefulWidget {
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
@@ -25,35 +25,38 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
   }
 
-void loginToFirebase() {
-  firebaseAuth
-    .signInWithEmailAndPassword(
+  void registerToFirebase() {
+    firebaseAuth
+    .createUserWithEmailAndPassword(
         email: emailController.text, password: passwordController.text)
     .then((result) {
+      print(result);
       Navigator.pushReplacementNamed(
         context,
-        HomePage.routeName
+        HomePage.routeName,
+        arguments: HomeArguments(
+          result.user.uid
+        )
       );
-  }).catchError((err) {
-      print(err.message);
+    }).catchError((err) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text(err.message),
-            actions: [
-              FlatButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-      });
-  });
-}
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(err.message),
+              actions: [
+                FlatButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +111,7 @@ void loginToFirebase() {
               color: Colors.lightBlue,
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  loginToFirebase();
+                  registerToFirebase();
                 }
               },
               child: Text('Submit'),

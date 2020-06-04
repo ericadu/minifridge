@@ -1,13 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/pages/home.dart';
+import 'package:minifridge_app/screens/home.dart';
 
-class SignupPage extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _SignupPageState createState() => _SignupPageState();
+  _LoginPageState createState() => _LoginPageState();
 }
 
-class _SignupPageState extends State<SignupPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
@@ -25,44 +25,41 @@ class _SignupPageState extends State<SignupPage> {
     passwordController.dispose();
   }
 
-  void registerToFirebase() {
-    firebaseAuth
-    .createUserWithEmailAndPassword(
+void loginToFirebase() {
+  firebaseAuth
+    .signInWithEmailAndPassword(
         email: emailController.text, password: passwordController.text)
     .then((result) {
-      print(result);
       Navigator.pushReplacementNamed(
         context,
-        HomePage.routeName,
-        arguments: HomeArguments(
-          result.user.uid
-        )
+        HomePage.routeName
       );
-    }).catchError((err) {
+  }).catchError((err) {
+      print(err.message);
       showDialog(
           context: context,
           builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(err.message),
-              actions: [
-                FlatButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
-    });
-  }
+          return AlertDialog(
+            title: Text("Error"),
+            content: Text(err.message),
+            actions: [
+              FlatButton(
+                child: Text("Ok"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+      });
+  });
+}
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
-        title: Text('Sign Up with Email'),
+        title: Text('Login with Email'),
       ),
       body: Form(
         key: _formKey,
@@ -111,7 +108,7 @@ class _SignupPageState extends State<SignupPage> {
               color: Colors.lightBlue,
               onPressed: () {
                 if (_formKey.currentState.validate()) {
-                  registerToFirebase();
+                  loginToFirebase();
                 }
               },
               child: Text('Submit'),
