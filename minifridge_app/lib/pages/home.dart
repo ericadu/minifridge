@@ -38,24 +38,5 @@ class HomePage extends StatelessWidget {
       ),
       body: Center(child: Text('Welcome!')),
     );
-
-    // return Scaffold(
-    //   appBar: AppBar(
-    //     title: Text('Home Page'),
-    //     actions: <Widget>[
-    //       FlatButton(
-    //         child: Text(
-    //           'Logout',
-    //           style: TextStyle(
-    //             fontSize: 18.0,
-    //             color: Colors.white,
-    //           ),
-    //         ),
-    //         onPressed: _signOut,
-    //       ),
-    //     ],
-    //   ),
-    //   body: Center(child: Text('Welcome!')),
-    // );
   }
 }

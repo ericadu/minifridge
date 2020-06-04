@@ -22,16 +22,20 @@ Seems to be a distinction between food item concept, and also food item once it 
 Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write a script to load data into firebase.
 
 ## Models V1
-### ProduceItem
+### User
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `current_items` | list of current items | has_many `UserItem` |
+| `item_history` | list of past items| has_many `UserItem` |
 
+### ProduceItem
 | Property       | Description      | Type  |
 | -------------  |------------------| ------|
 | `name`           | Commonly used name    | `string` |
 |`shelf_life` | shelf life for item in many states | has_many `ShelfLife`|
-|`default_shelf_life` | the most common?| has_one `ShelfLife` |
 | `category` | Food category | `enum` |
 
-### MyItem
+### UserItem
 | Property       | Description      | Type  |
 | -------------  |------------------| ------|
 | `produce_item` |   What the item is  | has_one `ProduceItem` |
@@ -142,11 +146,26 @@ Could use [jcomo/shelf-life api](https://github.com/jcomo/shelf-life), or write 
 | `ripe`          | Ready to eat    | 
 | `overripe`      | Safe to eat but past its prime  | 
 
-### Dietary Preferences
+### User
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `first_name` | first name| `string` |
+| `last_name` | first name| `string` |
+| `diet` | dietary preferences | has_many `Diets` |
+| `user_item` | food | has_many `UserItem` |
+
+
+### UserAccount
+| Property       | Description      | Type  |
+| -------------  |------------------| ------|
+| `email`        |   user email | `string` |
+|`password`       | password| `string`|
+
+### Diets
 | Property       | Description      | Type  |
 | -------------  |------------------| ------|
 | `strict` |   Restriction or preference| `bool`|
-| `diet`  | Name of common diets | `enum` |
+| `diet_name`  | Name of common diets | `enum` |
 
 #### Diet enum
 | Enum           | Description      | 
