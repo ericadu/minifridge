@@ -1,6 +1,5 @@
 import 'package:meta/meta.dart';
 import 'package:minifridge_app/models/produce_item.dart';
-import 'package:minifridge_app/models/storage_type.dart';
 
 class UserItem {
   String id;
@@ -9,7 +8,7 @@ class UserItem {
   int buyTimestamp;
   String state;
   int expTimestamp;
-  StorageType storageType;
+  String storageType;
   ProduceItem produceItem;
 
   UserItem({
@@ -29,7 +28,7 @@ class UserItem {
     this.buyTimestamp = data['buyTimestamp'];
     this.state = data['state'];
     this.expTimestamp = data['expTimestamp'];
-    this.storageType = StorageType.fromMap(data['storageType']);
+    this.storageType = data['storageType'];
     this.produceItem = ProduceItem.fromMap(data['produceItem']);
   }
 
@@ -41,7 +40,7 @@ class UserItem {
     data['buyTimestamp'] = this.buyTimestamp;
     data['state'] = this.state;
     data['expTimestamp'] = this.expTimestamp;
-    data['storageType'] = this.storageType.toJson();
+    data['storageType'] = this.storageType;
     data['produceItem'] = this.produceItem.toJson();
     return data;
   }

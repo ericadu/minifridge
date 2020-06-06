@@ -1,11 +1,10 @@
 import 'package:meta/meta.dart';
-import 'package:minifridge_app/models/storage_type.dart';
 
 class ShelfLife {
   String id;
   String state;
   double time;
-  StorageType storageType;
+  String storageType;
 
   ShelfLife({
     this.id,
@@ -17,7 +16,7 @@ class ShelfLife {
   ShelfLife.fromMap(Map data) {
     state = data['state'];
     time = data['time'];
-    storageType = StorageType.fromMap(data['storageType']);
+    storageType = data['storageType'];
   }
 
   Map<String, dynamic> toJson() {
@@ -25,7 +24,7 @@ class ShelfLife {
     data['id'] = this.id;
     data['state'] = this.state;
     data['time'] = this.time;
-    data['storageType'] = this.storageType.toJson();
+    data['storageType'] = this.storageType;
     return data;
   }
 }
