@@ -9,3 +9,4 @@
 
 ### Widgets
 - [Replace Login/Signup](https://flutterawesome.com/provides-login-screen-with-login-signup-functionalities/)
+- [Other login implementations](https://codeburst.io/make-a-material-design-login-page-with-flutter-theming-4fce335cbce3)
