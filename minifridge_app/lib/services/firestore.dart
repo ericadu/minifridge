@@ -12,6 +12,14 @@ class FirestoreApi {
     _collectionReference = _firestore.collection(collectionPath).document(docId).collection(subcollectionPath);
   }
 
+  Stream<QuerySnapshot> streamCollection() {
+    return _collectionReference.snapshots();
+  }
+
+  Future<QuerySnapshot> getCollection() {
+    return _collectionReference.getDocuments();
+  }
+
   Future<DocumentReference> addDocument(Map data) {
     return _collectionReference.add(data);
   }
