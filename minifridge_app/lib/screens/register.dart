@@ -3,6 +3,8 @@ import 'package:flutter_signin_button/button_list.dart';
 import 'package:flutter_signin_button/button_view.dart';
 
 class RegisterPage extends StatelessWidget {
+  static const routeName = '/register';
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

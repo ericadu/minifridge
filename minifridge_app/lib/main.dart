@@ -11,7 +11,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -20,10 +19,10 @@ class MyApp extends StatelessWidget {
       home: LandingPage(),
       routes: <String, WidgetBuilder> {
         HomePage.routeName: (BuildContext context) => HomePage(),
-        '/login': (BuildContext context) => LoginPage(),
-        '/register': (BuildContext context) => RegisterPage(),
-        '/signup': (BuildContext context) => SignupPage(),
-      }
+        LoginPage.routeName: (BuildContext context) => LoginPage(),
+        RegisterPage.routeName: (BuildContext context) => RegisterPage(),
+        SignupPage.routeName: (BuildContext context) => SignupPage(),
+      },
     );
   }
 }

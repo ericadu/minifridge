@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/screens/home.dart';
 
 class SignupPage extends StatefulWidget {
+  static const routeName = '/signup';
+
   @override
   _SignupPageState createState() => _SignupPageState();
 }

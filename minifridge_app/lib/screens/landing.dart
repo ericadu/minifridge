@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/screens/home.dart';
 
 class LandingPage extends StatefulWidget {
   @override
@@ -12,7 +13,11 @@ class _LandingPageState extends State<LandingPage> {
     super.initState();
     FirebaseAuth.instance.currentUser().then((res) {
       if (res != null) {
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(
+          context,
+          HomePage.routeName,
+          arguments: HomeArguments(res.uid)
+        );
       } else {
         Navigator.pushReplacementNamed(context, '/register');
       }

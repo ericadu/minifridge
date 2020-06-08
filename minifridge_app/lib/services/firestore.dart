@@ -8,11 +8,11 @@ class FirestoreApi {
     _collectionReference = _firestore.collection(collectionPath);
   }
 
-  Future<DocumentReference> addDocument(Map data) {
-    return _collectionReference.add(data);
+  FirestoreApi.fromSubcollection(String collectionPath, String docId, String subcollectionPath) {
+    _collectionReference = _firestore.collection(collectionPath).document(docId).collection(subcollectionPath);
   }
 
-  CollectionReference subcollectionReference(String uid, String collectionPath) {
-    return _collectionReference.document(uid).collection(collectionPath);
+  Future<DocumentReference> addDocument(Map data) {
+    return _collectionReference.add(data);
   }
 }

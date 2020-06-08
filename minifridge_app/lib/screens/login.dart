@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/screens/home.dart';
 
 class LoginPage extends StatefulWidget {
+  static const routeName = '/login';
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -25,35 +27,36 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
   }
 
-void loginToFirebase() {
-  firebaseAuth
-    .signInWithEmailAndPassword(
-        email: emailController.text, password: passwordController.text)
-    .then((result) {
-      Navigator.pushReplacementNamed(
-        context,
-        HomePage.routeName
-      );
-  }).catchError((err) {
-      print(err.message);
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text("Error"),
-            content: Text(err.message),
-            actions: [
-              FlatButton(
-                child: Text("Ok"),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              )
-            ],
-          );
-      });
-  });
-}
+  void loginToFirebase() {
+    firebaseAuth
+      .signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text)
+      .then((result) {
+        Navigator.pushReplacementNamed(
+          context,
+          HomePage.routeName,
+          arguments: HomeArguments(result.user.uid)
+        );
+    }).catchError((err) {
+        print(err.message);
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("Error"),
+              content: Text(err.message),
+              actions: [
+                FlatButton(
+                  child: Text("Ok"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+        });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -10,3 +10,10 @@
 ### Widgets
 - [Replace Login/Signup](https://flutterawesome.com/provides-login-screen-with-login-signup-functionalities/)
 - [Other login implementations](https://codeburst.io/make-a-material-design-login-page-with-flutter-theming-4fce335cbce3)
+
+### Dart 
+- [Inheritance](https://stackoverflow.com/questions/13272035/how-do-i-call-a-super-constructor-in-dart)
+- [Overloading Constructor](https://stackoverflow.com/questions/49691163/dart-multiple-constructors)
+
+### Nav
+- [Args in routes](https://flutter.dev/docs/cookbook/navigation/navigate-with-arguments)

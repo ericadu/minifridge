@@ -1,6 +1,10 @@
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/services/user_item_api.dart';
+import 'package:minifridge_app/view/user_items_notifier.dart';
+import 'package:provider/provider.dart';
+
 import 'package:minifridge_app/main.dart';
 
 class HomeArguments {
@@ -61,39 +65,47 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final HomeArguments args = ModalRoute.of(context).settings.arguments;
+    final UserItemsApi _userItemsApi = UserItemsApi(args.uid);
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            title: Text('Minifridge'),
-            floating: false,
-            pinned: true,
-            snap: false,
-            flexibleSpace: Placeholder(),
-            expandedHeight: 300,
-            actions: <Widget>[
-              IconButton(
-                icon: Icon(
-                Icons.exit_to_app,
-                color: Colors.white,
-                ),
-                onPressed: () {
-                  FirebaseAuth auth = FirebaseAuth.instance;
-                  auth.signOut().then((res) {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(builder: (context) => MyApp()),
-                    );
-                  });
-                }
-              )
-            ],
-          ),
-          SliverList(
-            delegate: _buildItemsDelegate(context)
-          )
-        ]
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => 
+          UserItemsNotifier(_userItemsApi)
+        )
+      ],
+      child: Scaffold(
+        body: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              title: Text('Minifridge'),
+              floating: false,
+              pinned: true,
+              snap: false,
+              flexibleSpace: Placeholder(),
+              expandedHeight: 300,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(
+                  Icons.exit_to_app,
+                  color: Colors.white,
+                  ),
+                  onPressed: () {
+                    FirebaseAuth auth = FirebaseAuth.instance;
+                    auth.signOut().then((res) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => MyApp()),
+                      );
+                    });
+                  }
+                )
+              ],
+            ),
+            SliverList(
+              delegate: _buildItemsDelegate(context)
+            )
+          ]
+        )
       )
     );
   }
