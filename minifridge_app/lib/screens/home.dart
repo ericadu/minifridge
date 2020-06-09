@@ -2,10 +2,8 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/services/user_item_api.dart';
-import 'package:minifridge_app/view/user_items_notifier.dart';
+import 'package:minifridge_app/view/user_notifier.dart';
 import 'package:provider/provider.dart';
-
-import 'package:minifridge_app/main.dart';
 
 class HomeArguments {
   final String uid;
@@ -14,6 +12,8 @@ class HomeArguments {
 }
 
 class HomePage extends StatelessWidget {
+  final FirebaseUser user;
+  const HomePage({Key key, this.user}) : super(key: key);
   static const routeName = '/home';
   static final rand = new Random();
 
@@ -33,29 +33,16 @@ class HomePage extends StatelessWidget {
     'Avocados'
   ];
 
-  final dates = List.generate(foods.length, (_) => rand.nextInt(14));
-
-  // Widget _buildItemsList(BuildContext context) {
-  //   return ListView.separated(
-  //     itemCount: foods.length,
-  //     itemBuilder: (context, index) {
-  //       return ListTile(
-  //         title: Text(foods[index]),
-  //         subtitle: Text(dates[index].toString() + " days")
-  //       );
-  //     },
-  //     separatorBuilder: (context, index) {
-  //       return Divider();
-  //     },
-  //   );
-  // }
+  List<int> _getDates() {
+    return List.generate(foods.length, (_) => rand.nextInt(14));
+  }
 
   SliverChildBuilderDelegate _buildItemsDelegate(BuildContext context) {
     return SliverChildBuilderDelegate(
       (BuildContext context, int index) {
         return ListTile(
           title: Text(foods[index]),
-          subtitle: Text(dates[index].toString() + " days")
+          subtitle: Text(_getDates()[index].toString() + " days")
         );
       },
       childCount: foods.length
@@ -64,48 +51,32 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final HomeArguments args = ModalRoute.of(context).settings.arguments;
-    final UserItemsApi _userItemsApi = UserItemsApi(args.uid);
+    final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => 
-          UserItemsNotifier(_userItemsApi)
-        )
-      ],
-      child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            SliverAppBar(
-              title: Text('Minifridge'),
-              floating: false,
-              pinned: true,
-              snap: false,
-              flexibleSpace: Placeholder(),
-              expandedHeight: 300,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(
-                  Icons.exit_to_app,
-                  color: Colors.white,
-                  ),
-                  onPressed: () {
-                    FirebaseAuth auth = FirebaseAuth.instance;
-                    auth.signOut().then((res) {
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (context) => MyApp()),
-                      );
-                    });
-                  }
-                )
-              ],
-            ),
-            SliverList(
-              delegate: _buildItemsDelegate(context)
-            )
-          ]
-        )
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: Text('Minifridge'),
+            floating: false,
+            pinned: true,
+            snap: false,
+            flexibleSpace: Placeholder(),
+            expandedHeight: 300,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.white,
+                ),
+                onPressed: () => Provider.of<UserNotifier>(context, listen: false).signOut(),
+              )
+            ],
+          ),
+          SliverList(
+            delegate: _buildItemsDelegate(context)
+          )
+        ]
       )
     );
   }

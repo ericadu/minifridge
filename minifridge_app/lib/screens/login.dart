@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/screens/home.dart';
+import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login';
@@ -11,6 +12,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final _key = GlobalKey<ScaffoldState>();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -27,40 +29,12 @@ class _LoginPageState extends State<LoginPage> {
     passwordController.dispose();
   }
 
-  void loginToFirebase() {
-    firebaseAuth
-      .signInWithEmailAndPassword(
-          email: emailController.text, password: passwordController.text)
-      .then((result) {
-        Navigator.pushReplacementNamed(
-          context,
-          HomePage.routeName,
-          arguments: HomeArguments(result.user.uid)
-        );
-    }).catchError((err) {
-        print(err.message);
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(err.message),
-              actions: [
-                FlatButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-        });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserNotifier>(context);
+
     return new Scaffold(
+      key: _key,
       appBar: AppBar(
         title: Text('Login with Email'),
       ),
@@ -107,15 +81,22 @@ class _LoginPageState extends State<LoginPage> {
                 },
               )
             ),
-            RaisedButton(
-              color: Colors.lightBlue,
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  loginToFirebase();
-                }
-              },
-              child: Text('Submit'),
-            )
+            user.status == Status.Authenticating 
+              ? Center(child: CircularProgressIndicator())
+              : RaisedButton(
+                  color: Colors.lightBlue,
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      // loginToFirebase();
+                      if (!await user.signIn(
+                        emailController.text, passwordController.text))
+                        _key.currentState.showSnackBar(SnackBar(
+                          content: Text("Something is wrong"),
+                        ));
+                    }
+                  },
+                  child: Text('Submit'),
+                )
           ])
         )
       )
