@@ -11,6 +11,7 @@
 - [Replace Login/Signup](https://flutterawesome.com/provides-login-screen-with-login-signup-functionalities/)
 - [Other login implementations](https://codeburst.io/make-a-material-design-login-page-with-flutter-theming-4fce335cbce3)
 - [SliverList & StreamBuilder](https://stackoverflow.com/questions/58925207/using-a-streambuilder-to-build-a-sliverlist-for-a-customscrollview)
+- [SliverAppBar](https://medium.com/@diegoveloper/flutter-collapsing-toolbar-sliver-app-bar-14b858e87abe)
 
 ### Dart 
 - [Inheritance](https://stackoverflow.com/questions/13272035/how-do-i-call-a-super-constructor-in-dart)
