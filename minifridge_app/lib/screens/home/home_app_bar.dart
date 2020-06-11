@@ -25,20 +25,12 @@ class HomeAppBar extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text("🥺", style: TextStyle(fontSize: 60)),
-            Text("You have a items expiring tomorrow!", style: TextStyle(fontSize: 10))
+            Text("You have items expiring tomorrow!", style: TextStyle(fontSize: 10))
           ]
         )
       ),
       expandedHeight: 280,
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(
-          Icons.exit_to_app,
-          color: Colors.white,
-          ),
-          onPressed: () => Provider.of<UserNotifier>(context, listen: false).signOut(),
-        )
-      ],
+
     );
   }
 }

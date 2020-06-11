@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:provider/provider.dart';
 
 class HomeDrawer extends StatelessWidget {
 
@@ -28,6 +30,10 @@ class HomeDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pop(context);
             }
+          ),
+          ListTile(
+            title: Text('👋  Logout'),
+            onTap: () => Provider.of<UserNotifier>(context, listen: false).signOut(),
           )
         ]
       )
