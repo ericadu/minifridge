@@ -1,18 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
-import 'package:minifridge_app/models/produce_item.dart';
 
 class UserItem {
+  String displayName;
   String id;
   int quantity;
   String unit;
-  int buyTimestamp;
+  Timestamp buyTimestamp;
   String state;
-  int expTimestamp;
+  Timestamp expTimestamp;
   String storageType;
-  ProduceItem produceItem;
+  DocumentReference produceItem;
 
   UserItem({
     this.id,
+    this.displayName,
     @required this.quantity,
     @required this.unit,
     @required this.buyTimestamp,
@@ -22,26 +24,29 @@ class UserItem {
     this.produceItem
   });
 
-  UserItem.fromMap(Map data) {
+  UserItem.fromMap(Map data, String docId) {
+    this.id = docId;
+    this.displayName = data['displayName'];
     this.quantity = data['quantity'];
     this.unit = data['unit'];
     this.buyTimestamp = data['buyTimestamp'];
     this.state = data['state'];
     this.expTimestamp = data['expTimestamp'];
     this.storageType = data['storageType'];
-    this.produceItem = ProduceItem.fromMap(data['produceItem']);
+    this.produceItem = data['produceItem'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['displayName'] = this.displayName;
     data['quantity'] = this.quantity;
     data['unit'] = this.unit;
     data['buyTimestamp'] = this.buyTimestamp;
     data['state'] = this.state;
     data['expTimestamp'] = this.expTimestamp;
     data['storageType'] = this.storageType;
-    data['produceItem'] = this.produceItem.toJson();
+    data['produceItem'] = this.produceItem;
     return data;
   }
 }

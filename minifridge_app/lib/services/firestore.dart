@@ -9,6 +9,9 @@ class FirestoreApi {
   }
 
   FirestoreApi.fromSubcollection(String collectionPath, String docId, String subcollectionPath) {
+    print(collectionPath);
+    print(docId);
+    print(subcollectionPath);
     _collectionReference = _firestore.collection(collectionPath).document(docId).collection(subcollectionPath);
   }
 

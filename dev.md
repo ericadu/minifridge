@@ -10,6 +10,7 @@
 ### Widgets
 - [Replace Login/Signup](https://flutterawesome.com/provides-login-screen-with-login-signup-functionalities/)
 - [Other login implementations](https://codeburst.io/make-a-material-design-login-page-with-flutter-theming-4fce335cbce3)
+- [SliverList & StreamBuilder](https://stackoverflow.com/questions/58925207/using-a-streambuilder-to-build-a-sliverlist-for-a-customscrollview)
 
 ### Dart 
 - [Inheritance](https://stackoverflow.com/questions/13272035/how-do-i-call-a-super-constructor-in-dart)
@@ -20,3 +21,4 @@
 
 ### State
 - [Provider tutorial](https://www.youtube.com/watch?v=MkFjtCov62g)
+- [Auth with Provider](https://medium.com/flutter-community/flutter-firebase-login-using-provider-package-54ee4e5083c7)

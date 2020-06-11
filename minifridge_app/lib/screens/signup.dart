@@ -35,10 +35,7 @@ class _SignupPageState extends State<SignupPage> {
       print(result);
       Navigator.pushReplacementNamed(
         context,
-        HomePage.routeName,
-        arguments: HomeArguments(
-          result.user.uid
-        )
+        HomePage.routeName
       );
     }).catchError((err) {
       showDialog(

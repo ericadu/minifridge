@@ -14,7 +14,7 @@ class UserItemsNotifier extends ChangeNotifier {
   Future<List<UserItem>> getItems() async {
     QuerySnapshot result = await _api.getCollection();
     _userItems = result.documents
-        .map((document) => UserItem.fromMap(document.data))
+        .map((document) => UserItem.fromMap(document.data, document.documentID))
         .toList();
     return _userItems;
   }
