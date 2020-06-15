@@ -31,9 +31,32 @@ class UserItemList extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          return ListTile(
-            title: Text(currentItems[index].displayName),
-            subtitle: Text(_getMessage(currentItems[index]))
+          UserItem item = currentItems[index];
+          return Dismissible(
+            background: Container(color: Colors.red),
+            key: Key(item.displayName),
+            onDismissed: (direction) {
+              print("DISMISSED");
+
+              Scaffold
+                .of(context)
+                .showSnackBar(
+                  SnackBar(
+                    content: Text("${item.displayName} removed"),
+                    action: SnackBarAction(
+                      label: "Undo",
+                      textColor: Colors.yellow,
+                      onPressed: () {
+                        print("UNDO");
+                      }
+                    )
+                  )
+                );
+            },
+            child: ListTile(
+              title: Text(item.displayName),
+              subtitle: Text(_getMessage(item))
+            ),
           );
         },
         childCount: currentItems.length
