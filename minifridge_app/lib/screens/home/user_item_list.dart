@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
 
@@ -23,6 +24,10 @@ class UserItemList extends StatelessWidget {
     }
   }
 
+  Future<bool> promptUser(DismissDirection direction) async {
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     List<UserItem> currentItems = foods.where((item) => _getDays(item) > -1).toList();
@@ -35,23 +40,47 @@ class UserItemList extends StatelessWidget {
           return Dismissible(
             background: Container(color: Colors.red),
             key: Key(item.displayName),
-            onDismissed: (direction) {
-              print("DISMISSED");
-
-              Scaffold
-                .of(context)
-                .showSnackBar(
-                  SnackBar(
-                    content: Text("${item.displayName} removed"),
-                    action: SnackBarAction(
-                      label: "Undo",
-                      textColor: Colors.yellow,
+            confirmDismiss: (direction) {
+              return showCupertinoDialog<bool>(
+                context: context,
+                builder: (context) => CupertinoAlertDialog(
+                  content: Text("Are you sure you want to remove ${item.displayName}?"),
+                  actions: <Widget>[
+                    CupertinoDialogAction(
+                      child: Text("Yes"),
                       onPressed: () {
-                        print("UNDO");
+                        Navigator.of(context).pop(true);
+                      }
+                    ),
+                    CupertinoDialogAction(
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        return Navigator.of(context).pop(false);
                       }
                     )
-                  )
-                );
+                  ]
+                )
+              );
+            },
+            onDismissed: (direction) {
+              if (direction == DismissDirection.startToEnd) {
+                print("DISMISSED");
+
+                Scaffold
+                  .of(context)
+                  .showSnackBar(
+                    SnackBar(
+                      content: Text("${item.displayName} removed"),
+                      action: SnackBarAction(
+                        label: "Undo",
+                        textColor: Colors.yellow,
+                        onPressed: () {
+                          print("UNDO");
+                        }
+                      )
+                    )
+                  );
+              }
             },
             child: ListTile(
               title: Text(item.displayName),
