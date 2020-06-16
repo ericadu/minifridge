@@ -1,5 +1,5 @@
 name: minifridge_app
-description: A new Flutter project.
+description: making household food waste reduction fun
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 0.0.1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -25,7 +25,7 @@ dependencies:
     sdk: flutter
   cloud_firestore: ^0.13.5
   firebase_core: ^0.4.4+3
-  firebase_analytics: ^5.0.2
+  firebase_analytics: ^5.0.15
   firebase_auth: ^0.14.0+5
   firebase_database: ^3.1.1
   flutter_signin_button: ^1.0.0

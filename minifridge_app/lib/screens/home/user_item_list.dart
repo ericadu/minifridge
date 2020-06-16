@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/view/user_items_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -63,6 +64,9 @@ class UserItemList extends StatelessWidget {
             onDismissed: (direction) {
               // TODO: Probably need to check if this went through
               Provider.of<UserItemsNotifier>(context, listen: false).toggleEaten(item);
+              analytics.logEvent(
+                name: 'dismiss_item', 
+                parameters: {'item': item.displayName, 'daysLeft': _getDays(item).toString()});
 
               Scaffold
                 .of(context)

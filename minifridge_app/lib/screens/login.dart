@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/view/user_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -92,6 +93,8 @@ class _LoginPageState extends State<LoginPage> {
                         _key.currentState.showSnackBar(SnackBar(
                           content: Text("Something is wrong"),
                         ));
+                      
+                      analytics.logLogin();
                     }
                   },
                   child: Text('Submit'),
