@@ -16,10 +16,17 @@ class UserItemsNotifier extends ChangeNotifier {
     _userItems = result.documents
         .map((document) => UserItem.fromMap(document.data, document.documentID))
         .toList();
+    print(_userItems);
     return _userItems;
   }
 
   Stream<QuerySnapshot> streamUserItems() {
     return _api.streamCollection();
+  }
+
+  void toggleEaten(UserItem item) async {
+    item.eat();
+    Map data = item.toJson();
+    return await _api.updateDocument(item.id, data);
   }
 }

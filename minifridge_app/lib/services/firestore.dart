@@ -26,4 +26,8 @@ class FirestoreApi {
   Future<DocumentReference> addDocument(Map data) {
     return _collectionReference.add(data);
   }
+
+  Future<void> updateDocument(String id, Map data) {
+    return _collectionReference.document(id).updateData(data);
+  }
 }

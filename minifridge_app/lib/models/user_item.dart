@@ -11,6 +11,7 @@ class UserItem {
   Timestamp expTimestamp;
   String storageType;
   DocumentReference produceItem;
+  bool eaten;
 
   UserItem({
     this.id,
@@ -21,7 +22,8 @@ class UserItem {
     this.state,
     this.expTimestamp,
     this.storageType,
-    this.produceItem
+    this.produceItem,
+    this.eaten
   });
 
   UserItem.fromMap(Map data, String docId) {
@@ -34,6 +36,7 @@ class UserItem {
     this.expTimestamp = data['expTimestamp'];
     this.storageType = data['storageType'];
     this.produceItem = data['produceItem'];
+    this.eaten = data['eaten'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,11 @@ class UserItem {
     data['expTimestamp'] = this.expTimestamp;
     data['storageType'] = this.storageType;
     data['produceItem'] = this.produceItem;
+    data['eaten'] = this.eaten;
     return data;
+  }
+
+  void eat() {
+    this.eaten = !this.eaten;
   }
 }

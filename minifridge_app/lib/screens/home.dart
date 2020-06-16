@@ -34,6 +34,7 @@ class HomePage extends StatelessWidget {
                 if (snapshot.hasData && snapshot.data.documents.length > 0) {
                   List<UserItem> _foods = snapshot.data.documents
                     .map((item) => UserItem.fromMap(item.data, item.documentID))
+                    .where((item) => !item.eaten)
                     .toList();
                   
                   _foods.sort((a, b) {

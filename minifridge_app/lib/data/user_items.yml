@@ -1,7 +1,6 @@
 - displayName: Raspberry
   buyTimestamp: June 12, 2020 at 12:00:00 AM UTC-4
   expTimestamp: June 19, 2020 at 12:00:00 AM UTC-4
-  produceItem: /produce_items/v7ZSIGQ1fQz3o18MJjsB
   quantity: 3
   state: "whole"
   storageType: "fridge"
@@ -9,7 +8,6 @@
 - displayName: Blueberry
   buyTimestamp: June 10, 2020 at 12:00:00 AM UTC-4
   expTimestamp: June 14, 2020 at 12:00:00 AM UTC-4
-  produceItem: /produce_items/v7ZSIGQ1fQz3o18MJjsB
   quantity: 2
   state: "whole"
   storageType: "fridge"
@@ -17,7 +15,6 @@
 - displayName: Blackberry
   buyTimestamp: June 11, 2020 at 12:00:00 AM UTC-4
   expTimestamp: June 18, 2020 at 12:00:00 AM UTC-4
-  produceItem: /produce_items/v7ZSIGQ1fQz3o18MJjsB
   quantity: 4
   state: "whole"
   storageType: "fridge"

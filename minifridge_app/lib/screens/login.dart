@@ -84,7 +84,6 @@ class _LoginPageState extends State<LoginPage> {
             user.status == Status.Authenticating 
               ? Center(child: CircularProgressIndicator())
               : RaisedButton(
-                  color: Colors.lightBlue,
                   onPressed: () async {
                     if (_formKey.currentState.validate()) {
                       // loginToFirebase();
