@@ -1,7 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
+enum Status {
+  Uninitialized,
+  Authenticated,
+  Authenticating,
+  Unauthenticated,
+  NewAccount,
+  SigningUp,
+  FailedSignup
+}
 
 class UserNotifier with ChangeNotifier {
   FirebaseAuth _auth;
@@ -23,6 +31,29 @@ class UserNotifier with ChangeNotifier {
       return true;
     } catch (e) {
       _status = Status.Unauthenticated;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  void newUser() {
+    _status = Status.NewAccount;
+    notifyListeners();
+  }
+
+  void existingUser() {
+    _status = Status.Unauthenticated;
+    notifyListeners();
+  }
+
+  Future<bool> signUp(String email, String password) async {
+    try {
+      _status = Status.SigningUp;
+      notifyListeners();
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      return true;
+    } catch (e) {
+      _status = Status.FailedSignup;
       notifyListeners();
       return false;
     }

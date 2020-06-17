@@ -97,8 +97,15 @@ class _LoginPageState extends State<LoginPage> {
                       analytics.logLogin();
                     }
                   },
-                  child: Text('Submit'),
-                )
+                  child: Text('Login'),
+                ),
+            Padding(
+              padding: EdgeInsets.all(50.0),
+              child: new InkWell(
+                child: new Text("Don't have an account? Sign up with email."),
+                onTap: () => user.newUser()
+              )
+            ),
           ])
         )
       )

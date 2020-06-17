@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/screens/home.dart';
+import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:provider/provider.dart';
 
 class SignupPage extends StatefulWidget {
   static const routeName = '/signup';
@@ -11,6 +12,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final _formKey = GlobalKey<FormState>();
+  final _key = GlobalKey<ScaffoldState>();
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -27,41 +29,14 @@ class _SignupPageState extends State<SignupPage> {
     passwordController.dispose();
   }
 
-  void registerToFirebase() {
-    firebaseAuth
-    .createUserWithEmailAndPassword(
-        email: emailController.text, password: passwordController.text)
-    .then((result) {
-      print(result);
-      Navigator.pushReplacementNamed(
-        context,
-        HomePage.routeName
-      );
-    }).catchError((err) {
-      showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text("Error"),
-              content: Text(err.message),
-              actions: [
-                FlatButton(
-                  child: Text("Ok"),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                )
-              ],
-            );
-          });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserNotifier>(context);
+
     return new Scaffold(
+      key: _key,
       appBar: AppBar(
-        title: Text('Sign Up with Email'),
+        title: Text('Signup with Email'),
       ),
       body: Form(
         key: _formKey,
@@ -106,15 +81,28 @@ class _SignupPageState extends State<SignupPage> {
                 },
               )
             ),
-            RaisedButton(
-              color: Colors.lightBlue,
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  registerToFirebase();
-                }
-              },
-              child: Text('Submit'),
-            )
+            user.status == Status.SigningUp
+              ? Center(child: CircularProgressIndicator())
+              : RaisedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState.validate()) {
+                      // loginToFirebase();
+                      if (!await user.signUp(
+                        emailController.text, passwordController.text))
+                        _key.currentState.showSnackBar(SnackBar(
+                          content: Text("Something is wrong"),
+                        ));
+                    }
+                  },
+                  child: Text('Signup'),
+                ),
+            Padding(
+              padding: EdgeInsets.all(50.0),
+              child: new InkWell(
+                child: new Text("Back to login."),
+                onTap: () => user.existingUser()
+              )
+            ),
           ])
         )
       )

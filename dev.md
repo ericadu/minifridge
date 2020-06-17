@@ -26,6 +26,7 @@
 
 ### Push Notificaitons
 - [Broadcast messages](https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f)
+- [Guide](https://fireship.io/lessons/flutter-push-notifications-fcm-guide/)
 
 ### Analytics
 - [Setup Firebase Analytics](https://medium.com/flutter-community/the-flutter-guide-to-firebase-analytics-9b99c6e27a6)

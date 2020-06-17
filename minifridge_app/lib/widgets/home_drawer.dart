@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'package:minifridge_app/view/user_notifier.dart';
 
 class HomeDrawer extends StatelessWidget {
+  void launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -11,22 +20,16 @@ class HomeDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('More')
+            child: Text('Drawer')
           ),
           ListTile(
             title: Text("🍑  What's in season?"),
             onTap: () {
-              Navigator.pop(context);
+              launchURL("https://www.seasonalfoodguide.org");
             }
           ),
           ListTile(
-            title: Text('👤  Profile'),
-            onTap: () {
-              Navigator.pop(context);
-            }
-          ),
-          ListTile(
-            title: Text('⚙️  Settings'),
+            title: Text('⚙️  Settings - Coming Soon'),
             onTap: () {
               Navigator.pop(context);
             }

@@ -48,8 +48,18 @@ class HomePage extends StatelessWidget {
                     ]
                   );
                 } else {
-                  return Center(
-                    child: Text("No items found.")
+                  return CustomScrollView(
+                    slivers: <Widget>[
+                      HomeAppBar(),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: 400,
+                          child: Center(
+                            child: Text("No items found! Send us a photo 🍑")
+                          )
+                        )
+                      )
+                    ]
                   );
                 }
               }
