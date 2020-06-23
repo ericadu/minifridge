@@ -19,6 +19,7 @@
 
 ### Nav
 - [Args in routes](https://flutter.dev/docs/cookbook/navigation/navigate-with-arguments)
+- [Bottom Tabs](https://medium.com/flutter/getting-to-the-bottom-of-navigation-in-flutter-b3e440b9386)
 
 ### State
 - [Provider tutorial](https://www.youtube.com/watch?v=MkFjtCov62g)

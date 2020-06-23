@@ -25,7 +25,7 @@ class LandingPage extends StatelessWidget {
             case Status.FailedSignup:
               return SignupPage();
             case Status.Authenticated:
-              return HomePage(user: user.user);
+              return HomePage();
             case Status.Uninitialized:
             default:
               return Splash();

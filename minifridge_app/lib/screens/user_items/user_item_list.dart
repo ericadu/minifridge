@@ -39,28 +39,6 @@ class UserItemList extends StatelessWidget {
           return Dismissible(
             background: Container(color: Colors.red),
             key: Key(item.displayName),
-            // confirmDismiss: (direction) {
-            //   return showCupertinoDialog<bool>(
-            //     context: context,
-            //     builder: (context) => CupertinoAlertDialog(
-            //       content: Text("Are you sure you want to remove ${item.displayName}?"),
-            //       actions: <Widget>[
-            //         CupertinoDialogAction(
-            //           child: Text("Yes"),
-            //           onPressed: () {
-            //             Navigator.of(context).pop(true);
-            //           }
-            //         ),
-            //         CupertinoDialogAction(
-            //           child: Text("Cancel"),
-            //           onPressed: () {
-            //             return Navigator.of(context).pop(false);
-            //           }
-            //         )
-            //       ]
-            //     )
-            //   );
-            // },
             onDismissed: (direction) {
               // TODO: Probably need to check if this went through
               Provider.of<UserItemsNotifier>(context, listen: false).toggleEaten(item);

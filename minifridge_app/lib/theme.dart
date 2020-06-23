@@ -11,8 +11,8 @@ class AppTheme {
       color: themeColor
     ),
     colorScheme: ColorScheme.light(
-      primary: lightPrimaryColor,
-      secondary: lightSecondaryColor
+      primary: themeColor,
+      secondary: themeColor
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
