@@ -6,6 +6,8 @@ import 'package:minifridge_app/screens/settings/settings.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,19 +16,26 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Minifridge',
-      theme: AppTheme.lightTheme,
-      home: LandingPage(),
-      navigatorObservers: [
-        observer
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => UserNotifier.instance(),
+        )
       ],
-      routes: <String, WidgetBuilder> {
-        HomePage.routeName: (BuildContext context) => HomePage(),
-        UserItemsPage.routeName: (BuildContext context) => UserItemsPage(),
-        SettingsPage.routeName: (BuildContext context) => SettingsPage(),
-        ImageCapture.routeName: (BuildContext context) => ImageCapture(),
-      },
+      child: MaterialApp(
+        title: 'Minifridge',
+        theme: AppTheme.lightTheme,
+        home: LandingPage(),
+        navigatorObservers: [
+          observer
+        ],
+        routes: <String, WidgetBuilder> {
+          HomePage.routeName: (BuildContext context) => HomePage(),
+          UserItemsPage.routeName: (BuildContext context) => UserItemsPage(),
+          SettingsPage.routeName: (BuildContext context) => SettingsPage(),
+          ImageCapture.routeName: (BuildContext context) => ImageCapture(),
+        },
+      )
     );
   }
 }

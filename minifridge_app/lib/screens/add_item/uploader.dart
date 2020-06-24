@@ -1,10 +1,10 @@
 
 import 'dart:io';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-// import 'package:minifridge_app/view/user_notifier.dart';
-// import 'package:provider/provider.dart';
+import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:provider/provider.dart';
 
 class Uploader extends StatefulWidget {
   final File file;
@@ -21,8 +21,8 @@ class _UploaderState extends State<Uploader> {
   StorageUploadTask _uploadTask;
 
   void _startUpload(String userId) {
-    String filePath = '{userId}/images/${DateTime.now()}.png';
-
+    String filePath = '$userId/images/${DateTime.now()}.png';
+    print(filePath);
     setState(() {
       _uploadTask = _storage.ref().child(filePath).putFile(widget.file);
     });
@@ -30,7 +30,7 @@ class _UploaderState extends State<Uploader> {
 
   @override
   Widget build(BuildContext context) {
-    // final FirebaseUser user = Provider.of<UserNotifier>(context, listen: false).user;
+    final FirebaseUser user = Provider.of<UserNotifier>(context, listen: false).user;
     if (_uploadTask != null) {
       return StreamBuilder<StorageTaskEvent>(
         stream: _uploadTask.events,
@@ -69,7 +69,7 @@ class _UploaderState extends State<Uploader> {
       return FlatButton.icon(
         label: Container(height: 0.0),
         icon: Icon(Icons.cloud_upload),
-        onPressed: () => _startUpload('dummyID')
+        onPressed: () => _startUpload(user.uid)
       );
     }
   }

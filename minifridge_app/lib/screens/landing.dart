@@ -7,27 +7,41 @@ import 'package:provider/provider.dart';
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => UserNotifier.instance(),
-        )
-      ],
-      child: Consumer(
-        builder: (BuildContext context, UserNotifier user, _) {
-          switch (user.status) {
-            case Status.Unauthenticated:
-            case Status.Authenticating:
-              return RegisterPage();
-            case Status.Authenticated:
-              return HomePage();
-            case Status.Uninitialized:
-            default:
-              return Splash();
-          }
+    return Consumer(
+      builder: (BuildContext context, UserNotifier user, _) {
+        switch (user.status) {
+          case Status.Unauthenticated:
+          case Status.Authenticating:
+            return RegisterPage();
+          case Status.Authenticated:
+            return HomePage();
+          case Status.Uninitialized:
+          default:
+            return Splash();
         }
-      )
+      }
     );
+    // return MultiProvider(
+    //   providers: [
+    //     ChangeNotifierProvider(
+    //       create: (_) => UserNotifier.instance(),
+    //     )
+    //   ],
+    //   child: Consumer(
+    //     builder: (BuildContext context, UserNotifier user, _) {
+    //       switch (user.status) {
+    //         case Status.Unauthenticated:
+    //         case Status.Authenticating:
+    //           return RegisterPage();
+    //         case Status.Authenticated:
+    //           return HomePage();
+    //         case Status.Uninitialized:
+    //         default:
+    //           return Splash();
+    //       }
+    //     }
+    //   )
+    // );
   }
 }
 
