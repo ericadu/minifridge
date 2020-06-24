@@ -8,6 +8,9 @@
 - [Example firestore](https://medium.com/flutter-community/supercharge-your-flutter-apps-for-android-ios-and-web-with-cloud-firestore-pt-1-bc15d8aceaab)
 - [File upload](https://fireship.io/lessons/flutter-file-uploads-cloud-storage/)
 
+### Theming
+- [Swatching Colors](https://medium.com/@morgenroth/using-flutters-primary-swatch-with-a-custom-materialcolor-c5e0f18b95b0)
+
 ### Widgets
 - [Replace Login/Signup](https://flutterawesome.com/provides-login-screen-with-login-signup-functionalities/)
 - [Other login implementations](https://codeburst.io/make-a-material-design-login-page-with-flutter-theming-4fce335cbce3)

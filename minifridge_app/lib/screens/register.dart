@@ -30,8 +30,8 @@ class RegisterPage extends StatelessWidget {
 
     
     return FlutterLogin(
-      title: 'Later',
-      // logo: 'images/minifridge_home_hero.png',
+      title: 'minifridge',
+      logo: "images/logo_large.png",
       onLogin: _authUser,
       onSignup: _newUser,
       onSubmitAnimationCompleted: (_) => {},

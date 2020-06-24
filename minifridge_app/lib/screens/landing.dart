@@ -21,27 +21,6 @@ class LandingPage extends StatelessWidget {
         }
       }
     );
-    // return MultiProvider(
-    //   providers: [
-    //     ChangeNotifierProvider(
-    //       create: (_) => UserNotifier.instance(),
-    //     )
-    //   ],
-    //   child: Consumer(
-    //     builder: (BuildContext context, UserNotifier user, _) {
-    //       switch (user.status) {
-    //         case Status.Unauthenticated:
-    //         case Status.Authenticating:
-    //           return RegisterPage();
-    //         case Status.Authenticated:
-    //           return HomePage();
-    //         case Status.Uninitialized:
-    //         default:
-    //           return Splash();
-    //       }
-    //     }
-    //   )
-    // );
   }
 }
 
