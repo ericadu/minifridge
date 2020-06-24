@@ -6,6 +6,7 @@
 ### Storage
 - [Firestore](https://www.youtube.com/watch?v=DqJ_KjFzL9I)
 - [Example firestore](https://medium.com/flutter-community/supercharge-your-flutter-apps-for-android-ios-and-web-with-cloud-firestore-pt-1-bc15d8aceaab)
+- [File upload](https://fireship.io/lessons/flutter-file-uploads-cloud-storage/)
 
 ### Widgets
 - [Replace Login/Signup](https://flutterawesome.com/provides-login-screen-with-login-signup-functionalities/)
@@ -31,3 +32,6 @@
 
 ### Analytics
 - [Setup Firebase Analytics](https://medium.com/flutter-community/the-flutter-guide-to-firebase-analytics-9b99c6e27a6)
+
+### DevTools
+- [VSC shortcuts](https://medium.com/flutter-community/flutter-visual-studio-code-shortcuts-for-fast-and-efficient-development-7235bc6c3b7d)

@@ -30,7 +30,6 @@ class UserItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<UserItem> currentItems = foods.where((item) => _getDays(item) > -1).toList();
-    print(currentItems.length);
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(

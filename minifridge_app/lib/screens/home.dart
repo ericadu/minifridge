@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/destination.dart';
-import 'package:minifridge_app/screens/add_item/add.dart';
 import 'package:minifridge_app/screens/settings/settings.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
 import 'package:minifridge_app/theme.dart';
@@ -38,8 +37,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin<HomeP
   Widget _buildView(String routeName) {
     if (routeName == SettingsPage.routeName) {
       return SettingsPage();
-    } else if (routeName == AddItemPage.routeName) {
-      return AddItemPage();
     } else {
       return UserItemsPage();
     }
@@ -87,6 +84,13 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin<HomeP
             title: Container(height: 0.0),
           );
         }).toList(),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: new FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).pushNamed('/image');
+        },
+        child: Icon(Icons.add),
       ),
     );
   }

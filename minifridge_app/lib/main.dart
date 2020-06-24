@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/screens/add_item/image_capture.dart';
 import 'package:minifridge_app/screens/landing.dart';
 import 'package:minifridge_app/screens/home.dart';
 import 'package:minifridge_app/screens/settings/settings.dart';
@@ -23,7 +24,8 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder> {
         HomePage.routeName: (BuildContext context) => HomePage(),
         UserItemsPage.routeName: (BuildContext context) => UserItemsPage(),
-        SettingsPage.routeName: (BuildContext context) => SettingsPage()
+        SettingsPage.routeName: (BuildContext context) => SettingsPage(),
+        ImageCapture.routeName: (BuildContext context) => ImageCapture(),
       },
     );
   }
