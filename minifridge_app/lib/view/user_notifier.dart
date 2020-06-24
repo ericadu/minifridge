@@ -6,7 +6,6 @@ enum Status {
   Authenticated,
   Authenticating,
   Unauthenticated,
-  NewAccount,
   SigningUp,
   FailedSignup
 }
@@ -14,7 +13,7 @@ enum Status {
 class UserNotifier with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
-  Status _status = Status.Uninitialized;
+  Status _status = Status.Unauthenticated;
 
   UserNotifier.instance() : _auth = FirebaseAuth.instance {
     _auth.onAuthStateChanged.listen(_onAuthStateChanged);
@@ -34,16 +33,6 @@ class UserNotifier with ChangeNotifier {
       notifyListeners();
       return false;
     }
-  }
-
-  void newUser() {
-    _status = Status.NewAccount;
-    notifyListeners();
-  }
-
-  void existingUser() {
-    _status = Status.Unauthenticated;
-    notifyListeners();
   }
 
   Future<bool> signUp(String email, String password) async {

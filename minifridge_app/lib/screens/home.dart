@@ -1,11 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/destination.dart';
-import 'package:minifridge_app/screens/settings.dart';
+import 'package:minifridge_app/screens/add_item/add.dart';
+import 'package:minifridge_app/screens/settings/settings.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
 import 'package:minifridge_app/theme.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   static final routeName = '/home';
@@ -39,6 +38,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin<HomeP
   Widget _buildView(String routeName) {
     if (routeName == SettingsPage.routeName) {
       return SettingsPage();
+    } else if (routeName == AddItemPage.routeName) {
+      return AddItemPage();
     } else {
       return UserItemsPage();
     }
@@ -73,7 +74,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin<HomeP
           }).toList(),
         )
       ),
-      bottomNavigationBar: BottomNavigationBar(
+      bottomNavigationBar: CupertinoTabBar(
         currentIndex: _currentIndex,
         onTap: (int index) {
           setState(() {
@@ -83,7 +84,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin<HomeP
         items: allDestinations.map((Destination destination) {
           return BottomNavigationBarItem(
             icon: Icon(destination.icon),
-            title: Text(destination.title)
+            title: Container(height: 0.0),
           );
         }).toList(),
       ),

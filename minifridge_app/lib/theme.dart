@@ -7,6 +7,7 @@ class AppTheme {
   static const Color themeColor = const Color(0xff8fd4de);
 
   static final ThemeData lightTheme = ThemeData(
+    // primarySwatch: Colors.green,
     appBarTheme: AppBarTheme(
       color: themeColor
     ),

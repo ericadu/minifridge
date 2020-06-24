@@ -14,8 +14,8 @@ class User {
 
   User.fromSnaphot(DocumentSnapshot snapshot) {
     this.id = snapshot.documentID;
-    this.currentItems = List.from(snapshot['currentItems']).map((x) => UserItem.fromMap(x));
-    this.itemHistory = List.from(snapshot['itemHistory']).map((x) => UserItem.fromMap(x));
+    this.currentItems = List.from(snapshot['currentItems']).map((x) => UserItem.fromMap(x, x['id']));
+    this.itemHistory = List.from(snapshot['itemHistory']).map((x) => UserItem.fromMap(x, x['id']));
   }
 
   Map<String, dynamic> toJson() {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/screens/home.dart';
-import 'package:minifridge_app/screens/login.dart';
-import 'package:minifridge_app/screens/signup.dart';
+import 'package:minifridge_app/screens/register.dart';
 import 'package:minifridge_app/view/user_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -19,11 +18,7 @@ class LandingPage extends StatelessWidget {
           switch (user.status) {
             case Status.Unauthenticated:
             case Status.Authenticating:
-              return LoginPage();
-            case Status.NewAccount:
-            case Status.SigningUp:
-            case Status.FailedSignup:
-              return SignupPage();
+              return RegisterPage();
             case Status.Authenticated:
               return HomePage();
             case Status.Uninitialized:
