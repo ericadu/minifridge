@@ -51,11 +51,11 @@ class _ImageCaptureState extends State<ImageCapture> {
         children: <Widget>[
           if (_imageFile != null) ... [
             Container(
-              padding: EdgeInsets.all(30),
+              padding: EdgeInsets.only(top: 30, left: 30, right: 30),
               child: Image.file(_imageFile)
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 FlatButton(
                   child: Icon(Icons.refresh),
@@ -64,7 +64,7 @@ class _ImageCaptureState extends State<ImageCapture> {
               ]
             ),
             Padding(
-              padding: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(50),
               child: Uploader(file: _imageFile)
             )
           ]
