@@ -18,12 +18,54 @@ class _ImageCaptureState extends State<ImageCapture> {
     final pickedFile = await picker.getImage(source: source);
 
     setState(() {
-      _imageFile = File(pickedFile.path);
+      if (pickedFile != null) {
+        _imageFile = File(pickedFile.path);
+      }
     });
   }
 
   void _clear() {
     setState(() => _imageFile = null);
+  }
+
+  Widget _renderHasImage() {
+    return ListView(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(top: 30, left: 30, right: 30),
+          child: Image.file(_imageFile)
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            FlatButton(
+              child: Icon(Icons.refresh),
+              onPressed: _clear,
+            )
+          ]
+        ),
+        Padding(
+          padding: const EdgeInsets.all(50),
+          child: Uploader(file: _imageFile)
+        )
+      ]
+    );
+  }
+
+  Widget _renderEmpty() {
+    return Container(
+      height: 500,
+      alignment: Alignment(0.0, 0.0),
+      child: Text("No image selected 📸")
+    );
+  }
+
+  Widget _renderBody() {
+    if (_imageFile != null) {
+      return _renderHasImage();
+    } else {
+      return _renderEmpty();
+    }
   }
 
   @override
@@ -47,29 +89,7 @@ class _ImageCaptureState extends State<ImageCapture> {
           ]
         )
       ),
-      body: ListView(
-        children: <Widget>[
-          if (_imageFile != null) ... [
-            Container(
-              padding: EdgeInsets.only(top: 30, left: 30, right: 30),
-              child: Image.file(_imageFile)
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                FlatButton(
-                  child: Icon(Icons.refresh),
-                  onPressed: _clear,
-                )
-              ]
-            ),
-            Padding(
-              padding: const EdgeInsets.all(50),
-              child: Uploader(file: _imageFile)
-            )
-          ]
-        ]
-      )
+      body: _renderBody()
     );
   }
 }
