@@ -16,7 +16,7 @@ class UserItemsNotifier extends ChangeNotifier {
     _userItems = result.documents
         .map((document) => UserItem.fromMap(document.data, document.documentID))
         .toList();
-    print(_userItems);
+
     return _userItems;
   }
 
