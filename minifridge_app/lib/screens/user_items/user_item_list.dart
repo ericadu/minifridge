@@ -63,7 +63,10 @@ class UserItemList extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => SingleUserItem(item: item)));
-              },
+                analytics.logEvent(
+                  name: 'click_item', 
+                  parameters: {'item': item.displayName});
+                },
               child: ListTile(
                 title: Text(item.displayName),
                 subtitle: Text(_getMessage(item)),
