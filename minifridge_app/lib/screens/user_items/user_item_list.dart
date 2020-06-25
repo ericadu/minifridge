@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
+import 'package:minifridge_app/screens/user_items/user_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/view/user_items_notifier.dart';
 import 'package:provider/provider.dart';
@@ -39,7 +40,6 @@ class UserItemList extends StatelessWidget {
             background: Container(color: Colors.red),
             key: Key(item.displayName),
             onDismissed: (direction) {
-              // TODO: Probably need to check if this went through
               Provider.of<UserItemsNotifier>(context, listen: false).toggleEaten(item);
               analytics.logEvent(
                 name: 'dismiss_item', 
@@ -60,9 +60,14 @@ class UserItemList extends StatelessWidget {
                   )
                 );
             },
-            child: ListTile(
-              title: Text(item.displayName),
-              subtitle: Text(_getMessage(item))
+            child: InkWell(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SingleUserItem(item: item)));
+              },
+              child: ListTile(
+                title: Text(item.displayName),
+                subtitle: Text(_getMessage(item)),
+              )
             ),
           );
         },
