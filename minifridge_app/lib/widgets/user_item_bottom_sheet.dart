@@ -31,7 +31,7 @@ class _UserItemBottomSheetState extends State<UserItemBottomSheet> {
 
   void decrement() {
     Provider.of<UserItemsNotifier>(context, listen: false).decreaseQuantity(widget.item);
-    
+
     setState(() {
       _quantity = _quantity - 1;
     });
@@ -62,10 +62,14 @@ class _UserItemBottomSheetState extends State<UserItemBottomSheet> {
                   Text('Quantity'),
                   Row(
                     children: <Widget>[
-                      IconButton(
+                      _quantity > 0 ? IconButton(
                         icon: Icon(Icons.remove_circle),
                         color: Colors.red,
                         onPressed: () => decrement()
+                      ) : IconButton(
+                        icon: Icon(Icons.remove_circle),
+                        color: Colors.grey,
+                        onPressed: () => {}
                       ),
                       Text(_quantity.toString()),
                       IconButton(
