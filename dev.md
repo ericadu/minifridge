@@ -30,8 +30,9 @@
 - [Auth with Provider](https://medium.com/flutter-community/flutter-firebase-login-using-provider-package-54ee4e5083c7)
 
 ### Push Notificaitons
-- [Broadcast messages](https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f)
+- [Broadcast messages easy setup](https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f)
 - [Guide](https://fireship.io/lessons/flutter-push-notifications-fcm-guide/)
+- [Apple <> cloud messaging config](https://firebase.google.com/docs/cloud-messaging/ios/certs)
 
 ### Analytics
 - [Setup Firebase Analytics](https://medium.com/flutter-community/the-flutter-guide-to-firebase-analytics-9b99c6e27a6)
