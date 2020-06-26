@@ -57,4 +57,12 @@ class UserItem {
   void eat() {
     this.eaten = !this.eaten;
   }
+
+  void decrement() {
+    this.quantity = this.quantity - 1;
+  }
+
+  void increment() {
+    this.quantity = this.quantity + 1;
+  }
 }

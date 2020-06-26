@@ -29,4 +29,16 @@ class UserItemsNotifier extends ChangeNotifier {
     Map data = item.toJson();
     return await _api.updateDocument(item.id, data);
   }
+
+  void decreaseQuantity(UserItem item) async {
+    item.decrement();
+    Map data = item.toJson();
+    return await _api.updateDocument(item.id, data);
+  }
+
+  void increaseQuantity(UserItem item) async {
+    item.increment();
+    Map data = item.toJson();
+    return await _api.updateDocument(item.id, data);
+  }
 }

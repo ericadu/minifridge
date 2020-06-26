@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
-import 'package:minifridge_app/screens/user_items/user_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/view/user_items_notifier.dart';
+import 'package:minifridge_app/widgets/user_item_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class UserItemList extends StatelessWidget {
@@ -15,6 +15,10 @@ class UserItemList extends StatelessWidget {
     DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(item.expTimestamp.microsecondsSinceEpoch);
     DateTime currTimestamp = new DateTime.now();
     return expTimestamp.difference(currTimestamp).inDays;
+  }
+
+  bool _validItem(UserItem item) {
+    return _getDays(item) > -1 && item.quantity > 0;
   }
 
   String _getMessage(UserItem item) {
@@ -30,7 +34,7 @@ class UserItemList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<UserItem> currentItems = foods.where((item) => _getDays(item) > -1).toList();
+    List<UserItem> currentItems = foods.where((item) => _validItem(item)).toList();
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -62,7 +66,11 @@ class UserItemList extends StatelessWidget {
             },
             child: InkWell(
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => SingleUserItem(item: item)));
+                showBottomSheet(
+                  context: context,
+                  builder: (context) => UserItemBottomSheet(item: item)
+                );
+
                 analytics.logEvent(
                   name: 'click_item', 
                   parameters: {'item': item.displayName});
