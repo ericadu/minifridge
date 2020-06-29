@@ -2,13 +2,20 @@
 import argparse
 import csv
 from datetime import datetime
+from dateutil import tz
 import firebase_admin
 from firebase_admin import credentials, firestore
 
 PATH = "/Users/ericadu/dev/minifridge/minifridge-firebase-adminsdk-z4sw9-387a25099d.json"
 
 def get_datetime(time_string):
-  return datetime.strptime(time_string, "%Y-%m-%d")
+  from_zone = tz.gettz('UTC')
+  to_zone = tz.gettz('America/New_York')
+  utc = datetime.strptime(time_string, "%Y-%m-%d")
+
+  utc = utc.replace(tzinfo=from_zone)
+  eastern = utc.astimezone(to_zone)
+  return eastern
 
 def valid_user(userid_string):
   if userid_string is not None and len(userid_string) > 0:

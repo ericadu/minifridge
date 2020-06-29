@@ -64,7 +64,7 @@ class ImageCapture extends StatelessWidget {
                     IconButton(
                       icon: Icon(Icons.photo_library),
                       onPressed: () => picker.pickImage(ImageSource.gallery)
-                    )
+                    ),
                   ]
                 )
               ),

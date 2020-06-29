@@ -50,12 +50,13 @@ class _UserItemBottomSheetState extends State<UserItemBottomSheet> {
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(30.0),
         child: Column(
           children: <Widget>[
-            Text(widget.item.displayName),
+            Text(widget.item.displayName,
+              style: TextStyle(fontWeight: FontWeight.bold)),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[

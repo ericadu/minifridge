@@ -36,7 +36,7 @@ class RegisterPage extends StatelessWidget {
     
     return FlutterLogin(
       title: 'foodbase',
-      logo: "images/logo_large.png",
+      // logo: "images/logo_large.png",
       onLogin: _authUser,
       onSignup: _newUser,
       onSubmitAnimationCompleted: (_) => {},

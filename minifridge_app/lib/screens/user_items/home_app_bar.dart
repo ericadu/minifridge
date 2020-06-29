@@ -29,7 +29,7 @@ class HomeAppBar extends StatelessWidget {
       // ),
       flexibleSpace: FlexibleSpaceBar(
         centerTitle: true,
-        title: Text('minifridge',
+        title: Text('foodbase',
             style: TextStyle(
               color: Colors.white,
               fontSize: 16.0,
