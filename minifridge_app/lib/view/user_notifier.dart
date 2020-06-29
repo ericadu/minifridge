@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 
 enum Status {
   Uninitialized,
@@ -9,6 +10,9 @@ enum Status {
   SigningUp,
   FailedSignup
 }
+
+// TODO: Migrate strings.
+final SUCCESS_MESSAGE = "Success";
 
 class UserNotifier with ChangeNotifier {
   FirebaseAuth _auth;
@@ -22,29 +26,78 @@ class UserNotifier with ChangeNotifier {
   Status get status => _status;
   FirebaseUser get user => _user;
 
-  Future<bool> signIn(String email, String password) async {
+  Future<String> signIn(String email, String password) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      return true;
+      analytics.logLogin();
+      return SUCCESS_MESSAGE;
     } catch (e) {
       _status = Status.Unauthenticated;
+      print('''
+        caught firebase auth exception\n
+        ${e.code}\n
+        ${e.message}
+      ''');
       notifyListeners();
-      return false;
+      String errorMessage;
+      switch (e.code) {
+        case "ERROR_INVALID_EMAIL":
+          errorMessage = "Your email address appears to be malformed.";
+          break;
+        case "ERROR_WRONG_PASSWORD":
+          errorMessage = "Your password is wrong.";
+          break;
+        case "ERROR_USER_NOT_FOUND":
+          errorMessage = "User with this email doesn't exist.";
+          break;
+        case "ERROR_USER_DISABLED":
+          errorMessage = "User with this email has been disabled.";
+          break;
+        case "ERROR_TOO_MANY_REQUESTS":
+          errorMessage = "Too many requests. Try again later.";
+          break;
+        case "ERROR_OPERATION_NOT_ALLOWED":
+          errorMessage = "Signing in with Email and Password is not enabled.";
+          break;
+        default:
+          errorMessage = "An undefined Error happened.";
+      }
+      return errorMessage;
     }
   }
 
-  Future<bool> signUp(String email, String password) async {
+  Future<String> signUp(String email, String password) async {
     try {
       _status = Status.SigningUp;
       notifyListeners();
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      return true;
+      return SUCCESS_MESSAGE;
     } catch (e) {
       _status = Status.FailedSignup;
       notifyListeners();
-      return false;
+      String errorMessage;
+      switch (e.code) {
+        case "ERROR_OPERATION_NOT_ALLOWED":
+          errorMessage = "Anonymous accounts are not enabled";
+          break;
+        case "ERROR_WEAK_PASSWORD":
+          errorMessage = "Your password is too weak";
+          break;
+        case "ERROR_INVALID_EMAIL":
+          errorMessage = "Your email is invalid";
+          break;
+        case "ERROR_EMAIL_ALREADY_IN_USE":
+          errorMessage = "Email is already in use on different account";
+          break;
+        case "ERROR_INVALID_CREDENTIAL":
+          errorMessage = "Your email is invalid";
+          break;
+        default:
+          errorMessage = "An undefined Error happened.";
+      }
+      return errorMessage;
     }
   }
 
