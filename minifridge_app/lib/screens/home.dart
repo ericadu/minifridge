@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/destination.dart';
 import 'package:minifridge_app/screens/settings/settings.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
 import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/view/image_picker_notifier.dart';
 
 class HomePage extends StatefulWidget {
   static final routeName = '/home';
@@ -42,8 +44,55 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin<HomeP
     }
   }
 
+  Column _buildBottomNavMenu() {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          leading: Icon(Icons.photo_camera),
+          title: Text('Take photo'),
+          // onTap: () => picker.pickImage(ImageSource.camera)
+        ),
+        ListTile(
+          leading: Icon(Icons.photo_library),
+          title: Text('Upload from library'),
+          // onTap: () => picker.pickImage(ImageSource.gallery)
+        ),
+        ListTile(
+          leading: Icon(Icons.edit),
+          title: Text('Enter manually'),
+          onTap: () {}
+        )
+      ]
+    );
+}
+
   @override
   Widget build(BuildContext context) {
+
+    FloatingActionButton addButton = FloatingActionButton(
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+              color: Color(0xFF737373),
+              height: 180,
+              child: Container(
+                child: _buildBottomNavMenu(),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).canvasColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(10),
+                    topRight: const Radius.circular(10)
+                  )
+                )
+              ),
+            );
+          }
+        );
+      },
+      child: Icon(Icons.add, color: Colors.grey[700]),
+    );
     
     return Scaffold(
       backgroundColor: AppTheme.themeColor,
@@ -86,12 +135,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin<HomeP
         }).toList(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: new FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).pushNamed('/image');
-        },
-        child: Icon(Icons.add),
-      ),
+      floatingActionButton: addButton
     );
   }
 
