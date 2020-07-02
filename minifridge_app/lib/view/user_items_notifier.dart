@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
-import 'package:minifridge_app/services/user_item_api.dart';
+import 'package:minifridge_app/services/user_items_api.dart';
 
 class UserItemsNotifier extends ChangeNotifier {
   UserItemsApi _api;
