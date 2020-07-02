@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/user_item.dart';
 import 'package:minifridge_app/view/user_items_notifier.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,9 @@ class _UserItemBottomSheetState extends State<UserItemBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(widget.item.expTimestamp.microsecondsSinceEpoch);
+    var newDt = DateFormat.MEd().format(expTimestamp);
+
     return Container(
       height: 330,
       decoration: BoxDecoration(
@@ -55,6 +59,16 @@ class _UserItemBottomSheetState extends State<UserItemBottomSheet> {
           children: <Widget>[
             Text(widget.item.displayName,
               style: TextStyle(fontWeight: FontWeight.bold)),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Fresh Until'),
+                  Text(newDt)
+                ]
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Row(
@@ -83,36 +97,16 @@ class _UserItemBottomSheetState extends State<UserItemBottomSheet> {
                 ]
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Unit'),
-                  Text(widget.item.unit)
-                ]
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('State'),
-                  Text(widget.item.state)
-                ]
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Text('Storage'),
-                  Text(widget.item.storageType)
-                ]
-              ),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(vertical: 20),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //     children: <Widget>[
+            //       Text('Storage'),
+            //       Text(widget.item.storageType)
+            //     ]
+            //   ),
+            // ),
           ]
         ),
       )

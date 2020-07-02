@@ -31,7 +31,11 @@ class UserItemsPage extends StatelessWidget {
                 return CustomScrollView(
                   slivers: <Widget>[
                     HomeAppBar(),
-                    UserItemList(foods: _foods)
+                    UserItemList(foods: _foods),
+                    SliverPadding(
+                      padding: EdgeInsets.only(bottom: 50),
+                    ),
+                    
                   ]
                 );
               } else {

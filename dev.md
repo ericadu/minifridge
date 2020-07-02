@@ -20,6 +20,7 @@
 ### Dart 
 - [Inheritance](https://stackoverflow.com/questions/13272035/how-do-i-call-a-super-constructor-in-dart)
 - [Overloading Constructor](https://stackoverflow.com/questions/49691163/dart-multiple-constructors)
+- [Datetime formatting](https://medium.com/flutter-community/working-with-dates-in-dart-e81c70911811)
 
 ### Nav
 - [Args in routes](https://flutter.dev/docs/cookbook/navigation/navigate-with-arguments)

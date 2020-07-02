@@ -54,6 +54,7 @@ class UserItemList extends StatelessWidget {
                 .showSnackBar(
                   SnackBar(
                     content: Text("${item.displayName} removed"),
+                    behavior: SnackBarBehavior.floating,
                     action: SnackBarAction(
                       label: "Undo",
                       textColor: Colors.yellow,
@@ -64,22 +65,39 @@ class UserItemList extends StatelessWidget {
                   )
                 );
             },
-            child: InkWell(
-              onTap: () {
-                showBottomSheet(
-                  context: context,
-                  builder: (context) => UserItemBottomSheet(item: item)
-                );
-
-                analytics.logEvent(
-                  name: 'click_item', 
-                  parameters: {'item': item.displayName});
-                },
-              child: ListTile(
-                title: Text(item.displayName),
-                subtitle: Text(_getMessage(item)),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 3, bottom: 10),
+                child: ListTile(
+                  title: Text(item.displayName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: Padding(
+                    padding: const EdgeInsets.only(top: 3),
+                    child: Text(_getMessage(item)),
+                  ),
+                  trailing: Icon(Icons.more_horiz),
+                ),
               )
-            ),
+            )
+            // child: InkWell(
+            //   onTap: () {
+            //     showBottomSheet(
+            //       context: context,
+            //       builder: (context) => UserItemBottomSheet(item: item)
+            //     );
+
+            //     analytics.logEvent(
+            //       name: 'click_item', 
+            //       parameters: {'item': item.displayName});
+            //     },
+            //   child: ListTile(
+            //     title: Text(item.displayName),
+            //     subtitle: Text(_getMessage(item)),
+            //   )
+            // ),
           );
         },
         childCount: currentItems.length
