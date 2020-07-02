@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
 import 'package:minifridge_app/services/user_item_api.dart';
 import 'package:minifridge_app/theme.dart';
@@ -13,18 +14,24 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   static const routeName = '/home';
 
-  Column _buildBottomNavMenu(ImagePickerNotifier picker) {
+  Column _buildBottomNavMenu(BuildContext context, ImagePickerNotifier picker) {
     return Column(
       children: <Widget>[
         ListTile(
           leading: Icon(Icons.photo_camera),
           title: Text('Take photo'),
-          onTap: () => picker.pickImage(ImageSource.camera)
+          onTap: () {
+            Navigator.pop(context);
+            picker.pickImage(ImageSource.camera);
+          }
         ),
         ListTile(
           leading: Icon(Icons.photo_library),
           title: Text('Upload from library'),
-          onTap: () => picker.pickImage(ImageSource.gallery)
+          onTap: () {
+            Navigator.pop(context);
+            picker.pickImage(ImageSource.gallery);
+          }
         ),
         ListTile(
           leading: Icon(Icons.edit),
@@ -60,7 +67,7 @@ class HomePage extends StatelessWidget {
                     color: Color(0xFF737373),
                     height: 180,
                     child: Container(
-                      child: _buildBottomNavMenu(picker),
+                      child: _buildBottomNavMenu(context, picker),
                       decoration: BoxDecoration(
                         color: Theme.of(context).canvasColor,
                         borderRadius: BorderRadius.only(
@@ -75,6 +82,9 @@ class HomePage extends StatelessWidget {
             },
             child: Icon(Icons.add, color: Colors.grey[700]),
           );
+          if (picker.hasImage()) {
+            return ImageUploadPage();
+          }
 
           return Scaffold(
             backgroundColor: AppTheme.themeColor,
