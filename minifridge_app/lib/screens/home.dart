@@ -32,11 +32,13 @@ class HomePage extends StatelessWidget {
             picker.pickImage(ImageSource.gallery);
           }
         ),
-        ListTile(
-          leading: Icon(Icons.edit),
-          title: Text('Enter manually'),
-          onTap: () {}
-        )
+        // ListTile(
+        //   leading: Icon(Icons.edit),
+        //   title: Text('Enter manually'),
+        //   onTap: () {
+            
+        //   }
+        // )
       ]
     );
 }
@@ -64,7 +66,7 @@ class HomePage extends StatelessWidget {
                 builder: (context) {
                   return Container(
                     color: Color(0xFF737373),
-                    height: 180,
+                    height: 130,
                     child: Container(
                       child: _buildBottomNavMenu(context, picker),
                       decoration: BoxDecoration(
