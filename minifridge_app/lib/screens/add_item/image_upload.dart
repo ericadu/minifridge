@@ -24,15 +24,17 @@ class ImageUploadPage extends StatelessWidget {
 
               if (uploadTask != null) {
                 uploadTask.onComplete.then((value) => {
+
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
-                      backgroundColor: Colors.green[300],
-                      content: Text("We've received your items! They'll be processed and added to your base soon 🎉🎉🎉"),
+                      backgroundColor: Colors.green,
+                      content: Text("Success! 🎉🎉🎉 We've received your items. They'll be processed and added to your base soon."),
+                      duration: Duration(seconds: 40),
                       action: SnackBarAction(
                         label: "Back to base",
                         onPressed: () {
                           picker.clear();
-                          Navigator.pushNamed(context, HomePage.routeName);
+                          Navigator.popAndPushNamed(context, HomePage.routeName);
                         }
                       )
                     )
@@ -40,34 +42,14 @@ class ImageUploadPage extends StatelessWidget {
                 });
               }
 
-              return Scaffold (
-                appBar: AppBar(
-                  title: Text('Selected Photo', style: TextStyle(color: Colors.white))
-                ),
-                bottomNavigationBar: BottomAppBar(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.clear),
-                        onPressed: () => picker.clear()
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.check, color: Colors.green),
-                        onPressed: () => picker.startUpload(user.user.uid)
-                      ),
-                    ]
-                  )
-                ),
-                body: Column(
-                  children: [
-                    LinearProgressIndicator(value: progressPercent),
-                    Container(
-                      padding: EdgeInsets.symmetric(vertical: 45, horizontal: 40),
-                      child: Image.file(picker.imageFile),
-                    ),
-                  ],
-                )
+              return Column(
+                children: [
+                  LinearProgressIndicator(value: progressPercent),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+                    child: Image.file(picker.imageFile),
+                  ),
+                ],
               );
             }
           );

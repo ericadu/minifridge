@@ -83,7 +83,29 @@ class HomePage extends StatelessWidget {
             child: Icon(Icons.add, color: Colors.grey[700]),
           );
           if (picker.hasImage()) {
-            return ImageUploadPage();
+            return Scaffold (
+                appBar: AppBar(
+                  title: Text('Selected Photo', style: TextStyle(color: Colors.white))
+                ),
+                bottomNavigationBar: BottomAppBar(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      if (!picker.uploading())
+                        IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () => picker.clear()
+                        ),
+                      if (!picker.uploading())
+                        IconButton(
+                          icon: Icon(Icons.check, color: Colors.green),
+                          onPressed: () => picker.startUpload(user.uid)
+                        ),
+                    ]
+                  )
+                ),
+                body: ImageUploadPage()
+            );
           }
 
           return Scaffold(
