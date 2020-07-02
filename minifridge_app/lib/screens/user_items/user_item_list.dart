@@ -50,22 +50,6 @@ class UserItemList extends StatelessWidget {
                 );
             },
             child: UserItemTile(item: item)
-            // child: InkWell(
-            //   onTap: () {
-            //     showBottomSheet(
-            //       context: context,
-            //       builder: (context) => UserItemBottomSheet(item: item)
-            //     );
-
-            //     analytics.logEvent(
-            //       name: 'click_item', 
-            //       parameters: {'item': item.displayName});
-            //     },
-            //   child: ListTile(
-            //     title: Text(item.displayName),
-            //     subtitle: Text(_getMessage(item)),
-            //   )
-            // ),
           );
         },
         childCount: currentItems.length
