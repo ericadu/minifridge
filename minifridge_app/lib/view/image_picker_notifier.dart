@@ -36,6 +36,7 @@ class ImagePickerNotifier extends ChangeNotifier {
 
   void clear() {
     _imageFile = null;
+    _uploadTask = null;
     notifyListeners();
   }
 }
