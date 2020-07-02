@@ -9,7 +9,7 @@ class AppTheme {
 
   static final ThemeData lightTheme = ThemeData(
     // primarySwatch: Colors.green,
-    accentColor: Colors.green,
+    accentColor: Colors.teal[400],
     primarySwatch: generateMaterialColor(themeColor),
     appBarTheme: AppBarTheme(
       color: themeColor

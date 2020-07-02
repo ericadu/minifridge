@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/user_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/view/user_items_notifier.dart';
-import 'package:minifridge_app/widgets/user_item_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class UserItemList extends StatelessWidget {
@@ -35,11 +35,15 @@ class UserItemList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<UserItem> currentItems = foods.where((item) => _validItem(item)).toList();
-
+    
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           UserItem item = currentItems[index];
+          DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(item.expTimestamp.microsecondsSinceEpoch);
+          var newDt = DateFormat.MEd().format(expTimestamp);
+          final newTheme = Theme.of(context).copyWith(dividerColor: Colors.white);
+
           return Dismissible(
             background: Container(color: Colors.red),
             key: Key(item.displayName),
@@ -67,18 +71,64 @@ class UserItemList extends StatelessWidget {
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.only(top: 3, bottom: 10),
-                child: ListTile(
-                  title: Text(item.displayName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                child: Theme(data: newTheme, child: 
+                  ExpansionTile(
+                    title: Text(item.displayName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
+                    subtitle: Padding(
+                      padding: const EdgeInsets.only(top: 3),
+                      child: Text(_getMessage(item)),
+                    ),
+                    children: <Widget>[
+                      Divider(color: Colors.grey[300]),
+                      Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: Text("Editing item")
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Fresh Until'),
+                            Text(newDt)
+                          ]
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(top: 8, left: 15, right: 15, bottom: 20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text('Quantity'),
+                            // Row(
+                            //   children: <Widget>[
+                            //     _quantity > 0 ? IconButton(
+                            //       icon: Icon(Icons.remove_circle),
+                            //       color: Colors.red,
+                            //       onPressed: () => decrement()
+                            //     ) : IconButton(
+                            //       icon: Icon(Icons.remove_circle),
+                            //       color: Colors.grey,
+                            //       onPressed: () => {}
+                            //     ),
+                            //     Text(_quantity.toString()),
+                            //     IconButton(
+                            //       icon: Icon(Icons.add_circle),
+                            //       color: Colors.green,
+                            //       onPressed: () => increment()
+                            //     )
+                            //   ]
+                            // )
+                          ]
+                        ),
+                      ),
+                    ]
                   ),
-                  subtitle: Padding(
-                    padding: const EdgeInsets.only(top: 3),
-                    child: Text(_getMessage(item)),
-                  ),
-                  trailing: Icon(Icons.more_horiz),
-                ),
+                )
               )
             )
             // child: InkWell(

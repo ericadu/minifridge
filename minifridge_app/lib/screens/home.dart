@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
 import 'package:minifridge_app/services/user_item_api.dart';
-import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/view/image_picker_notifier.dart';
 import 'package:minifridge_app/view/user_items_notifier.dart';
 import 'package:minifridge_app/view/user_notifier.dart';
