@@ -19,7 +19,7 @@ class AppTheme {
       secondary: themeColor
     ),
     snackBarTheme: SnackBarThemeData(
-      behavior: SnackBarBehavior.floating
+      behavior: SnackBarBehavior.fixed
     ),
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );

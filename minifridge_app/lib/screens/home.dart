@@ -109,7 +109,6 @@ class HomePage extends StatelessWidget {
           }
 
           return Scaffold(
-            backgroundColor: AppTheme.themeColor,
             body: UserItemsPage(),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: addButton

@@ -54,7 +54,6 @@ class UserItemList extends StatelessWidget {
                 .showSnackBar(
                   SnackBar(
                     content: Text("${item.displayName} removed"),
-                    behavior: SnackBarBehavior.floating,
                     action: SnackBarAction(
                       label: "Undo",
                       textColor: Colors.yellow,
