@@ -79,7 +79,7 @@ class _UserItemTileState extends State<UserItemTile> {
                   children: <Widget>[
                     Divider(color: Colors.grey[300]),
                     Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
@@ -92,7 +92,7 @@ class _UserItemTileState extends State<UserItemTile> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 8, left: 15, right: 15, bottom: 20),
+                      padding: EdgeInsets.only(top: 8, left: 15, right: 15, bottom: 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
