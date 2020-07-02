@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -32,20 +33,35 @@ class _UserItemTileState extends State<UserItemTile> {
     }
   }
 
+  void _callDatePicker(SingleItemNotifier userItem) async {
+    DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(userItem.expTimestamp.microsecondsSinceEpoch);
+    DateTime newExp = await showDatePicker(
+      context: context,
+      initialDate: expTimestamp,
+      firstDate: DateTime.now(),
+      lastDate: expTimestamp.add(new Duration(days: 365)),
+    );
+    
+    if (newExp != null && newExp != expTimestamp) {
+      userItem.updateExp(Timestamp.fromDate(newExp));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final FirebaseUser user = Provider.of<UserNotifier>(context, listen: false).user;
     final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
 
     UserItem item = widget.item;
-    DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(item.expTimestamp.microsecondsSinceEpoch);
-    var newDt = DateFormat.MEd().format(expTimestamp);
-    final newTheme = Theme.of(context).copyWith(dividerColor: Colors.white);
 
     return ChangeNotifierProvider(
       create: (_) => SingleItemNotifier(_userItemsApi, item),
       child: Consumer(
         builder: (BuildContext context, SingleItemNotifier userItem, _) {
+
+          DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(userItem.expTimestamp.microsecondsSinceEpoch);
+          var newDt = DateFormat.MEd().format(expTimestamp);
+          final newTheme = Theme.of(context).copyWith(dividerColor: Colors.white);
           return Card(
             child: Padding(
               padding: const EdgeInsets.only(top: 3, bottom: 10),
@@ -58,21 +74,20 @@ class _UserItemTileState extends State<UserItemTile> {
                   ),
                   subtitle: Padding(
                     padding: const EdgeInsets.only(top: 3),
-                    child: Text(_getMessage(item)),
+                    child: Text(_getMessage(userItem.item)),
                   ),
                   children: <Widget>[
                     Divider(color: Colors.grey[300]),
-                    Padding(
-                      padding: EdgeInsets.only(top: 20),
-                      child: Text("Editing item")
-                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Text('Fresh Until'),
-                          Text(newDt)
+                          RaisedButton(
+                            child: Text(newDt),
+                            onPressed: () => _callDatePicker(userItem)
+                          )
                         ]
                       ),
                     ),

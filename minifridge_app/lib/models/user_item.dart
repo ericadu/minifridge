@@ -65,4 +65,8 @@ class UserItem {
   void increment() {
     this.quantity = this.quantity + 1;
   }
+
+  void setNewExp(Timestamp expTime) {
+    this.expTimestamp = expTime;
+  }
 }
