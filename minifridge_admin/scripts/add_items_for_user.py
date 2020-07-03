@@ -29,7 +29,7 @@ def valid_file(filepath_string):
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument('--filepath', action='store', help='Data import path', default="../data/Eli-Gridview.csv")
+  parser.add_argument('--filepath', action='store', help='Data import path', default="data/Eli-Gridview.csv")
   parser.add_argument('--user', action='store', help='Firestore USER_ID', default="")
 
   args = parser.parse_args()
@@ -52,7 +52,7 @@ if __name__ == '__main__':
           'displayName': row[1],
           'buyTimestamp': get_datetime(row[2]),
           'expTimestamp': get_datetime(row[3]),
-          'quantity': int(row[4]),
+          'quantity': int(row[4]) if len(row[4]) > 0 else 1,
           'unit': row[5],
           'storageType': row[6],
           'state': row[7],
