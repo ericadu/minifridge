@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/user_item.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 import 'package:minifridge_app/util.dart';
 import 'package:minifridge_app/view/single_item_notifier.dart';
-import 'package:minifridge_app/view/user_items_notifier.dart';
 import 'package:minifridge_app/view/user_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -76,6 +76,13 @@ class _UserItemTileState extends State<UserItemTile> {
                     padding: const EdgeInsets.only(top: 3),
                     child: Text(_getMessage(userItem.item)),
                   ),
+                  onExpansionChanged: (bool expanded) {
+                    analytics.logEvent(name: 'expand_item', parameters: {
+                      'item': item.displayName,
+                      'daysLeft': Util.getDays(item),
+                      'action': expanded ? 'expand' : 'collapse'
+                    });
+                  },
                   children: <Widget>[
                     Divider(color: Colors.grey[300]),
                     Padding(

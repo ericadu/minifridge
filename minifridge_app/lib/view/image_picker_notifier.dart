@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 
 class ImagePickerNotifier extends ChangeNotifier {
   File _imageFile;
@@ -30,6 +31,11 @@ class ImagePickerNotifier extends ChangeNotifier {
 
     if (pickedFile != null) {
       _imageFile = File(pickedFile.path);
+
+      analytics.logEvent(name: 'add_item', parameters: {
+        'source': source == ImageSource.camera ? 'camera' : 'gallery'
+      });
+      
       notifyListeners();
     }
   }

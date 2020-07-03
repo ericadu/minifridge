@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 
 class SingleItemNotifier extends ChangeNotifier {
@@ -19,16 +20,25 @@ class SingleItemNotifier extends ChangeNotifier {
 
   void decrement() async {
     _item.decrement();
+    analytics.logEvent(
+      name: 'edit_item', 
+      parameters: {'item': _item.displayName, 'type': 'decrease'});
     update();
   }
 
   void increment() async {
     _item.increment();
+    analytics.logEvent(
+      name: 'edit_item', 
+      parameters: {'item': _item.displayName, 'type': 'increase'});
     update();
   }
 
   void updateExp(Timestamp expTime) async {
     _item.setNewExp(expTime);
+    analytics.logEvent(
+      name: 'edit_item', 
+      parameters: {'item': _item.displayName, 'type': 'expiration'});
     update();
   }
 

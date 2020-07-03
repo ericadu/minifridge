@@ -35,7 +35,7 @@ class HomeAppBar extends StatelessWidget {
               fontSize: 16.0,
             )),
         background: Image.asset(
-          "images/minifridge_home_hero.png",
+          "images/hero.png",
           fit: BoxFit.cover
         )
       ),

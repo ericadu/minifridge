@@ -13,35 +13,62 @@ import 'package:provider/provider.dart';
 class HomePage extends StatelessWidget {
   static const routeName = '/home';
 
-  Column _buildBottomNavMenu(BuildContext context, ImagePickerNotifier picker) {
-    return Column(
-      children: <Widget>[
-        ListTile(
-          leading: Icon(Icons.photo_camera),
-          title: Text('Take photo'),
-          onTap: () {
-            Navigator.pop(context);
-            picker.pickImage(ImageSource.camera);
+  Widget _buildAddButton(BuildContext context, ImagePickerNotifier picker) {
+    return FloatingActionButton(
+      child: Icon(
+        Icons.add,
+        color: Colors.grey[700],
+        size: 30
+      ),
+      onPressed: () {
+        showModalBottomSheet(
+          context: context,
+          builder: (context) {
+            return Container(
+              color: Color(0xFF737373),
+              height: 130,
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    ListTile(
+                      leading: Icon(Icons.photo_camera),
+                      title: Text('Take photo'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        picker.pickImage(ImageSource.camera);
+                      }
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.photo_library),
+                      title: Text('Upload from library'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        picker.pickImage(ImageSource.gallery);
+                      }
+                    ),
+                    // ListTile(
+                    //   leading: Icon(Icons.edit),
+                    //   title: Text('Enter manually'),
+                    //   onTap: () {
+                        
+                    //   }
+                    // )
+                  ]
+                ),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).canvasColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(10),
+                    topRight: const Radius.circular(10)
+                  )
+                )
+              ),
+            );
           }
-        ),
-        ListTile(
-          leading: Icon(Icons.photo_library),
-          title: Text('Upload from library'),
-          onTap: () {
-            Navigator.pop(context);
-            picker.pickImage(ImageSource.gallery);
-          }
-        ),
-        // ListTile(
-        //   leading: Icon(Icons.edit),
-        //   title: Text('Enter manually'),
-        //   onTap: () {
-            
-        //   }
-        // )
-      ]
+        );
+      },
     );
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,30 +86,7 @@ class HomePage extends StatelessWidget {
       ],
       child: Consumer(
         builder: (BuildContext context, ImagePickerNotifier picker, _) {
-          FloatingActionButton addButton = FloatingActionButton(
-            onPressed: () {
-              showModalBottomSheet(
-                context: context,
-                builder: (context) {
-                  return Container(
-                    color: Color(0xFF737373),
-                    height: 130,
-                    child: Container(
-                      child: _buildBottomNavMenu(context, picker),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).canvasColor,
-                        borderRadius: BorderRadius.only(
-                          topLeft: const Radius.circular(10),
-                          topRight: const Radius.circular(10)
-                        )
-                      )
-                    ),
-                  );
-                }
-              );
-            },
-            child: Icon(Icons.add, color: Colors.grey[700]),
-          );
+          
           if (picker.hasImage()) {
             return Scaffold (
                 appBar: AppBar(
@@ -112,7 +116,11 @@ class HomePage extends StatelessWidget {
           return Scaffold(
             body: UserItemsPage(),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            floatingActionButton: addButton
+            floatingActionButton: Container(
+              width: 70,
+              height: 70,
+              child: _buildAddButton(context, picker)
+            )
           );
         }
       )

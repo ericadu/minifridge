@@ -73,6 +73,7 @@ class UserNotifier with ChangeNotifier {
       _status = Status.SigningUp;
       notifyListeners();
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      analytics.logSignUp(signUpMethod: 'email');
       return SUCCESS_MESSAGE;
     } catch (e) {
       _status = Status.FailedSignup;

@@ -31,9 +31,10 @@ class ImageUploadPage extends StatelessWidget {
                       content: Text("Success! 🎉🎉🎉 We've received your items. They'll be processed and added to your base soon."),
                       duration: Duration(seconds: 40),
                       action: SnackBarAction(
-                        label: "Back to base",
+                        label: "Back",
                         onPressed: () {
                           picker.clear();
+                          Scaffold.of(context).hideCurrentSnackBar();
                           Navigator.popAndPushNamed(context, HomePage.routeName);
                         }
                       )

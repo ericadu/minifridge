@@ -32,7 +32,7 @@ class UserItemList extends StatelessWidget {
               Provider.of<UserItemsNotifier>(context, listen: false).toggleEaten(item);
               analytics.logEvent(
                 name: 'dismiss_item', 
-                parameters: {'item': item.displayName, 'daysLeft': Util.getDays(item).toString()});
+                parameters: {'item': item.displayName, 'daysLeft': Util.getDays(item)});
 
               Scaffold
                 .of(context)
