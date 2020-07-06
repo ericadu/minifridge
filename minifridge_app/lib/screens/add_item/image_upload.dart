@@ -14,6 +14,7 @@ class ImageUploadPage extends StatelessWidget {
     return Consumer2(
         builder: (BuildContext context, ImagePickerNotifier picker, UserNotifier user, _) {
           final StorageUploadTask uploadTask = picker.uploadTask;
+
           return StreamBuilder<StorageTaskEvent>(
             stream: uploadTask?.events,
             builder: (context, snapshot) {
@@ -24,7 +25,6 @@ class ImageUploadPage extends StatelessWidget {
 
               if (uploadTask != null) {
                 uploadTask.onComplete.then((value) => {
-
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.green,
@@ -34,7 +34,7 @@ class ImageUploadPage extends StatelessWidget {
                         label: "Back",
                         onPressed: () {
                           picker.clear();
-                          Scaffold.of(context).hideCurrentSnackBar();
+                          Scaffold.of(context).removeCurrentSnackBar();
                           Navigator.popAndPushNamed(context, HomePage.routeName);
                         }
                       )
