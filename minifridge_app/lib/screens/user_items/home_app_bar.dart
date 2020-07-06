@@ -33,7 +33,7 @@ class HomeAppBar extends StatelessWidget {
         IconButton(
           icon: const Icon(Icons.menu, color: Colors.white),
           onPressed: () {
-            showBottomSheet(
+            showModalBottomSheet(
               context: context,
               builder: (context) {
                 return SettingsMenu();

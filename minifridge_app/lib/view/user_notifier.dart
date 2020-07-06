@@ -104,7 +104,6 @@ class UserNotifier with ChangeNotifier {
 
   Future signOut() async {
     _auth.signOut();
-    print('hello');
     _status = Status.Unauthenticated;
     notifyListeners();
     return Future.delayed(Duration.zero);

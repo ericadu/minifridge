@@ -18,14 +18,18 @@ class SettingsMenu extends StatelessWidget {
       builder: (BuildContext context, UserNotifier user, _) {
         return Container(
           height: 150,
+          // color: Color(0xFF737373),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 10, color: Colors.grey[300], spreadRadius: 5)
-            ],
+            color: Theme.of(context).canvasColor,
           ),
+          // decoration: BoxDecoration(
+          //   color: Colors.white,
+          //   borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
+          //   boxShadow: [
+          //     BoxShadow(
+          //       blurRadius: 10, color: Colors.grey[300], spreadRadius: 5)
+          //   ],
+          // ),
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -40,6 +44,7 @@ class SettingsMenu extends StatelessWidget {
                   title: Text('👋  Logout'),
                   onTap: () {
                     user.signOut();
+                    Navigator.pop(context);
                   }
                 )
               ]
