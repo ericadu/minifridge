@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
-import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:minifridge_app/widgets/settings_menu.dart';
 
 // Behavior: Will show emoji status based on "health of fridge" (kinda like neopets)
 // Could have different indicators like
@@ -11,14 +9,6 @@ import 'package:url_launcher/url_launcher.dart';
 // - happy (refreshed? lots of shelf life? just ate some spoiling things? just re-stocked?)
 
 class HomeAppBar extends StatelessWidget {
-
-  void launchURL(String url) async {
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,34 +36,7 @@ class HomeAppBar extends StatelessWidget {
             showBottomSheet(
               context: context,
               builder: (context) {
-                return Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15)),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 10, color: Colors.grey[300], spreadRadius: 5)
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          title: Text("🍑  What's in season?"),
-                          onTap: () {
-                            launchURL("https://www.seasonalfoodguide.org");
-                          }
-                        ),
-                        ListTile(
-                          title: Text('👋  Logout'),
-                          onTap: () => Provider.of<UserNotifier>(context, listen: false).signOut(),
-                        )
-                      ]
-                    ),
-                  ),
-                );
+                return SettingsMenu();
               }
             );
           },
