@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/screens/home.dart';
 import 'package:minifridge_app/screens/register.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {

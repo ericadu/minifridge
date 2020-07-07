@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/util.dart';
-import 'package:minifridge_app/view/user_items_notifier.dart';
+import 'package:minifridge_app/providers/user_items_notifier.dart';
 import 'package:minifridge_app/widgets/user_item_tile.dart';
 import 'package:provider/provider.dart';
 

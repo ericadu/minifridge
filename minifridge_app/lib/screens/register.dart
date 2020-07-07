@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {

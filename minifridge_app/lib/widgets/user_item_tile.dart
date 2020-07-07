@@ -6,8 +6,8 @@ import 'package:minifridge_app/models/user_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 import 'package:minifridge_app/util.dart';
-import 'package:minifridge_app/view/single_item_notifier.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:minifridge_app/providers/single_item_notifier.dart';
+import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
 class UserItemTile extends StatefulWidget {

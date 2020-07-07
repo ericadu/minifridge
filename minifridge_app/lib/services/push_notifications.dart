@@ -1,9 +1,16 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 class PushNotificationService {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bool _initialized = false;
+  String _userId;
+
+  PushNotificationService(String userId) {
+    _userId = userId;
+    init();
+  }
 
   Future<void> init() async {
     if (!_initialized) {
@@ -22,6 +29,16 @@ class PushNotificationService {
           print("onResume: $message");
         },
       );
+
+      _firebaseMessaging.getToken().then((token) {
+        print('token: $token');
+        Firestore.instance
+          .collection('users')
+          .document(_userId)
+          .updateData({'pushToken': token});
+      }).catchError((err) {
+        print(err.message.toString());
+      });
       
       _initialized = true;
     }

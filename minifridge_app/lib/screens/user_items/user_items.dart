@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/user_item.dart';
 import 'package:minifridge_app/screens/user_items/home_app_bar.dart';
 import 'package:minifridge_app/screens/user_items/user_item_list.dart';
-import 'package:minifridge_app/view/user_items_notifier.dart';
+import 'package:minifridge_app/providers/user_items_notifier.dart';
 import 'package:provider/provider.dart';
 
 class UserItemsPage extends StatelessWidget {

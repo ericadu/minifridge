@@ -34,9 +34,13 @@
 - [Broadcast messages easy setup](https://medium.com/@SebastianEngel/easy-push-notifications-with-flutter-and-firebase-cloud-messaging-d96084f5954f)
 - [Guide](https://fireship.io/lessons/flutter-push-notifications-fcm-guide/)
 - [Apple <> cloud messaging config](https://firebase.google.com/docs/cloud-messaging/ios/certs)
+- [Example for chat](https://medium.com/@duytq94/flutter-chat-app-extended-push-notification-messages-a26c669f4675)
 
 ### Analytics
 - [Setup Firebase Analytics](https://medium.com/flutter-community/the-flutter-guide-to-firebase-analytics-9b99c6e27a6)
 
 ### DevTools
 - [VSC shortcuts](https://medium.com/flutter-community/flutter-visual-studio-code-shortcuts-for-fast-and-efficient-development-7235bc6c3b7d)
+
+### Flutter Architecture
+- [Provider Implementation Guide](https://medium.com/flutter-community/flutter-architecture-provider-implementation-guide-d33133a9a4e8)

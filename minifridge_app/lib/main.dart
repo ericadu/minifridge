@@ -5,7 +5,7 @@ import 'package:minifridge_app/screens/home.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/theme.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
 void main() {

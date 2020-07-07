@@ -1,8 +1,8 @@
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/screens/home.dart';
-import 'package:minifridge_app/view/image_picker_notifier.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:minifridge_app/providers/image_picker_notifier.dart';
+import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
 class ImageUploadPage extends StatelessWidget {

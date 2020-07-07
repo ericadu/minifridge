@@ -4,14 +4,29 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/user_items/user_items.dart';
+import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
-import 'package:minifridge_app/view/image_picker_notifier.dart';
-import 'package:minifridge_app/view/user_items_notifier.dart';
-import 'package:minifridge_app/view/user_notifier.dart';
+import 'package:minifridge_app/providers/image_picker_notifier.dart';
+import 'package:minifridge_app/providers/user_items_notifier.dart';
+import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   static const routeName = '/home';
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  FirebaseUser user;
+
+  void initState() {
+    super.initState();
+    user = Provider.of<UserNotifier>(context, listen: false).user;
+    final PushNotificationService _notificationService = PushNotificationService(user.uid);
+    _notificationService.init();
+  }
 
   Widget _buildAddButton(BuildContext context, ImagePickerNotifier picker) {
     return FloatingActionButton(
@@ -46,13 +61,6 @@ class HomePage extends StatelessWidget {
                         picker.pickImage(ImageSource.gallery);
                       }
                     ),
-                    // ListTile(
-                    //   leading: Icon(Icons.edit),
-                    //   title: Text('Enter manually'),
-                    //   onTap: () {
-                        
-                    //   }
-                    // )
                   ]
                 ),
                 decoration: BoxDecoration(
@@ -72,7 +80,6 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseUser user = Provider.of<UserNotifier>(context, listen: false).user;
     final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
 
     return MultiProvider(
@@ -126,5 +133,4 @@ class HomePage extends StatelessWidget {
       )
     );
   }
-
 }
