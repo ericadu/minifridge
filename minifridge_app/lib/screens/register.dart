@@ -26,6 +26,10 @@ class RegisterPage extends StatelessWidget {
       return message;
     }
 
+    Future<String> _recoverPassword(String email) async {
+      return await user.resetPassword(email);
+    }
+
     FormFieldValidator<String> passwordValidator = (String password) {
       if (password.length < 7) {
         return 'Minimum 6 characters.';
@@ -40,8 +44,11 @@ class RegisterPage extends StatelessWidget {
       onLogin: _authUser,
       onSignup: _newUser,
       onSubmitAnimationCompleted: (_) => {},
-      onRecoverPassword: (_) => Future(null),
+      onRecoverPassword: _recoverPassword,
       passwordValidator: passwordValidator,
+      messages: LoginMessages(
+        recoverPasswordDescription: "You'll receive an email with instructions on how to reset your password."
+      )
     );
   }
 }
