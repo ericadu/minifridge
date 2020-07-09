@@ -80,7 +80,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
     final FoodBaseApi _baseApi = FoodBaseApi(user.baseId);
 
     return MultiProvider(
@@ -112,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                       if (!picker.uploading())
                         IconButton(
                           icon: Icon(Icons.check, color: Colors.green),
-                          onPressed: () => picker.startUpload(user.uid)
+                          onPressed: () => picker.startUpload(user.id)
                         ),
                     ]
                   )
