@@ -32,16 +32,11 @@ class AuthNotifier with ChangeNotifier {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      _auth.signInWithEmailAndPassword(email: email, password: password)
-        .then((auth) => {
-          _firestore
-            .collection("users")
-            .document(auth.user.uid)
-            .get()
-            .then((DocumentSnapshot result) => {
-              _signedInUser = SignedInUser.fromSnaphot(result)
-            })
+      await _auth.signInWithEmailAndPassword(email: email, password: password)
+        .then((auth) {
+          _getSignedInUser(auth.user.uid).then((val) => _signedInUser = val);
         });
+
       analytics.logLogin();
       return SUCCESS_MESSAGE;
     } catch (e) {
@@ -77,6 +72,15 @@ class AuthNotifier with ChangeNotifier {
       }
       return errorMessage;
     }
+  }
+
+  Future<SignedInUser> _getSignedInUser(String uid) async {
+    return _firestore
+      .collection("users")
+      .document(uid)
+      .get().then((result) {
+        return SignedInUser.fromSnapshot(result);
+      });
   }
 
   Future<SignedInUser> _createBaseAndUser(String uid, String email) async {
@@ -146,11 +150,14 @@ class AuthNotifier with ChangeNotifier {
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
+      notifyListeners();
     } else {
       _user = firebaseUser;
       _status = Status.Authenticated;
+      _getSignedInUser(_user.uid)
+        .then((val) => _signedInUser = val)
+        .whenComplete(() => notifyListeners());
     }
-    notifyListeners();
   }
 
   Future<String> resetPassword(String email) async {

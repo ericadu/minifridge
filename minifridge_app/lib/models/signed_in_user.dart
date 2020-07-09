@@ -13,11 +13,11 @@ class SignedInUser {
     this.baseId,
   });
 
-  SignedInUser.fromSnaphot(DocumentSnapshot snapshot) {
+  SignedInUser.fromSnapshot(DocumentSnapshot snapshot) {
     this.id = snapshot.documentID;
-    this.email = snapshot['emil'];
-    this.pushToken = snapshot['pushToken'];
-    this.baseId = snapshot['baseId'];
+    this.email = snapshot.data['email'];
+    this.pushToken = snapshot.data['pushToken'];
+    this.baseId = snapshot.data['baseId'];
   }
 
   Map<String, dynamic> toJson() {

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,10 +25,19 @@ class _HomePageState extends State<HomePage> {
 
   void initState() {
     super.initState();
+    
     user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
     final PushNotificationService _notificationService = PushNotificationService(user.id);
+    
+    // _setUser(fbUser.uid);
     _notificationService.init();
   }
+
+  // void _setUser(String uid) async {
+  //   await Firestore.instance.collection("users").document(uid).get().then((snapshot) {
+  //     print(snapshot.data);
+  //   });
+  // }
 
   Widget _buildAddButton(BuildContext context, ImagePickerNotifier picker) {
     return FloatingActionButton(
