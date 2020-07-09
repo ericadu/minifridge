@@ -43,12 +43,12 @@ class BaseItem {
     this.quantity = data['quantity'];
     this.unit = data['unit'];
     this.buyTimestamp = data['buyTimestamp'];
-    this.referenceTimestamp = data['referenceTimestamp'] ? data['referenceTimestamp'] : data['buyTimestamp'];
+    this.referenceTimestamp = data['referenceTimestamp'];
     this.state = data['state'];
     this.storageType = data['storageType'];
     this.productId = data['productId'];
     this.shelfLife = ShelfLife.fromMap(data['shelfLife']);
-    this.endType = data['endType'] ? EndTypes.from(data['endType']): EndType.alive;
+    this.endType = data['endType'] != null ? EndTypes.from(data['endType']): EndType.alive;
   }
 
   Map<String, dynamic> toJson() {

@@ -1,4 +1,3 @@
-
 import argparse
 import csv
 from datetime import datetime
@@ -29,20 +28,22 @@ def valid_file(filepath_string):
 
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument('--filepath', action='store', help='Data import path', default="data/Eli-Gridview.csv")
-  parser.add_argument('--user', action='store', help='Firestore USER_ID', default="")
+  parser.add_argument('--filepath', action='store', help='Data import path', default="data/erica-new-Grid.csv")
+  parser.add_argument('--user', action='store', help='Firestore USER_ID', default="3N6fMDSeV4bcCd59ZzrjGYTXGwG2")
+  parser.add_argument('--base', action='store', help="Firestore BASE_ID", default="nHfhaJGTmV8x2Qu4llL9")
 
   args = parser.parse_args()
 
   USER_ID = args.user
   FILEPATH = args.filepath
+  BASE_ID = args.base
 
-  if (valid_user(USER_ID) and valid_file(FILEPATH)):
+  if (valid_user(USER_ID) and valid_file(FILEPATH) and valid_user(BASE_ID)):
     cred = credentials.Certificate(PATH)
     firebase_admin.initialize_app(cred)
     datab = firestore.client()
 
-    userItemsRef = datab.collection('users', USER_ID, 'currentItems')
+    userItemsRef = datab.collection('bases', BASE_ID, 'items')
 
     with open(FILEPATH, 'r') as f:
       reader = csv.reader(f)
@@ -51,12 +52,19 @@ if __name__ == '__main__':
         new_item = {
           'displayName': row[1],
           'buyTimestamp': get_datetime(row[2]),
-          'expTimestamp': get_datetime(row[3]),
-          'quantity': int(row[4]) if len(row[4]) > 0 else 1,
-          'unit': row[5],
-          'storageType': row[6],
-          'state': row[7],
-          'eaten': False
+          'shelfLife': {
+            'dayRangeStart': int(row[3]),
+            'dayRangeEnd': int(row[4])
+          },
+          'quantity': int(row[5]) if len(row[5]) > 0 else 1,
+          'referenceTimestamp': get_datetime(row[2]),
+          'unit': 'item',
+          'addedByUserId': USER_ID,
+          # 'quantity': int(row[4]) if len(row[3]) > 0 else 1,
+          # 'unit': row[5],
+          # 'storageType': row[6],
+          # 'state': row[7],
+          # 'eaten': False
         }
 
         userItemsRef.document().create(new_item)

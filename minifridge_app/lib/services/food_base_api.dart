@@ -11,7 +11,7 @@ class FoodBaseApi {
     // _baseApi = DocumentApi(
     //   _firestore.collection(basesReference).document(baseId)
     // );
-
+    
     _itemsReference = _firestore.collection(basesReference).document(baseId).collection(itemsReference);
   }
 

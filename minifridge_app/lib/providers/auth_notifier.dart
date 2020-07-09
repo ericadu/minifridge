@@ -32,10 +32,7 @@ class AuthNotifier with ChangeNotifier {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _auth.signInWithEmailAndPassword(email: email, password: password)
-        .then((auth) {
-          _getSignedInUser(auth.user.uid).then((val) => _signedInUser = val);
-        });
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
 
       analytics.logLogin();
       return SUCCESS_MESSAGE;

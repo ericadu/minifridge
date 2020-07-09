@@ -13,9 +13,9 @@ class BaseItemsPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Consumer(
-      builder: (BuildContext context, BaseItemsNotifier userItems, _) {
+      builder: (BuildContext context, BaseItemsNotifier baseItems, _) {
         return StreamBuilder(
-          stream: userItems.streamUserItems(),
+          stream: baseItems.streamItems(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData && snapshot.data.documents.length > 0) {
               List<BaseItem> _foods = snapshot.data.documents
