@@ -8,7 +8,7 @@ import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/base_items_notifier.dart';
-import 'package:minifridge_app/providers/user_notifier.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   void initState() {
     super.initState();
-    user = Provider.of<UserNotifier>(context, listen: false).user;
+    user = Provider.of<AuthNotifier>(context, listen: false).user;
     final PushNotificationService _notificationService = PushNotificationService(user.uid);
     _notificationService.init();
   }

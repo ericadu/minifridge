@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import 'package:minifridge_app/providers/user_notifier.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatelessWidget {
@@ -8,7 +8,7 @@ class RegisterPage extends StatelessWidget {
   // TODO: Fix this login bug, not sure what it is yet
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserNotifier>(context);
+    final user = Provider.of<AuthNotifier>(context);
 
     Future<String> _authUser(LoginData data) async {
       String message = await user.signIn(data.name, data.password);

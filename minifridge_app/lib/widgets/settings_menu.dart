@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/providers/user_notifier.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,7 +15,7 @@ class SettingsMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (BuildContext context, UserNotifier user, _) {
+      builder: (BuildContext context, AuthNotifier user, _) {
         return Container(
           height: 150,
           // color: Color(0xFF737373),

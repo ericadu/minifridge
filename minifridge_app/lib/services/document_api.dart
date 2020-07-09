@@ -10,4 +10,12 @@ class DocumentApi {
   Future<void> update(Map data) {
     return _documentReference.updateData(data);
   }
+
+  Stream<DocumentSnapshot> streamDocument() {
+    return _documentReference.snapshots();
+  }
+
+  Future<DocumentSnapshot> getDocument() {
+    return _documentReference.get();
+  }
 }

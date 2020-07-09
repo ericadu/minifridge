@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/screens/home.dart';
 import 'package:minifridge_app/screens/register.dart';
-import 'package:minifridge_app/providers/user_notifier.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer(
-      builder: (BuildContext context, UserNotifier user, _) {
+      builder: (BuildContext context, AuthNotifier user, _) {
         switch (user.status) {
           case Status.Unauthenticated:
           case Status.Authenticating:

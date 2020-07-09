@@ -5,7 +5,7 @@ import 'package:minifridge_app/screens/home.dart';
 import 'package:minifridge_app/screens/base_items/base_items.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/theme.dart';
-import 'package:minifridge_app/providers/user_notifier.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => UserNotifier.instance(),
+          create: (_) => AuthNotifier.instance(),
         )
       ],
       child: MaterialApp(

@@ -14,12 +14,12 @@ enum Status {
 // TODO: Migrate strings.
 final SUCCESS_MESSAGE = "Success";
 
-class UserNotifier with ChangeNotifier {
+class AuthNotifier with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
   Status _status = Status.Unauthenticated;
 
-  UserNotifier.instance() : _auth = FirebaseAuth.instance {
+  AuthNotifier.instance() : _auth = FirebaseAuth.instance {
     _auth.onAuthStateChanged.listen(_onAuthStateChanged);
   }
 

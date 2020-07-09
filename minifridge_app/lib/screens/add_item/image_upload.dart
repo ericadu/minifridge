@@ -2,7 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/screens/home.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
-import 'package:minifridge_app/providers/user_notifier.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
 class ImageUploadPage extends StatelessWidget {
@@ -12,7 +12,7 @@ class ImageUploadPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Consumer2(
-        builder: (BuildContext context, ImagePickerNotifier picker, UserNotifier user, _) {
+        builder: (BuildContext context, ImagePickerNotifier picker, AuthNotifier user, _) {
           final StorageUploadTask uploadTask = picker.uploadTask;
 
           return StreamBuilder<StorageTaskEvent>(

@@ -7,7 +7,7 @@ import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 import 'package:minifridge_app/util.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
-import 'package:minifridge_app/providers/user_notifier.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
 class BaseItemTile extends StatefulWidget {
@@ -49,7 +49,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
 
   @override
   Widget build(BuildContext context) {
-    final FirebaseUser user = Provider.of<UserNotifier>(context, listen: false).user;
+    final FirebaseUser user = Provider.of<AuthNotifier>(context, listen: false).user;
     final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
 
     BaseItem item = widget.item;
