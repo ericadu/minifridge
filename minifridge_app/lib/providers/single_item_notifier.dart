@@ -16,7 +16,7 @@ class SingleItemNotifier extends ChangeNotifier {
   BaseItem get item => _item;
   int get quantity => _item.quantity;
 
-  Timestamp get expTimestamp => _item.expTimestamp;
+  // Timestamp get expTimestamp => _item.expTimestamp;
 
   void decrement() async {
     _item.decrement();
@@ -34,13 +34,13 @@ class SingleItemNotifier extends ChangeNotifier {
     update();
   }
 
-  void updateExp(Timestamp expTime) async {
-    _item.setNewExp(expTime);
-    analytics.logEvent(
-      name: 'edit_item', 
-      parameters: {'item': _item.displayName, 'type': 'expiration'});
-    update();
-  }
+  // void updateExp(Timestamp expTime) async {
+  //   _item.setNewExp(expTime);
+  //   analytics.logEvent(
+  //     name: 'edit_item', 
+  //     parameters: {'item': _item.displayName, 'type': 'expiration'});
+  //   update();
+  // }
 
   void update() async {
     Map data = _item.toJson();

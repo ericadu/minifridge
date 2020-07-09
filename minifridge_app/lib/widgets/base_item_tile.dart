@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
-import 'package:minifridge_app/util.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
@@ -23,7 +22,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
   
   
   String _getMessage(BaseItem item) {
-    int daysLeft = Util.getDays(item);
+    int daysLeft = item.getDays();
     if (daysLeft == 0) {
       return "⏰ Eat me today";
     } else if (daysLeft == 1) {
@@ -34,17 +33,18 @@ class _BaseItemTileState extends State<BaseItemTile> {
   }
 
   void _callDatePicker(SingleItemNotifier userItem) async {
-    DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(userItem.expTimestamp.microsecondsSinceEpoch);
-    DateTime newExp = await showDatePicker(
+    // DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(userItem.expTimestamp.microsecondsSinceEpoch);
+    DateTime expTimestamp = new DateTime.now();
+    await showDatePicker(
       context: context,
       initialDate: expTimestamp,
       firstDate: DateTime.now(),
       lastDate: expTimestamp.add(new Duration(days: 365)),
     );
     
-    if (newExp != null && newExp != expTimestamp) {
-      userItem.updateExp(Timestamp.fromDate(newExp));
-    }
+    // if (newExp != null && newExp != expTimestamp) {
+    //   userItem.updateExp(Timestamp.fromDate(newExp));
+    // }
   }
 
   @override
@@ -59,7 +59,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
       child: Consumer(
         builder: (BuildContext context, SingleItemNotifier userItem, _) {
 
-          DateTime expTimestamp = new DateTime.fromMicrosecondsSinceEpoch(userItem.expTimestamp.microsecondsSinceEpoch);
+          DateTime expTimestamp = DateTime.now();
           var newDt = DateFormat.MEd().format(expTimestamp);
           final newTheme = Theme.of(context).copyWith(dividerColor: Colors.white);
           return Card(
@@ -79,7 +79,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
                   onExpansionChanged: (bool expanded) {
                     analytics.logEvent(name: 'expand_item', parameters: {
                       'item': item.displayName,
-                      'daysLeft': Util.getDays(item),
+                      'daysLeft': item.getDays(),
                       'action': expanded ? 'expand' : 'collapse'
                     });
                   },

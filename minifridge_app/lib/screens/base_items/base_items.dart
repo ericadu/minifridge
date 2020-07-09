@@ -23,9 +23,9 @@ class BaseItemsPage extends StatelessWidget {
                 .where((item) => item.endType == EndType.alive)
                 .toList();
               
-              _foods.sort((a, b) {
-                return a.expTimestamp.compareTo(b.expTimestamp);
-              });
+              // _foods.sort((a, b) {
+              //   return a.expTimestamp.compareTo(b.expTimestamp);
+              // });
 
               return CustomScrollView(
                 slivers: <Widget>[

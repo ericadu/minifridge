@@ -99,5 +99,10 @@ class BaseItem {
     return referenceDatetime().add(shelfLife.dayRangeEnd);
   }
 
+  int getDays() {
+    DateTime currTimestamp = new DateTime.now();
+    return rangeStartDate().difference(currTimestamp).inDays;
+  }
+
   
 }
