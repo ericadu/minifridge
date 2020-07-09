@@ -1,26 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/models/user_item.dart';
-import 'package:minifridge_app/screens/user_items/home_app_bar.dart';
-import 'package:minifridge_app/screens/user_items/user_item_list.dart';
-import 'package:minifridge_app/providers/user_items_notifier.dart';
+import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
+import 'package:minifridge_app/screens/base_items/base_item_list.dart';
+import 'package:minifridge_app/providers/base_items_notifier.dart';
 import 'package:provider/provider.dart';
 
-class UserItemsPage extends StatelessWidget {
+class BaseItemsPage extends StatelessWidget {
   static const routeName = '/items';
 
   @override
   Widget build(BuildContext context) {
 
     return Consumer(
-      builder: (BuildContext context, UserItemsNotifier userItems, _) {
+      builder: (BuildContext context, BaseItemsNotifier userItems, _) {
         return StreamBuilder(
           stream: userItems.streamUserItems(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData && snapshot.data.documents.length > 0) {
-              List<UserItem> _foods = snapshot.data.documents
-                .map((item) => UserItem.fromMap(item.data, item.documentID))
-                .where((item) => !item.eaten)
+              List<BaseItem> _foods = snapshot.data.documents
+                .map((item) => BaseItem.fromMap(item.data, item.documentID))
+                .where((item) => item.endType == EndType.alive)
                 .toList();
               
               _foods.sort((a, b) {
@@ -30,7 +30,7 @@ class UserItemsPage extends StatelessWidget {
               return CustomScrollView(
                 slivers: <Widget>[
                   HomeAppBar(),
-                  UserItemList(foods: _foods),
+                  BaseItemList(foods: _foods),
                   SliverPadding(
                     padding: EdgeInsets.only(bottom: 50),
                   ),

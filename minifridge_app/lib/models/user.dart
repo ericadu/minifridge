@@ -1,28 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:minifridge_app/models/user_item.dart';
 
 class User {
   String id;
-  List<UserItem> currentItems;
-  List<UserItem> itemHistory;
+  String pushToken;
 
   User({
     this.id,
-    this.currentItems,
-    this.itemHistory
+    this.pushToken,
   });
 
   User.fromSnaphot(DocumentSnapshot snapshot) {
     this.id = snapshot.documentID;
-    this.currentItems = List.from(snapshot['currentItems']).map((x) => UserItem.fromMap(x, x['id']));
-    this.itemHistory = List.from(snapshot['itemHistory']).map((x) => UserItem.fromMap(x, x['id']));
+    this.pushToken = snapshot['pushToken'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['currentItems'] = this.currentItems.map((x) => x.toJson());
-    data['itemHistory'] = this.itemHistory.map((x) => x.toJson());
+    data['pushToken'] = this.pushToken;
     return data;
   }
 }

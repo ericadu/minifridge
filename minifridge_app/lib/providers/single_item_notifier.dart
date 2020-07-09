@@ -1,19 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/models/user_item.dart';
+import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 
 class SingleItemNotifier extends ChangeNotifier {
   UserItemsApi _api;
-  UserItem _item;
+  BaseItem _item;
   
-  SingleItemNotifier(UserItemsApi api, UserItem item) {
+  SingleItemNotifier(UserItemsApi api, BaseItem item) {
     _api = api;
     _item = item;
   }
 
-  UserItem get item => _item;
+  BaseItem get item => _item;
   int get quantity => _item.quantity;
 
   Timestamp get expTimestamp => _item.expTimestamp;

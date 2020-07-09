@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/models/user_item.dart';
+import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 
-class UserItemsNotifier extends ChangeNotifier {
+class BaseItemsNotifier extends ChangeNotifier {
   UserItemsApi _api;
-  List<UserItem> _userItems;
+  List<BaseItem> _userItems;
   
-  UserItemsNotifier(UserItemsApi api) {
+  BaseItemsNotifier(UserItemsApi api) {
     _api = api;
   }
 
-  Future<List<UserItem>> getItems() async {
+  Future<List<BaseItem>> getItems() async {
     QuerySnapshot result = await _api.getCollection();
     _userItems = result.documents
-        .map((document) => UserItem.fromMap(document.data, document.documentID))
+        .map((document) => BaseItem.fromMap(document.data, document.documentID))
         .toList();
 
     return _userItems;
@@ -24,7 +24,7 @@ class UserItemsNotifier extends ChangeNotifier {
     return _api.streamCollection();
   }
 
-  void toggleEaten(UserItem item) async {
+  void toggleEaten(BaseItem item) async {
     item.eat();
     Map data = item.toJson();
     return await _api.updateDocument(item.id, data);

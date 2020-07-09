@@ -3,11 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
-import 'package:minifridge_app/screens/user_items/user_items.dart';
+import 'package:minifridge_app/screens/base_items/base_items.dart';
 import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
-import 'package:minifridge_app/providers/user_items_notifier.dart';
+import 'package:minifridge_app/providers/base_items_notifier.dart';
 import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
           create: (_) => ImagePickerNotifier()
         ),
         ChangeNotifierProvider(
-          create: (_) => UserItemsNotifier(_userItemsApi)
+          create: (_) => BaseItemsNotifier(_userItemsApi)
         )
       ],
       child: Consumer(
@@ -121,7 +121,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           return Scaffold(
-            body: UserItemsPage(),
+            body: BaseItemsPage(),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: Container(
               width: 70,

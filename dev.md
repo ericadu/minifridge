@@ -10,6 +10,7 @@
 
 ### Theming
 - [Swatching Colors](https://medium.com/@morgenroth/using-flutters-primary-swatch-with-a-custom-materialcolor-c5e0f18b95b0)
+- [Color palettes](https://flatuicolors.com/)
 
 ### Widgets
 - [Replace Login/Signup](https://flutterawesome.com/provides-login-screen-with-login-signup-functionalities/)

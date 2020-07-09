@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:minifridge_app/models/user_item.dart';
+import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 import 'package:minifridge_app/util.dart';
@@ -10,19 +10,19 @@ import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/providers/user_notifier.dart';
 import 'package:provider/provider.dart';
 
-class UserItemTile extends StatefulWidget {
-  final UserItem item;
+class BaseItemTile extends StatefulWidget {
+  final BaseItem item;
 
-  const UserItemTile({Key key, this.item}) : super(key: key);
+  const BaseItemTile({Key key, this.item}) : super(key: key);
 
   @override
-  _UserItemTileState createState() => _UserItemTileState();
+  _BaseItemTileState createState() => _BaseItemTileState();
 }
 
-class _UserItemTileState extends State<UserItemTile> {
+class _BaseItemTileState extends State<BaseItemTile> {
   
   
-  String _getMessage(UserItem item) {
+  String _getMessage(BaseItem item) {
     int daysLeft = Util.getDays(item);
     if (daysLeft == 0) {
       return "⏰ Eat me today";
@@ -52,7 +52,7 @@ class _UserItemTileState extends State<UserItemTile> {
     final FirebaseUser user = Provider.of<UserNotifier>(context, listen: false).user;
     final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
 
-    UserItem item = widget.item;
+    BaseItem item = widget.item;
 
     return ChangeNotifierProvider(
       create: (_) => SingleItemNotifier(_userItemsApi, item),

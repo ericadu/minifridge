@@ -1,30 +1,23 @@
 import 'package:meta/meta.dart';
 
 class ShelfLife {
-  String id;
-  String state;
-  double time;
-  String storageType;
+  Duration dayRangeStart;
+  Duration dayRangeEnd;
 
   ShelfLife({
-    this.id,
-    @required this.state,
-    @required this.time,
-    @required this.storageType
+    @required this.dayRangeStart,
+    @required this.dayRangeEnd,
   });
 
   ShelfLife.fromMap(Map data) {
-    state = data['state'];
-    time = data['time'];
-    storageType = data['storageType'];
+    dayRangeStart = Duration(days: data['dayRangeStart']);
+    dayRangeEnd = Duration(days: data['dayRangeEnd']);
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['state'] = this.state;
-    data['time'] = this.time;
-    data['storageType'] = this.storageType;
+    data['dayRangeStart'] = this.dayRangeStart.inDays;
+    data['dayRangeEnd'] = this.dayRangeEnd.inDays;
     return data;
   }
 }
