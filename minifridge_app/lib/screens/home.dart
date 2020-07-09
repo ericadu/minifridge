@@ -1,11 +1,11 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:minifridge_app/models/signed_in_user.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/base_items/base_items.dart';
+import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/services/push_notifications.dart';
-import 'package:minifridge_app/services/user_items_api.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/base_items_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
@@ -19,12 +19,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  FirebaseUser user;
+  SignedInUser user;
 
   void initState() {
     super.initState();
-    user = Provider.of<AuthNotifier>(context, listen: false).user;
-    final PushNotificationService _notificationService = PushNotificationService(user.uid);
+    user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
+    final PushNotificationService _notificationService = PushNotificationService(user.id);
     _notificationService.init();
   }
 
@@ -80,7 +80,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
+    // final UserItemsApi _userItemsApi = UserItemsApi(user.uid);
+    final FoodBaseApi _baseApi = FoodBaseApi(user.baseId);
 
     return MultiProvider(
       providers: [
@@ -88,7 +89,7 @@ class _HomePageState extends State<HomePage> {
           create: (_) => ImagePickerNotifier()
         ),
         ChangeNotifierProvider(
-          create: (_) => BaseItemsNotifier(_userItemsApi)
+          create: (_) => BaseItemsNotifier(_baseApi)
         )
       ],
       child: Consumer(

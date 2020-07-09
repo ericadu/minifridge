@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/models/signed_in_user.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 
 enum Status {
@@ -7,16 +9,15 @@ enum Status {
   Authenticated,
   Authenticating,
   Unauthenticated,
-  SigningUp,
-  FailedSignup
 }
 
-// TODO: Migrate strings.
-final SUCCESS_MESSAGE = "Success";
+const String SUCCESS_MESSAGE = "Success";
 
 class AuthNotifier with ChangeNotifier {
+  final _firestore = Firestore.instance;
   FirebaseAuth _auth;
   FirebaseUser _user;
+  SignedInUser _signedInUser;
   Status _status = Status.Unauthenticated;
 
   AuthNotifier.instance() : _auth = FirebaseAuth.instance {
@@ -25,12 +26,22 @@ class AuthNotifier with ChangeNotifier {
 
   Status get status => _status;
   FirebaseUser get user => _user;
+  SignedInUser get signedInUser => _signedInUser;
 
   Future<String> signIn(String email, String password) async {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      _auth.signInWithEmailAndPassword(email: email, password: password)
+        .then((auth) => {
+          _firestore
+            .collection("users")
+            .document(auth.user.uid)
+            .get()
+            .then((DocumentSnapshot result) => {
+              _signedInUser = SignedInUser.fromSnaphot(result)
+            })
+        });
       analytics.logLogin();
       return SUCCESS_MESSAGE;
     } catch (e) {
@@ -68,15 +79,38 @@ class AuthNotifier with ChangeNotifier {
     }
   }
 
+  Future<SignedInUser> _createBaseAndUser(String uid, String email) async {
+    DocumentReference ref = await _firestore
+      .collection("bases")
+      .add({
+        "owner": uid,
+      });
+    
+    _firestore
+      .collection("users")
+      .document(uid)
+      .setData({
+        "baseId": ref.documentID,
+        "email": email
+      });
+    
+    return SignedInUser(id: uid, baseId: ref.documentID);
+  }
+
   Future<String> signUp(String email, String password) async {
     try {
-      _status = Status.SigningUp;
+      _status = Status.Authenticating;
       notifyListeners();
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      _auth.createUserWithEmailAndPassword(email: email, password: password).then((auth) {
+        return _createBaseAndUser(auth.user.uid, email);
+      }).then((user) {
+        _signedInUser = user;
+      });
+
       analytics.logSignUp(signUpMethod: 'email');
       return SUCCESS_MESSAGE;
     } catch (e) {
-      _status = Status.FailedSignup;
+      _status = Status.Unauthenticated;
       notifyListeners();
       String errorMessage;
       switch (e.code) {
