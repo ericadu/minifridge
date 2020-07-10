@@ -4,10 +4,6 @@ import 'package:meta/meta.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/models/shelf_life.dart';
 
-enum EndType {
-  eaten, thrown, alive
-}
-
 enum Freshness {
   not_ready,
   ready,
@@ -117,7 +113,8 @@ class BaseItem {
 
   int getDays() {
     DateTime currTimestamp = new DateTime.now();
-    return rangeStartDate().difference(currTimestamp).inDays;
+    int hours = rangeStartDate().difference(currTimestamp).inHours;
+    return (hours / 24).ceil();
   }
 
   int getLifeSoFar() {
@@ -126,7 +123,7 @@ class BaseItem {
   }
 
   int daysLeft() {
-    return DateTime.now().difference(rangeEndDate()).inDays;
+    return DateTime.now().difference(rangeEndDate()).inDays + 1;
   }
 
   bool inRange() {
@@ -141,7 +138,7 @@ class BaseItem {
     }
 
     int freshnessTime = shelfLife.dayRangeStart.inDays;
-    double freshnessTimePart = freshnessTime / 5;
+    double freshnessTimePart = freshnessTime > 2 ? freshnessTime / 5 : 0;
 
     if (getLifeSoFar() >= 0 && getLifeSoFar() <= freshnessTimePart) {
       return Freshness.ready;

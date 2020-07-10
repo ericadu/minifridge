@@ -11,7 +11,7 @@ class FoodBaseApi {
     // _baseApi = DocumentApi(
     //   _firestore.collection(basesReference).document(baseId)
     // );
-    
+
     _itemsReference = _firestore.collection(basesReference).document(baseId).collection(itemsReference);
   }
 
@@ -25,5 +25,9 @@ class FoodBaseApi {
 
     Future<DocumentReference> addDocument(Map data) {
       return _itemsReference.add(data);
+    }
+
+    Future<void> updateDocument(String itemId, Map data) {
+      return _itemsReference.document(itemId).updateData(data);
     }
 }

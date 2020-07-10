@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
+import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/services/user_items_api.dart';
 
 class SingleItemNotifier extends ChangeNotifier {
-  UserItemsApi _api;
+  // UserItemsApi _api;
+  FoodBaseApi _api;
   BaseItem _item;
   
-  SingleItemNotifier(UserItemsApi api, BaseItem item) {
+  SingleItemNotifier(FoodBaseApi api, BaseItem item) {
     _api = api;
     _item = item;
   }
@@ -34,13 +36,13 @@ class SingleItemNotifier extends ChangeNotifier {
     update();
   }
 
-  // void updateExp(Timestamp expTime) async {
-  //   _item.setNewExp(expTime);
-  //   analytics.logEvent(
-  //     name: 'edit_item', 
-  //     parameters: {'item': _item.displayName, 'type': 'expiration'});
-  //   update();
-  // }
+  void updateRef(Timestamp expTime) async {
+    _item.setNewReference(expTime);
+    analytics.logEvent(
+      name: 'edit_item', 
+      parameters: {'item': _item.displayName, 'type': 'reference'});
+    update();
+  }
 
   void update() async {
     Map data = _item.toJson();

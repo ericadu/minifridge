@@ -4,10 +4,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/models/signed_in_user.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/base_items/base_items.dart';
-import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
-import 'package:minifridge_app/providers/base_items_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -26,16 +24,8 @@ class _HomePageState extends State<HomePage> {
     
     user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
     final PushNotificationService _notificationService = PushNotificationService(user.id);
-    
-    // _setUser(fbUser.uid);
     _notificationService.init();
   }
-
-  // void _setUser(String uid) async {
-  //   await Firestore.instance.collection("users").document(uid).get().then((snapshot) {
-  //     print(snapshot.data);
-  //   });
-  // }
 
   Widget _buildAddButton(BuildContext context, ImagePickerNotifier picker) {
     return FloatingActionButton(
@@ -89,16 +79,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final FoodBaseApi _baseApi = FoodBaseApi(user.baseId);
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => ImagePickerNotifier()
         ),
-        ChangeNotifierProvider(
-          create: (_) => BaseItemsNotifier(_baseApi)
-        )
       ],
       child: Consumer(
         builder: (BuildContext context, ImagePickerNotifier picker, _) {
