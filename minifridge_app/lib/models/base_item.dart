@@ -134,10 +134,8 @@ class BaseItem {
     DateTime utcReference = new DateTime.utc(reference.year, reference.month, reference.day);
 
     int lifeSoFar = utcCurrent.difference(utcReference).inDays;
-    print(this.displayName);
-    print(lifeSoFar);
+    
     if (lifeSoFar < 0) {
-      print("not ready");
       return Freshness.not_ready;
     }
 
