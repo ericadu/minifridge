@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 
 class BaseItemsNotifier extends ChangeNotifier {
@@ -28,9 +31,24 @@ class BaseItemsNotifier extends ChangeNotifier {
     return _api.addDocument(data);
   }
 
-  // void toggleEaten(BaseItem item) async {
-  //   item.eat();
-  //   Map data = item.toJson();
-  //   return await _api.updateDocument(item.id, data);
+  // BaseItem removeAt(int index) {
+  //   return _baseItems.removeAt(index);
   // }
+
+  // void insertAt(int index, BaseItem item) {
+  //   _baseItems.insert(index, item);
+  // }
+
+  void updateEndtype(BaseItem item, EndType endType) async {
+    item.setEnd(endType);
+    analytics.logEvent(
+      name: 'remove_item', 
+      parameters: {
+        'item': item.displayName,
+        'type': describeEnum(endType)
+      });
+    Map data = item.toJson();
+    // notifyListeners();
+    return await _api.updateDocument(item.id, data);
+  }
 }

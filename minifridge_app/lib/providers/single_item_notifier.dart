@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
-import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 
@@ -40,17 +39,6 @@ class SingleItemNotifier extends ChangeNotifier {
     analytics.logEvent(
       name: 'edit_item', 
       parameters: {'item': _item.displayName, 'type': 'reference'});
-    update();
-  }
-
-  void updateEndtype(EndType end) async {
-    _item.setEnd(end);
-    analytics.logEvent(
-      name: 'remove_item', 
-      parameters: {
-        'item': _item.displayName,
-        'type': describeEnum(end)
-      });
     update();
   }
 
