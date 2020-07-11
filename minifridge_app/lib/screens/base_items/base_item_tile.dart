@@ -19,7 +19,7 @@ class BaseItemTile extends StatelessWidget {
     DateTime newExp = await showDatePicker(
       context: context,
       initialDate: refDatetime,
-      firstDate: refDatetime.subtract(Duration(days: 5)),
+      firstDate: DateTime.now().subtract(Duration(days:30)),
       lastDate: refDatetime.add(new Duration(days: 365)),
     );
     
@@ -51,6 +51,9 @@ class BaseItemTile extends StatelessWidget {
         break;
       case Freshness.past:
         message = "🚨 Caution";
+        break;
+      case Freshness.not_ready:
+        message = "🐣  Not quite ready";
         break;
       default:
         message = "⏳ " + item.getDays().toString() + " days left";
@@ -128,7 +131,7 @@ class BaseItemTile extends StatelessWidget {
                           padding: EdgeInsets.only(right: 10),
                           child: Container(
                             child: RaisedButton(
-                              padding: EdgeInsets.all(10),
+                              padding: EdgeInsets.all(8),
                               child: Text(
                                 DateFormat.MEd().format(item.referenceDatetime())
                               ),

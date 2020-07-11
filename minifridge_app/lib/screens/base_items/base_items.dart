@@ -4,7 +4,6 @@ import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/models/signed_in_user.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
-import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/screens/base_items/base_item_tile.dart';
 import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
 import 'package:minifridge_app/providers/base_items_notifier.dart';

@@ -70,7 +70,7 @@ class BaseItem {
     data['unit'] = this.unit;
     data['price'] = this.price;
     data['buyTimestamp'] = this.buyTimestamp;
-    data['refTimestamp'] = this.referenceTimestamp;
+    data['referenceTimestamp'] = this.referenceTimestamp;
     data['state'] = this.state;
     data['storageType'] = this.storageType;
     data['productId'] = this.productId;
@@ -134,8 +134,10 @@ class BaseItem {
     DateTime utcReference = new DateTime.utc(reference.year, reference.month, reference.day);
 
     int lifeSoFar = utcCurrent.difference(utcReference).inDays;
-
-    if (utcCurrent.isBefore(utcReference)) {
+    print(this.displayName);
+    print(lifeSoFar);
+    if (lifeSoFar < 0) {
+      print("not ready");
       return Freshness.not_ready;
     }
 
