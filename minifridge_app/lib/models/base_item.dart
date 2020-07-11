@@ -112,19 +112,16 @@ class BaseItem {
   }
 
   int getDays() {
-    DateTime currTimestamp = new DateTime.now();
-    int hours = rangeStartDate().difference(currTimestamp).inHours;
-    return (hours / 24).ceil();
+    DateTime current = new DateTime.now();
+    DateTime utcCurrent = new DateTime.utc(current.year, current.month, current.day);
+
+    DateTime utcRangeStart = new DateTime.utc(rangeStartDate().year, rangeStartDate().month, rangeStartDate().day);
+    return utcRangeStart.difference(utcCurrent).inDays;
   }
 
-  int getLifeSoFar() {
-    DateTime currTimestamp = new DateTime.now();
-    return currTimestamp.difference(referenceDatetime()).inDays;
-  }
-
-  int daysLeft() {
-    return DateTime.now().difference(rangeEndDate()).inDays + 1;
-  }
+  // int daysLeft() {
+  //   return DateTime.now().difference(rangeEndDate()).inDays;
+  // }
 
   bool inRange() {
     return rangeStartDate().isBefore(DateTime.now());
@@ -132,46 +129,51 @@ class BaseItem {
 
   Freshness getFreshness() {
     DateTime current = new DateTime.now();
+    DateTime reference = referenceDatetime();
+    DateTime utcCurrent = new DateTime.utc(current.year, current.month, current.day);
+    DateTime utcReference = new DateTime.utc(reference.year, reference.month, reference.day);
 
-    if (current.isBefore(referenceDatetime())) {
+    int lifeSoFar = utcCurrent.difference(utcReference).inDays;
+
+    if (utcCurrent.isBefore(utcReference)) {
       return Freshness.not_ready;
     }
 
     int freshnessTime = shelfLife.dayRangeStart.inDays;
     double freshnessTimePart = freshnessTime > 2 ? freshnessTime / 5 : 0;
 
-    if (getLifeSoFar() >= 0 && getLifeSoFar() <= freshnessTimePart) {
-      return Freshness.ready;
-    }
-
-    if (getLifeSoFar() > freshnessTimePart && getLifeSoFar() < freshnessTime - freshnessTimePart) {
-      return Freshness.fresh_min;
-    }
-
-    if (getLifeSoFar() >= freshnessTime - freshnessTimePart && getLifeSoFar() < freshnessTime) {
-      return Freshness.fresh_max;
-    }
-
     int range = shelfLife.dayRangeEnd.inDays - shelfLife.dayRangeStart.inDays;
     int rangePart = range ~/ 4;
     int expirationTime = shelfLife.dayRangeEnd.inDays;
 
-    if (getLifeSoFar() >= freshnessTime && getLifeSoFar() < freshnessTime + rangePart) {
-      return Freshness.in_range_start;
+    if (lifeSoFar > expirationTime) {
+      return Freshness.past;
     }
 
-    if (getLifeSoFar() >= freshnessTime + rangePart && getLifeSoFar() < expirationTime - rangePart) {
-      return Freshness.in_range_min;
-    }
-
-    if (getLifeSoFar() >= expirationTime - rangePart && getLifeSoFar() < expirationTime) {
-      return Freshness.in_range_max;
-    }
-
-    if (getLifeSoFar() == expirationTime) {
+    if (lifeSoFar == expirationTime) {
       return Freshness.in_range_end;
     }
 
-    return Freshness.past;
+    if (lifeSoFar >= (expirationTime - rangePart) && lifeSoFar < expirationTime) {
+      return Freshness.in_range_max;
+    }
+
+    if (lifeSoFar >= freshnessTime + rangePart && lifeSoFar < expirationTime - rangePart) {
+      return Freshness.in_range_min;
+    }
+
+    if (lifeSoFar >= freshnessTime && lifeSoFar < freshnessTime + rangePart) {
+      return Freshness.in_range_start;
+    }
+
+    if (lifeSoFar >= freshnessTime - freshnessTimePart && lifeSoFar < freshnessTime) {
+      return Freshness.fresh_max;
+    }
+
+    if (lifeSoFar >= freshnessTimePart && lifeSoFar < freshnessTime - freshnessTimePart) {
+      return Freshness.fresh_min;
+    }
+
+    return Freshness.ready;
   }
 }

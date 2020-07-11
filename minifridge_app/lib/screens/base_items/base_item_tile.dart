@@ -32,16 +32,21 @@ class BaseItemTile extends StatelessWidget {
       case Freshness.in_range_min:
       case Freshness.in_range_max:
       case Freshness.in_range_end:
-        message = "⏰ Eat me ASAP";
+        message = "⏰ Eat me next";
         break;
       case Freshness.ready:
       case Freshness.fresh_min:
-      case Freshness.fresh_max:
-        String day = item.getDays() == 1 ? "day" : "days";
-        message = "⏳ ${item.getDays()} ${day} left";
+      case Freshness.fresh_max:       
+        if (item.getDays() == 1) {
+          message = "⏳  1 day left";
+        } else if (item.getDays() > 7) {
+          message = "✅  Fresh AF";
+        } else {
+          message = "⏳ ${item.getDays()} days left";
+        }
         break;
       case Freshness.past:
-        message = "👀 Caution";
+        message = "🚨 Caution";
         break;
       default:
         message = "⏳ " + item.getDays().toString() + " days left";
