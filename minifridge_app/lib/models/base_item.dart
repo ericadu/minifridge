@@ -79,7 +79,7 @@ class BaseItem {
     return data;
   }
 
-  void end(EndType endType) {
+  void setEnd(EndType endType) {
     this.endType = endType;
   }
 

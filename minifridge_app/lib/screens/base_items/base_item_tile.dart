@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,64 @@ class BaseItemTile extends StatelessWidget {
     return message;
   }
 
+  Widget slideLeftBackground() {
+    return Container(
+      color: Colors.green,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Icon(
+              Icons.check,
+              color: Colors.white,
+            ),
+            Text(
+              " Eat",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.left,
+            ),
+            SizedBox(
+              width: 20,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerLeft,
+      ),
+    );
+  }
+
+  Widget slideRightBackground() {
+    return Container(
+      color: Colors.red,
+      child: Align(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.delete,
+              color: Colors.white,
+            ),
+            Text(
+              " Trash",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.right,
+            ),
+          ],
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const Color inactiveGrey = const Color(0xffd6d6d6);
@@ -83,13 +142,15 @@ class BaseItemTile extends StatelessWidget {
         Freshness freshness = item.getFreshness();
 
         return Dismissible(
-          background: Container(color: Colors.red),
-          key: Key(item.id),
-          onDismissed: (direction) {
-            // Provider.of<BaseItemsNotifier>(context, listen: false).toggleEaten(item);
-            analytics.logEvent(
-              name: 'dismiss_item', 
-              parameters: {'item': item.displayName, 'daysLeft': item.getDays()});
+          background: slideRightBackground(),
+          secondaryBackground: slideLeftBackground(),
+          key: UniqueKey(),
+          onDismissed: (DismissDirection direction) {
+            if (direction == DismissDirection.startToEnd) {
+              baseItem.updateEndtype(EndType.thrown);
+            } else if (direction == DismissDirection.endToStart) {
+              baseItem.updateEndtype(EndType.eaten);
+            }
 
             Scaffold
               .of(context)
@@ -100,7 +161,7 @@ class BaseItemTile extends StatelessWidget {
                     label: "Undo",
                     textColor: Colors.yellow,
                     onPressed: () {
-                      // Provider.of<BaseItemsNotifier>(context, listen: false).toggleEaten(item);
+                      baseItem.updateEndtype(EndType.alive);
                     }
                   )
                 )
