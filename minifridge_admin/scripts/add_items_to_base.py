@@ -9,7 +9,8 @@ PATH = "/Users/ericadu/dev/minifridge/minifridge-firebase-adminsdk-z4sw9-387a250
 
 def get_datetime(time_string):
   from_zone = tz.gettz('UTC')
-  to_zone = tz.gettz('America/New_York')
+  # to_zone = tz.gettz('America/New_York')
+  to_zone = tz.gettz('America/Los_Angeles')
   utc = datetime.strptime(time_string, "%Y-%m-%d")
 
   utc = utc.replace(tzinfo=from_zone)
@@ -56,15 +57,13 @@ if __name__ == '__main__':
             'dayRangeStart': int(row[3]),
             'dayRangeEnd': int(row[4])
           },
-          'quantity': int(row[5]) if len(row[5]) > 0 else 1,
+          'price': float(row[5]) if len(row[5]) > 0 else None,
+          'quantity': int(row[6]) if len(row[6]) > 0 else 1,
           'referenceTimestamp': get_datetime(row[2]),
-          'unit': 'item',
+          'unit': row[7],
           'addedByUserId': USER_ID,
-          # 'quantity': int(row[4]) if len(row[3]) > 0 else 1,
-          # 'unit': row[5],
-          # 'storageType': row[6],
-          # 'state': row[7],
-          # 'eaten': False
+          'storageType': row[8],
+          'state': row[9],
         }
 
         userItemsRef.document().create(new_item)
