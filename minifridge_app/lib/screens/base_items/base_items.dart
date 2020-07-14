@@ -90,8 +90,8 @@ class BaseItemsPage extends StatelessWidget {
                   ),
                   Text("You do-nut have any items!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 40, right: 30),
-                    child: Text("📷  Upload a photo of your last grocery receipt to get started.",
+                    padding: const EdgeInsets.only(top: 10, left: 45, right: 20),
+                    child: Text("📷  Upload a photo of your last grocery receipt to add food.",
                       style: TextStyle(fontSize: 16)),
                   ),
                   Padding(
