@@ -78,9 +78,31 @@ class BaseItemsPage extends StatelessWidget {
         HomeAppBar(),
         SliverToBoxAdapter(
           child: SizedBox(
-            height: 400,
-            child: Center(
-              child: Text("No items found! Send us a photo 🍑")
+            height: 450,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, bottom: 10),
+                    child: Text("🍩", style: TextStyle(fontSize: 50)),
+                  ),
+                  Text("You do-nut have any items!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10, left: 40, right: 30),
+                    child: Text("📷  Upload a photo of your last grocery receipt to get started.",
+                      style: TextStyle(fontSize: 16)),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 40, left: 50),
+                    child: Image.asset(
+                      "images/arrow.png",
+                      scale: 3.5,
+                    )
+                  )
+                ]
+              ),
             )
           )
         )

@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     ListTile(
                       leading: Icon(Icons.photo_library),
-                      title: Text('Upload from library'),
+                      title: Text('Choose from library'),
                       onTap: () {
                         Navigator.pop(context);
                         picker.pickImage(ImageSource.gallery);
