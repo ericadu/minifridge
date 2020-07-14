@@ -45,7 +45,7 @@ class BaseItemTile extends StatelessWidget {
         if (item.getDays() == 1) {
           message = "⏳  1 day left";
         } else if (item.getDays() > 7) {
-          message = "✅  Fresh AF";
+          message = "💚​  Fresh AF";
         } else {
           message = "⏳ ${item.getDays()} days left";
         }
@@ -146,7 +146,7 @@ class BaseItemTile extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: EdgeInsets.only(top: 18, left: 25),
-                            child: Text("💯  Ready to eat", style: TextStyle(fontSize: 17))
+                            child: Text("✅  Ready to eat", style: TextStyle(fontSize: 17))
                           )
                         )
                       )
@@ -175,10 +175,10 @@ class BaseItemTile extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("👀  Save me", style: TextStyle(fontSize: 17)),
+                                Text("🔎  Look for signs", style: TextStyle(fontSize: 17)),
                                 Padding(
                                   padding: EdgeInsets.only(top:5),
-                                  child: Text("Expiration Zone")
+                                  child: Text("Expiration Zone.")
                                 )
                               ],
                             )
