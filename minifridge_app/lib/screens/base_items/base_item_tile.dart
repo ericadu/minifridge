@@ -121,10 +121,10 @@ class BaseItemTile extends StatelessWidget {
                   children: <Widget>[
                     Divider(color: Colors.grey[300]),
                     Padding(
-                      padding: const EdgeInsets.only(left: 30),
+                      padding: const EdgeInsets.only(left: 25),
                       child: TimelineTile(
                         alignment: TimelineAlign.manual,
-                        lineX: 0.3,
+                        lineX: 0.31,
                         topLineStyle: activeLine,
                         indicatorStyle: freshness.index > 0 ? activeIndicator : inactiveIndicator,
                         bottomLineStyle: freshness.index > 1 ? activeLine : inactiveLine,
