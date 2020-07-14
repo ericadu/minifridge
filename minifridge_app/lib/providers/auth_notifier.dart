@@ -72,12 +72,26 @@ class AuthNotifier with ChangeNotifier {
   }
 
   Future<SignedInUser> _getSignedInUser(String uid) async {
-    return _firestore
+
+    DocumentSnapshot snapshot = await _firestore
       .collection("users")
       .document(uid)
-      .get().then((result) {
-        return SignedInUser.fromSnapshot(result);
-      });
+      .get();
+    
+    if (snapshot != null && snapshot.exists) {
+      return SignedInUser.fromSnapshot(snapshot);
+    } 
+    
+    try {
+      return await _createBaseAndUser(_user.uid, _user.email);
+    } catch (e) {
+      print('''
+        caught firestore create base and user exception\n
+        ${e.code}\n
+        ${e.message}
+      ''');
+      return null;
+    }
   }
 
   Future<SignedInUser> _createBaseAndUser(String uid, String email) async {
@@ -102,11 +116,7 @@ class AuthNotifier with ChangeNotifier {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      _auth.createUserWithEmailAndPassword(email: email, password: password).then((auth) {
-        return _createBaseAndUser(auth.user.uid, email);
-      }).then((user) {
-        _signedInUser = user;
-      });
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
       analytics.logSignUp(signUpMethod: 'email');
       return SUCCESS_MESSAGE;

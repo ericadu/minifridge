@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/models/signed_in_user.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';

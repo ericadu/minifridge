@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
@@ -174,7 +175,7 @@ class BaseItemTile extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("⏰  Eat ASAP", style: TextStyle(fontSize: 17)),
+                                Text("👀  Save me", style: TextStyle(fontSize: 17)),
                                 Padding(
                                   padding: EdgeInsets.only(top:5),
                                   child: Text("Expiration Zone")
@@ -205,7 +206,7 @@ class BaseItemTile extends StatelessWidget {
                           ),
                           child: Padding(
                             padding: EdgeInsets.only(top: 20, left: 25),
-                            child: Text("👀  Caution", style: TextStyle(fontSize: 17))
+                            child: Text("🚨  Caution", style: TextStyle(fontSize: 17))
                           )
                         )
                       )
