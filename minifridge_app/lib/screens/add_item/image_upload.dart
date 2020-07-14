@@ -28,7 +28,7 @@ class ImageUploadPage extends StatelessWidget {
                   Scaffold.of(context).showSnackBar(
                     SnackBar(
                       backgroundColor: Colors.green,
-                      content: Text("Success! 🎉🎉🎉 We've received your items. They'll be processed and added to your base soon."),
+                      content: Text("Success! 🎉🎉🎉 Your items will be processed and added to your base soon."),
                       duration: Duration(seconds: 40),
                       action: SnackBarAction(
                         label: "Back",
