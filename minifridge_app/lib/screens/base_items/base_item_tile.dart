@@ -47,17 +47,17 @@ class BaseItemTile extends StatelessWidget {
         } else if (item.getDays() > 7) {
           message = "💚​  Fresh AF";
         } else {
-          message = "⏳ ${item.getDays()} days left";
+          message = "⏳  ${item.getDays()} days left";
         }
         break;
       case Freshness.past:
-        message = "🚨 Caution";
+        message = "😬  Caution";
         break;
       case Freshness.not_ready:
         message = "🐣  Not quite ready";
         break;
       default:
-        message = "⏳ " + item.getDays().toString() + " days left";
+        message = "⏳  " + item.getDays().toString() + " days left";
     }
 
     return message;
@@ -121,7 +121,7 @@ class BaseItemTile extends StatelessWidget {
                   children: <Widget>[
                     Divider(color: Colors.grey[300]),
                     Padding(
-                      padding: const EdgeInsets.only(left: 25),
+                      padding: const EdgeInsets.only(top: 3, left: 25),
                       child: TimelineTile(
                         alignment: TimelineAlign.manual,
                         lineX: 0.31,
@@ -177,8 +177,8 @@ class BaseItemTile extends StatelessWidget {
                               children: [
                                 Text("🔎  Look for signs", style: TextStyle(fontSize: 17)),
                                 Padding(
-                                  padding: EdgeInsets.only(top:5),
-                                  child: Text("Expiration Zone.")
+                                  padding: EdgeInsets.only(top:5, left: 27),
+                                  child: Text("In expiration zone")
                                 )
                               ],
                             )
@@ -187,7 +187,7 @@ class BaseItemTile extends StatelessWidget {
                       )
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(left: 30),
+                      padding: const EdgeInsets.only(left: 30, bottom: 3),
                       child:TimelineTile(
                         alignment: TimelineAlign.manual,
                         lineX: 0.3,
@@ -204,9 +204,15 @@ class BaseItemTile extends StatelessWidget {
                           constraints: const BoxConstraints(
                             minHeight: 70,
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 20, left: 25),
-                            child: Text("🚨  Caution", style: TextStyle(fontSize: 17))
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(top: 20, left: 25),
+                                child: Text("👻  Oops! Went past", style: TextStyle(fontSize: 17))
+                              )
+                            ]
                           )
                         )
                       )
