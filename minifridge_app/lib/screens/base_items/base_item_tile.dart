@@ -210,7 +210,7 @@ class BaseItemTile extends StatelessWidget {
                             children: [
                               Padding(
                                 padding: EdgeInsets.only(top: 20, left: 25),
-                                child: Text("👻  Oops! Went past", style: TextStyle(fontSize: 17))
+                                child: Text("👻  To the after life", style: TextStyle(fontSize: 17))
                               )
                             ]
                           )

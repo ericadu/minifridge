@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
@@ -143,6 +144,7 @@ class BaseItemsPage extends StatelessWidget {
                       delegate: SliverChildBuilderDelegate(
                         (BuildContext context, int index) {
                           BaseItem item = foods[index];
+                          EndType endtype;
                           return Dismissible(
                             background: slideRightBackground(),
                             secondaryBackground: slideLeftBackground(),
@@ -150,15 +152,17 @@ class BaseItemsPage extends StatelessWidget {
                             onDismissed: (DismissDirection direction) {
                               if (direction == DismissDirection.startToEnd) {
                                 baseItems.updateEndtype(item, EndType.thrown);
+                                endtype = EndType.thrown;
                               } else if (direction == DismissDirection.endToStart) {
                                 baseItems.updateEndtype(item, EndType.eaten);
+                                endtype = EndType.eaten;
                               }
-
+    
                               Scaffold
                                 .of(context)
                                 .showSnackBar(
                                   SnackBar(
-                                    content: Text("${item.displayName} removed"),
+                                    content: Text("${item.displayName} ${describeEnum(endtype)}"),
                                     action: SnackBarAction(
                                       label: "Undo",
                                       textColor: Colors.yellow,
