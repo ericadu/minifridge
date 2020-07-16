@@ -157,6 +157,7 @@ class AuthNotifier with ChangeNotifier {
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
+      _signedInUser = null;
       notifyListeners();
     } else {
       _user = firebaseUser;
