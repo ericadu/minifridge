@@ -3,7 +3,7 @@ import csv
 from datetime import datetime
 from dateutil import tz
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, messaging
 import json
 
 PATH = "/Users/ericadu/dev/minifridge/minifridge-firebase-adminsdk-z4sw9-387a25099d.json"
@@ -28,6 +28,19 @@ def valid_file(filepath_string):
     return True
   return False
 
+def send_to_token(token):
+  message = messaging.Message(
+    notification=messaging.Notification(
+      title='Your fridge is stocked! 🚀',
+      body='Your receipt was processed and new food has been added to your base. Eat up 🐛'
+    ),
+    token=token
+  )
+
+  response = messaging.send(message)
+
+  print('Successfully sent message:', response)
+
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('--user', action='store', help='Firestore USER_ID', default="erica")
@@ -44,6 +57,7 @@ if __name__ == '__main__':
     base_id = user["baseId"]
     filepath = user["filepath"]
     timezone = user["time"]
+    token = user["pushToken"]
 
     if (valid_user(user_id) and valid_file(filepath) and valid_user(base_id)):
       cred = credentials.Certificate(PATH)
@@ -74,5 +88,7 @@ if __name__ == '__main__':
 
           userItemsRef.document().create(new_item)
           print(new_item)
+      
+      send_to_token(token)
     else:
       print("invalid user or filepath.")
