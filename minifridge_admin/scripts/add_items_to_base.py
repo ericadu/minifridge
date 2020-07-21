@@ -28,6 +28,7 @@ def valid_file(filepath_string):
     return True
   return False
 
+# TODO: change to handle multiple tokens.
 def send_to_token(token):
   message = messaging.Message(
     notification=messaging.Notification(

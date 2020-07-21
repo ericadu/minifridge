@@ -184,6 +184,18 @@ class BaseItemsPage extends StatelessWidget {
                     ),
                   ]
                 );
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    HomeAppBar(),
+                    SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 450,
+                        child: CircularProgressIndicator(),
+                      )
+                    )
+                  ]
+                );
               } else {
                 return _buildEmpty();
               }

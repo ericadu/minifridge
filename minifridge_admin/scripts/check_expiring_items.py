@@ -13,6 +13,7 @@ def valid_user(userid_string):
     return True
   return False
 
+# TODO: modify to send to many tokens
 def send_to_token(token, items):
   text = ''
   if (len(items) < 3):

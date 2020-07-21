@@ -19,6 +19,24 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   SignedInUser user;
+  bool showManualAdd = false;
+  int currentStep = 0;
+  bool complete = false;
+
+  List<Step> steps = [
+    Step(
+      title: const Text('New Item'),
+      isActive: true,
+      state: StepState.complete,
+      content: Column(
+        children: <Widget>[
+          TextFormField(
+            decoration: InputDecoration(labelText: 'Item Name')
+          )
+        ]
+      )
+    )
+  ];
 
   void initState() {
     super.initState();
@@ -42,7 +60,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context) {
             return Container(
               color: Color(0xFF737373),
-              height: 130,
+              height: 180,
               child: Container(
                 child: Column(
                   children: <Widget>[
@@ -62,6 +80,16 @@ class _HomePageState extends State<HomePage> {
                         picker.pickImage(ImageSource.gallery);
                       }
                     ),
+                    ListTile(
+                      leading: Icon(Icons.edit),
+                      title: Text('Add Manually'),
+                      onTap: () {
+                        Navigator.pop(context);
+                        setState(() {
+                          showManualAdd = true;
+                        });
+                      }
+                    ),
                   ]
                 ),
                 decoration: BoxDecoration(
@@ -77,6 +105,25 @@ class _HomePageState extends State<HomePage> {
         );
       },
     );
+  }
+
+  next() {
+    currentStep + 1 != steps.length
+        ? goTo(currentStep + 1)
+        : setState(() {
+          complete = true;
+          showManualAdd = false;
+        });
+  }
+
+  cancel() {
+    setState(() {
+      showManualAdd = false;
+    });
+  }
+
+  goTo(int step) {
+    setState(() => currentStep = step);
   }
 
   @override
@@ -113,6 +160,27 @@ class _HomePageState extends State<HomePage> {
                   )
                 ),
                 body: ImageUploadPage()
+            );
+          }
+
+          if (showManualAdd) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Add Manually', style: TextStyle(color: Colors.white))
+              ),
+              body: Column(
+                children: [
+                  Expanded(
+                  child: Stepper(
+                    steps: steps,
+                    currentStep: currentStep,
+                    onStepContinue: next,
+                    onStepTapped: (step) => goTo(step),
+                    onStepCancel: cancel
+                  )
+                )
+                ],
+              )
             );
           }
 
