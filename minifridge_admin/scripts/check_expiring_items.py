@@ -30,6 +30,7 @@ def send_to_token(token, items):
 
   response = messaging.send(message)
 
+  print(", ".join(items))
   print('Successfully sent message:', response)
 
 if __name__ == '__main__':
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     creds_dict = json.load(d)
 
     ## TODO: for each user
-    for user in creds_dict.values():
+    for name, user in creds_dict.items():
     # user_name = 'erica'
     # user = creds_dict[user_name]
 
@@ -69,5 +70,6 @@ if __name__ == '__main__':
         
         if len(expiring_items) > 0:
           send_to_token(token, expiring_items)
-    else:
-      print("invalid user or filepath.")
+          print("sent notification to: ", name)
+      else:
+        print("invalid user or filepath: ", name)
