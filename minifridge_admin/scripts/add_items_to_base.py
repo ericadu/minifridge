@@ -84,6 +84,7 @@ if __name__ == '__main__':
             'addedByUserId': user_id,
             'storageType': row[8],
             'state': row[9],
+            'endType': 'alive'
           }
 
           userItemsRef.document().create(new_item)
