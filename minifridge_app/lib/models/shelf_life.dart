@@ -6,7 +6,7 @@ class ShelfLife {
 
   ShelfLife({
     @required this.dayRangeStart,
-    @required this.dayRangeEnd,
+    this.dayRangeEnd,
   });
 
   ShelfLife.fromMap(Map data) {

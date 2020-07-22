@@ -23,7 +23,7 @@ class ManualEntryNotifier extends ChangeNotifier {
   }
 
   void setDate(DateTime newExp) {
-    _dateController.text = DateFormat.MEd().format(newExp);
+    _dateController.text = DateFormat.yMMMEd().format(newExp);
     notifyListeners();
   }
 

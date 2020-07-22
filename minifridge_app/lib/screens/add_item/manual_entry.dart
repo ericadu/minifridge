@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/providers/base_items_notifier.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
-import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/widgets/manual_right_button.dart';
 import 'package:provider/provider.dart';
 
 class ManualEntryPage extends StatelessWidget {
@@ -39,30 +38,10 @@ class ManualEntryPage extends StatelessWidget {
     );
   }
 
-  Widget _buildRightButton(VoidCallback onStepContinue, ManualEntryNotifier manual) {
-    if (manual.currentStep + 1 == manual.stepLength) {
-      return Container(
-        color: AppTheme.lightTheme.accentColor,
-        child: FlatButton(
-          child: Text("Submit", style: TextStyle(color: Colors.white)),
-          onPressed: onStepContinue
-        )
-      );
-    }
-
-    return Container(
-      color: AppTheme.themeColor,
-      child: FlatButton(
-        child: Text("Next", style: TextStyle(color: Colors.white)),
-        onPressed: onStepContinue
-      )
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Consumer2(
-      builder: (BuildContext context, ManualEntryNotifier manual, BaseItemsNotifier base, _) {
+    return Consumer(
+      builder: (BuildContext context, ManualEntryNotifier manual, _) {
         List<Step> steps = [
           Step(
             title: const Text('Item Name'),
@@ -116,7 +95,7 @@ class ManualEntryPage extends StatelessWidget {
                     children: <Widget>[
                       _buildLeftButton(onStepCancel, manual),
                       SizedBox(height: 100, width: 20),
-                      _buildRightButton(onStepContinue, manual)
+                      ManualAddRightButton(callback: onStepContinue)
                     ]
                   );
                 },

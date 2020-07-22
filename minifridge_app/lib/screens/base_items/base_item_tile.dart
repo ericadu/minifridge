@@ -186,7 +186,7 @@ class BaseItemTile extends StatelessWidget {
                         )
                       )
                     ),
-                    Padding(
+                    item.rangeEndDate() != null ? Padding(
                       padding: const EdgeInsets.only(left: 30, bottom: 3),
                       child:TimelineTile(
                         alignment: TimelineAlign.manual,
@@ -216,7 +216,7 @@ class BaseItemTile extends StatelessWidget {
                           )
                         )
                       )
-                    )
+                    ) : null
                   ]
                 )
               )
