@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/signed_in_user.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/base_items/base_items.dart';
@@ -8,6 +9,7 @@ import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
+import 'package:minifridge_app/theme.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,21 +24,8 @@ class _HomePageState extends State<HomePage> {
   bool showManualAdd = false;
   int currentStep = 0;
   bool complete = false;
-
-  List<Step> steps = [
-    Step(
-      title: const Text('New Item'),
-      isActive: true,
-      state: StepState.complete,
-      content: Column(
-        children: <Widget>[
-          TextFormField(
-            decoration: InputDecoration(labelText: 'Item Name')
-          )
-        ]
-      )
-    )
-  ];
+  static final itemNameController = TextEditingController();
+  final dateController = TextEditingController();
 
   void initState() {
     super.initState();
@@ -45,6 +34,11 @@ class _HomePageState extends State<HomePage> {
     final PushNotificationService _notificationService = PushNotificationService(user.id);
      analytics.setUserId(user.id);
     _notificationService.init();
+  }
+
+  void dispose() {
+    itemNameController.dispose();
+    super.dispose();
   }
 
   Widget _buildAddButton(BuildContext context, ImagePickerNotifier picker) {
@@ -107,27 +101,83 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  next() {
-    currentStep + 1 != steps.length
-        ? goTo(currentStep + 1)
-        : setState(() {
-          complete = true;
-          showManualAdd = false;
-        });
-  }
-
-  cancel() {
-    setState(() {
-      showManualAdd = false;
-    });
-  }
-
-  goTo(int step) {
-    setState(() => currentStep = step);
+  void _callDatePicker(BuildContext context) async {
+    DateTime today = DateTime.now();
+    DateTime newExp = await showDatePicker(
+      context: context,
+      initialDate: today,
+      firstDate: today.subtract(Duration(days: 30)),
+      lastDate: today.add(new Duration(days: 730)),
+    );
+    
+    if (newExp != null) {
+      setState(() {
+        dateController.text = DateFormat.MEd().format(newExp);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    List<Step> steps = [
+      Step(
+        title: const Text('Item Name'),
+        isActive: true,
+        state: StepState.complete,
+        content: Column(
+          children: <Widget>[
+            TextFormField(
+              controller: itemNameController,
+            )
+          ]
+        )
+      ),
+      Step(
+        title: const Text('Set Expiration Date'),
+        isActive: false,
+        state: StepState.editing,
+        content: Column(
+          children: <Widget>[
+            TextFormField(
+              controller: dateController,
+              // initialValue: DateTime.now().toString(),
+              onTap: () {
+                _callDatePicker(context);
+              }
+            )
+          ]
+        )
+      )
+    ];
+
+    _goTo(int step) {
+      setState(() => currentStep = step);
+    }
+
+    _next() {
+      currentStep + 1 != steps.length
+          ? _goTo(currentStep + 1)
+          : setState(() {
+            complete = true;
+            showManualAdd = false;
+          });
+    }
+
+    _cancel() {
+      if (currentStep <= 0) return;
+
+      setState(() {
+        _goTo(currentStep - 1);
+      });
+    }
+
+    _resetStepper() {
+      setState(() {
+        currentStep = 0;
+        showManualAdd = false;
+      });
+    }
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -166,17 +216,90 @@ class _HomePageState extends State<HomePage> {
           if (showManualAdd) {
             return Scaffold(
               appBar: AppBar(
-                title: Text('Add Manually', style: TextStyle(color: Colors.white))
+                title: Text('Add Manually', style: TextStyle(color: Colors.white)),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.white),
+                    onPressed: () => _resetStepper()
+                  )
+                ],
               ),
               body: Column(
                 children: [
                   Expanded(
                   child: Stepper(
                     steps: steps,
+                    controlsBuilder: (BuildContext context,
+                      {VoidCallback onStepContinue, VoidCallback onStepCancel}) {
+                        if (currentStep == 0) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Container(
+                                // color: Colors.grey[300],
+                                child: FlatButton(
+                                  child: Text("Cancel", style: TextStyle(color: Colors.grey)),
+                                  onPressed: () => _resetStepper()
+                                ),
+                              ),
+                              SizedBox(height: 100, width: 20),
+                              Container(
+                                color: AppTheme.themeColor,
+                                child: FlatButton(
+                                  child: Text("Next", style: TextStyle(color: Colors.white)),
+                                  onPressed: onStepContinue
+                                )
+                              )
+                            ]
+                          );                          
+                        } else if (currentStep + 1 < steps.length) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Container(
+                                // color: Colors.grey[300],
+                                child: FlatButton(
+                                  child: Text("Back", style: TextStyle(color: Colors.grey)),
+                                  onPressed: onStepCancel
+                                ),
+                              ),
+                              SizedBox(height: 100, width: 20),
+                              Container(
+                                color: AppTheme.themeColor,
+                                child: FlatButton(
+                                  child: Text("Next", style: TextStyle(color: Colors.white)),
+                                  onPressed: onStepContinue
+                                )
+                              )
+                            ]
+                          );
+                        } else {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Container(
+                                // color: Colors.grey[300],
+                                child: FlatButton(
+                                  child: Text("Back", style: TextStyle(color: Colors.grey)),
+                                  onPressed: onStepCancel
+                                ),
+                              ),
+                              SizedBox(height: 100, width: 20),
+                              Container(
+                                color: AppTheme.lightTheme.accentColor,
+                                child: FlatButton(
+                                  child: Text("Submit", style: TextStyle(color: Colors.white)),
+                                  onPressed: onStepContinue
+                                )
+                              )
+                            ]
+                          );
+                        }
+                      },
                     currentStep: currentStep,
-                    onStepContinue: next,
-                    onStepTapped: (step) => goTo(step),
-                    onStepCancel: cancel
+                    onStepContinue: _next,
+                    onStepTapped: (step) => _goTo(step),
+                    onStepCancel: _cancel
                   )
                 )
                 ],
