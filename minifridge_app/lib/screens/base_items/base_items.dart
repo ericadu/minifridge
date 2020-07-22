@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/end_type.dart';
-import 'package:minifridge_app/models/signed_in_user.dart';
-import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/screens/base_items/base_item_tile.dart';
 import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
 import 'package:minifridge_app/providers/base_items_notifier.dart';
@@ -13,7 +11,10 @@ import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:provider/provider.dart';
 
 class BaseItemsPage extends StatelessWidget {
+  final FoodBaseApi api;
   static const routeName = '/items';
+
+  const BaseItemsPage({Key key, this.api}) : super(key: key);
 
   Widget slideLeftBackground() {
     return Container(
@@ -117,92 +118,89 @@ class BaseItemsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SignedInUser user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
-    final FoodBaseApi _baseApi = FoodBaseApi(user.baseId);
+    // SignedInUser user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
+    // final FoodBaseApi _baseApi = FoodBaseApi(user.baseId);
 
-    return ChangeNotifierProvider(
-      create: (_) => BaseItemsNotifier(_baseApi),
-      child:  Consumer(
-        builder: (BuildContext context, BaseItemsNotifier baseItems, _) {
-          return StreamBuilder(
-            stream: baseItems.streamItems(),
-            builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData && snapshot.data.documents.length > 0) {
-                List<BaseItem> foods = snapshot.data.documents
-                  .map((item) => BaseItem.fromMap(item.data, item.documentID))
-                  .where((item) => _validItem(item))
-                  .toList();
-                
-                foods.sort((a, b) {
-                  return a.getDays().compareTo(b.getDays());
-                });
+    return Consumer(
+      builder: (BuildContext context, BaseItemsNotifier baseItems, _) {
+        return StreamBuilder(
+          stream: baseItems.streamItems(),
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData && snapshot.data.documents.length > 0) {
+              List<BaseItem> foods = snapshot.data.documents
+                .map((item) => BaseItem.fromMap(item.data, item.documentID))
+                .where((item) => _validItem(item))
+                .toList();
+              
+              foods.sort((a, b) {
+                return a.getDays().compareTo(b.getDays());
+              });
 
-                return CustomScrollView(
-                  slivers: <Widget>[
-                    HomeAppBar(),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (BuildContext context, int index) {
-                          BaseItem item = foods[index];
-                          EndType endtype;
-                          return Dismissible(
-                            background: slideRightBackground(),
-                            secondaryBackground: slideLeftBackground(),
-                            key: Key(item.id),
-                            onDismissed: (DismissDirection direction) {
-                              if (direction == DismissDirection.startToEnd) {
-                                baseItems.updateEndtype(item, EndType.thrown);
-                                endtype = EndType.thrown;
-                              } else if (direction == DismissDirection.endToStart) {
-                                baseItems.updateEndtype(item, EndType.eaten);
-                                endtype = EndType.eaten;
-                              }
-    
-                              Scaffold
-                                .of(context)
-                                .showSnackBar(
-                                  SnackBar(
-                                    content: Text("${item.displayName} ${describeEnum(endtype)}"),
-                                    action: SnackBarAction(
-                                      label: "Undo",
-                                      textColor: Colors.yellow,
-                                      onPressed: () {
-                                        baseItems.updateEndtype(item, EndType.alive);
-                                      }
-                                    )
+              return CustomScrollView(
+                slivers: <Widget>[
+                  HomeAppBar(),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (BuildContext context, int index) {
+                        BaseItem item = foods[index];
+                        EndType endtype;
+                        return Dismissible(
+                          background: slideRightBackground(),
+                          secondaryBackground: slideLeftBackground(),
+                          key: Key(item.id),
+                          onDismissed: (DismissDirection direction) {
+                            if (direction == DismissDirection.startToEnd) {
+                              baseItems.updateEndtype(item, EndType.thrown);
+                              endtype = EndType.thrown;
+                            } else if (direction == DismissDirection.endToStart) {
+                              baseItems.updateEndtype(item, EndType.eaten);
+                              endtype = EndType.eaten;
+                            }
+  
+                            Scaffold
+                              .of(context)
+                              .showSnackBar(
+                                SnackBar(
+                                  content: Text("${item.displayName} ${describeEnum(endtype)}"),
+                                  action: SnackBarAction(
+                                    label: "Undo",
+                                    textColor: Colors.yellow,
+                                    onPressed: () {
+                                      baseItems.updateEndtype(item, EndType.alive);
+                                    }
                                   )
-                                );
-                            },
-                            child: BaseItemTile(item: item, api: _baseApi)
-                          );
-                        },
-                        childCount: foods.length
-                      )
-                    ),
-                    SliverPadding(
-                      padding: EdgeInsets.only(bottom: 50),
-                    ),
-                  ]
-                );
-              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return CustomScrollView(
-                  slivers: <Widget>[
-                    HomeAppBar(),
-                    SliverToBoxAdapter(
-                      child: SizedBox(
-                        height: 450,
-                        child: CircularProgressIndicator(),
-                      )
+                                )
+                              );
+                          },
+                          child: BaseItemTile(item: item, api: api)
+                        );
+                      },
+                      childCount: foods.length
                     )
-                  ]
-                );
-              } else {
-                return _buildEmpty();
-              }
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.only(bottom: 50),
+                  ),
+                ]
+              );
+            } else if (snapshot.connectionState == ConnectionState.waiting) {
+              return CustomScrollView(
+                slivers: <Widget>[
+                  HomeAppBar(),
+                  SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 450,
+                      child: CircularProgressIndicator(),
+                    )
+                  )
+                ]
+              );
+            } else {
+              return _buildEmpty();
             }
-          );
-        }
-      )
+          }
+        );
+      }
     );
   }
 }

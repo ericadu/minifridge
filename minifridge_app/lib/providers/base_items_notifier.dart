@@ -31,14 +31,6 @@ class BaseItemsNotifier extends ChangeNotifier {
     return _api.addDocument(data);
   }
 
-  // BaseItem removeAt(int index) {
-  //   return _baseItems.removeAt(index);
-  // }
-
-  // void insertAt(int index, BaseItem item) {
-  //   _baseItems.insert(index, item);
-  // }
-
   void updateEndtype(BaseItem item, EndType endType) async {
     item.setEnd(endType);
     analytics.logEvent(
