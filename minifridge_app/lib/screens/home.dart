@@ -82,7 +82,18 @@ class _HomePageState extends State<HomePage> {
           }
 
           if (manual.showManualAdd) {
-            return ManualEntryPage();
+            return Scaffold(
+              appBar: AppBar(
+                title: Text('Add Manually', style: TextStyle(color: Colors.white)),
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.white),
+                    onPressed: () => manual.reset()
+                  )
+                ],
+              ),
+              body: ManualEntryPage()
+            );
           }
 
           return Scaffold(

@@ -6,24 +6,26 @@ class ManualEntryNotifier extends ChangeNotifier {
   int _currentStep = 0;
   bool _complete = false;
   int _stepLength;
-  static final _itemNameController = TextEditingController();
-  static final _dateController = TextEditingController();
+  String _itemName;
+  String _expDate;
+  // static final _itemNameController = TextEditingController();
+  // static final _dateController = TextEditingController();
 
   bool get showManualAdd => _showManualAdd;
   int get currentStep => _currentStep;
   bool get complete => _complete;
-  String get itemName => _itemNameController.text;
-  String get expDate => _dateController.text;
+  String get itemName => _itemName;
+  String get expDate => _expDate;
   int get stepLength => _stepLength;
-  TextEditingController get itemNameController => _itemNameController;
-  TextEditingController get dateController => _dateController;
+  // TextEditingController get itemNameController => _itemNameController;
+  // TextEditingController get dateController => _dateController;
 
   void setStepLength(int stepLength) {
     _stepLength = stepLength;
   }
 
   void setDate(DateTime newExp) {
-    _dateController.text = DateFormat.yMMMEd().format(newExp);
+    _expDate = DateFormat.yMMMEd().format(newExp);
     notifyListeners();
   }
 
@@ -37,7 +39,8 @@ class ManualEntryNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  next() {
+  next(String name) {
+    _itemName = name;
     goTo(currentStep + 1);
   }
 
@@ -47,10 +50,8 @@ class ManualEntryNotifier extends ChangeNotifier {
   }
 
   reset() {
-    _currentStep = 0;
     _showManualAdd = false;
-    _itemNameController.text = '';
-    _dateController.text = '';
+    _currentStep = 0;
     notifyListeners();
   }
 }

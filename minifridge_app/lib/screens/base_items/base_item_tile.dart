@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
+import 'package:minifridge_app/screens/add_item/manual_entry.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
+import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/widgets/edit_item_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -121,7 +124,7 @@ class BaseItemTile extends StatelessWidget {
                   children: <Widget>[
                     Divider(color: Colors.grey[300]),
                     Padding(
-                      padding: const EdgeInsets.only(top: 3, left: 25),
+                      padding: const EdgeInsets.only(left: 25, top: 3),
                       child: TimelineTile(
                         alignment: TimelineAlign.manual,
                         lineX: 0.31,
@@ -186,37 +189,66 @@ class BaseItemTile extends StatelessWidget {
                         )
                       )
                     ),
-                    item.rangeEndDate() != null ? Padding(
-                      padding: const EdgeInsets.only(left: 30, bottom: 3),
-                      child:TimelineTile(
-                        alignment: TimelineAlign.manual,
-                        lineX: 0.3,
-                        topLineStyle: freshness.index > 5 ? activeLine : inactiveLine,
-                        indicatorStyle: freshness.index > 6 ? activeIndicator : inactiveIndicator,
-                        bottomLineStyle: freshness.index > 7 ? activeLine : inactiveLine,
-                        leftChild: Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Container(
-                            child: Text(DateFormat.MEd().format(item.rangeEndDate()))
+                    if (item.hasRange())
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30),
+                        child:TimelineTile(
+                          alignment: TimelineAlign.manual,
+                          lineX: 0.3,
+                          topLineStyle: freshness.index > 5 ? activeLine : inactiveLine,
+                          indicatorStyle: freshness.index > 6 ? activeIndicator : inactiveIndicator,
+                          bottomLineStyle: freshness.index > 7 ? activeLine : inactiveLine,
+                          leftChild: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Container(
+                              child: Text(DateFormat.MEd().format(item.rangeEndDate()))
+                            ),
                           ),
-                        ),
-                        rightChild: Container(
-                          constraints: const BoxConstraints(
-                            minHeight: 70,
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(top: 20, left: 25),
-                                child: Text("👻  To the after life", style: TextStyle(fontSize: 17))
-                              )
-                            ]
+                          rightChild: Container(
+                            constraints: const BoxConstraints(
+                              minHeight: 60,
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(top: 20, left: 25),
+                                  child: Text("👻  To the after life", style: TextStyle(fontSize: 17))
+                                )
+                              ]
+                            )
                           )
                         )
-                      )
-                    ) : null
+                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(right: 3),
+                          child: IconButton(
+                            icon: Icon(Icons.edit, color: Colors.grey),
+                            onPressed: () {
+                              // showBottomSheet(context: context, builder: (context) {
+                              //   return Container(
+                              //     height: 500,
+                              //     child: ManualEntryPage(existingName: item.displayName, existingDate: item.referenceDatetime())
+                              //   );
+                              // });
+                            }
+                          )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(right: 7),
+                          child: IconButton(
+                            icon: Icon(Icons.flag, color: Colors.grey),
+                            onPressed: () {
+
+                            }
+                          )
+                        )
+                      ],
+                    )
                   ]
                 )
               )

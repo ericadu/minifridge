@@ -37,6 +37,7 @@ class BaseItem {
 
   BaseItem.fromMap(Map data, String docId) {
     this.id = docId;
+    this.addedByUserId = data['addedByUserId'];
     this.displayName = data['displayName'];
     this.quantity = data['quantity'];
     this.unit = data['unit'];
@@ -50,9 +51,9 @@ class BaseItem {
     this.endType = data['endType'] != null ? EndTypes.from(data['endType']): EndType.alive;
   }
 
+  // fix addedby user id, and actual id
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
     data['displayName'] = this.displayName;
     data['quantity'] = this.quantity;
     data['unit'] = this.unit;
@@ -62,8 +63,14 @@ class BaseItem {
     data['state'] = this.state;
     data['storageType'] = this.storageType;
     data['productId'] = this.productId;
+    data['addedByUserId'] = this.addedByUserId;
     data['shelfLife'] = this.shelfLife.toJson();
     data['endType'] = describeEnum(this.endType);
+
+    if (this.id != null) {
+      data['id'] = this.id;
+    }
+
     return data;
   }
 
@@ -89,6 +96,10 @@ class BaseItem {
 
   DateTime rangeStartDate() {
     return referenceDatetime().add(shelfLife.dayRangeStart);
+  }
+
+  bool hasRange() {
+    return shelfLife.dayRangeEnd != null;
   }
 
   DateTime rangeEndDate() {

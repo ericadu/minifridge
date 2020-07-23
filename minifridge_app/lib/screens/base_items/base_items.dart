@@ -133,7 +133,11 @@ class BaseItemsPage extends StatelessWidget {
                 .toList();
               
               foods.sort((a, b) {
-                return a.getDays().compareTo(b.getDays());
+                int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
+                if (comparison == 0) {
+                  return a.getDays().compareTo(b.getDays());
+                }
+                return comparison;
               });
 
               return CustomScrollView(

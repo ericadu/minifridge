@@ -11,13 +11,19 @@ class ShelfLife {
 
   ShelfLife.fromMap(Map data) {
     dayRangeStart = Duration(days: data['dayRangeStart']);
-    dayRangeEnd = Duration(days: data['dayRangeEnd']);
+
+    if (data['dayRangeEnd'] != null) {
+      dayRangeEnd = Duration(days: data['dayRangeEnd']);
+    }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['dayRangeStart'] = this.dayRangeStart.inDays;
-    data['dayRangeEnd'] = this.dayRangeEnd.inDays;
+
+    if (this.dayRangeEnd != null) {
+      data['dayRangeEnd'] = this.dayRangeEnd.inDays;
+    }
     return data;
   }
 }

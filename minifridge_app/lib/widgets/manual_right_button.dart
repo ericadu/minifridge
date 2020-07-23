@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/models/shelf_life.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/providers/base_items_notifier.dart';
@@ -28,14 +29,20 @@ class ManualAddRightButton extends StatelessWidget {
                 DateTime expDate = DateFormat.yMMMEd().parse(manual.expDate);
                 print(expDate.toString());
                 BaseItem item = BaseItem(
+                  displayName: manual.itemName,
                   quantity: 1,
                   unit: 'item',
                   buyTimestamp: Timestamp.fromDate(today),
                   referenceTimestamp: Timestamp.fromDate(today),
                   addedByUserId: Provider.of<AuthNotifier>(context, listen: false).user.uid,
-                  shelfLife: ShelfLife(dayRangeStart: expDate.difference(today))
+                  shelfLife: ShelfLife(dayRangeStart: expDate.difference(today)),
+                  endType: EndType.alive,
                 );
-                base.addNewItem(item.toJson());
+
+                base.addNewItem(item.toJson()).then((doc) {
+                  manual.reset();
+                });
+
               }
             )
           );

@@ -74,8 +74,9 @@ extension FreshnessUtil on BaseItem {
     } else {
       // Handle non range case.
       int inflectionPoint = shelfLife.dayRangeStart.inDays;
-
-      if (lifeSoFar < inflectionPoint) {
+      if (lifeSoFar + 1 == inflectionPoint) {
+        return Freshness.in_range_end;
+      } else if (lifeSoFar < inflectionPoint) {
         return Freshness.ready;
       } else {
         return Freshness.past;

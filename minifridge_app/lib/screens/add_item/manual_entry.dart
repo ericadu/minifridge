@@ -1,10 +1,43 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
 import 'package:minifridge_app/widgets/manual_right_button.dart';
 import 'package:provider/provider.dart';
 
-class ManualEntryPage extends StatelessWidget {
+class ManualEntryPage extends StatefulWidget {
   static const routeName = '/manual';
+  final DateTime existingDate;
+  final String existingName;
+
+  ManualEntryPage({
+    this.existingName,
+    this.existingDate
+  });
+
+  @override
+  _ManualEntryPageState createState() => _ManualEntryPageState();
+}
+
+class _ManualEntryPageState extends State<ManualEntryPage> {
+  final _itemNameController = TextEditingController();
+  final _dateController = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.existingName != null) {
+      _itemNameController.text = widget.existingName;
+    }
+    if (widget.existingDate != null) {
+      _dateController.text = DateFormat.yMMMEd().format(widget.existingDate);
+    }
+    super.initState();
+  }
+
+  void dispose() {
+    _itemNameController.dispose();
+    _dateController.dispose();
+    super.dispose();
+  }
 
   void _callDatePicker(BuildContext context, ManualEntryNotifier manual) async {
     DateTime today = DateTime.now();
@@ -17,6 +50,9 @@ class ManualEntryPage extends StatelessWidget {
     
     if (newExp != null) {
       manual.setDate(newExp);
+      setState(() {
+        _dateController.text = DateFormat.yMMMEd().format(newExp);
+      });
     }
   }
 
@@ -50,7 +86,7 @@ class ManualEntryPage extends StatelessWidget {
             content: Column(
               children: <Widget>[
                 TextFormField(
-                  controller: manual.itemNameController,
+                  controller: _itemNameController,
                 )
               ]
             )
@@ -62,7 +98,7 @@ class ManualEntryPage extends StatelessWidget {
             content: Column(
               children: <Widget>[
                 TextFormField(
-                  controller: manual.dateController,
+                  controller: _dateController,
                   onTap: () {
                     _callDatePicker(context, manual);
                   }
@@ -74,38 +110,27 @@ class ManualEntryPage extends StatelessWidget {
 
         manual.setStepLength(steps.length);
 
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Add Manually', style: TextStyle(color: Colors.white)),
-            actions: [
-              IconButton(
-                icon: Icon(Icons.close, color: Colors.white),
-                onPressed: () => manual.reset()
-              )
-            ],
-          ),
-          body: Column(
-            children: [
-              Expanded(
-              child: Stepper(
-                steps: steps,
-                controlsBuilder: (BuildContext context, { VoidCallback onStepContinue, VoidCallback onStepCancel }) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      _buildLeftButton(onStepCancel, manual),
-                      SizedBox(height: 100, width: 20),
-                      ManualAddRightButton(callback: onStepContinue)
-                    ]
-                  );
-                },
-                currentStep: manual.currentStep,
-                onStepContinue: manual.next,
-                onStepTapped: (step) => manual.goTo(step),
-                onStepCancel: manual.cancel
-              )
-            )],
-          )
+        return Column(
+          children: [
+            Expanded(
+            child: Stepper(
+              steps: steps,
+              controlsBuilder: (BuildContext context, { VoidCallback onStepContinue, VoidCallback onStepCancel }) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: <Widget>[
+                    _buildLeftButton(onStepCancel, manual),
+                    SizedBox(height: 100, width: 20),
+                    ManualAddRightButton(callback: onStepContinue)
+                  ]
+                );
+              },
+              currentStep: manual.currentStep,
+              onStepContinue: () => { manual.next(_itemNameController.text) },
+              onStepTapped: (step) => manual.goTo(step),
+              onStepCancel: manual.cancel
+            )
+          )],
         );
       }
     );
