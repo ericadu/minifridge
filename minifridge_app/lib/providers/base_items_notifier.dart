@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
-import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 
 class BaseItemsNotifier extends ChangeNotifier {
@@ -33,12 +32,6 @@ class BaseItemsNotifier extends ChangeNotifier {
 
   void updateEndtype(BaseItem item, EndType endType) async {
     item.setEnd(endType);
-    analytics.logEvent(
-      name: 'remove_item', 
-      parameters: {
-        'item': item.displayName,
-        'type': describeEnum(endType)
-      });
     Map data = item.toJson();
     // notifyListeners();
     return await _api.updateDocument(item.id, data);

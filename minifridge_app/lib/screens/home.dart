@@ -23,16 +23,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   SignedInUser user;
-  bool showManualAdd = false;
-  int currentStep = 0;
-  bool complete = false;
 
   void initState() {
     super.initState();
     
     user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
     final PushNotificationService _notificationService = PushNotificationService(user.id);
-     analytics.setUserId(user.id);
+    analytics.setUserId(user.id);
+    analytics.logEvent(
+      name: 'home_screen', 
+      parameters: {'user': user.id}
+    );
     _notificationService.init();
   }
 
@@ -50,10 +51,12 @@ class _HomePageState extends State<HomePage> {
         ),
         ChangeNotifierProvider(
           create: (_) => ManualEntryNotifier()
-        )
+        ),
       ],
       child: Consumer2(
-        builder: (BuildContext context, ImagePickerNotifier picker, ManualEntryNotifier manual, _) {
+        builder: (BuildContext context,
+          ImagePickerNotifier picker,
+          ManualEntryNotifier manual, _) {
           
           if (picker.hasImage()) {
             return Scaffold (

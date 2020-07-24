@@ -36,8 +36,9 @@ extension FreshnessUtil on BaseItem {
     int freshnessTime = shelfLife.dayRangeStart.inDays;
     double freshnessTimePart = freshnessTime > 2 ? freshnessTime / 5 : 0;
 
-    if (shelfLife.dayRangeEnd != null) {
+    // if (shelfLife.dayRangeEnd != null) {
       // Handle range case.
+    if (shelfLife.dayRangeEnd != null) {
       int range = shelfLife.dayRangeEnd.inDays - shelfLife.dayRangeStart.inDays;
       int rangePart = range ~/ 4;
       int expirationTime = shelfLife.dayRangeEnd.inDays;
@@ -61,28 +62,24 @@ extension FreshnessUtil on BaseItem {
       if (lifeSoFar >= freshnessTime && lifeSoFar < freshnessTime + rangePart) {
         return Freshness.in_range_start;
       }
-
-      if (lifeSoFar >= freshnessTime - freshnessTimePart && lifeSoFar < freshnessTime) {
-        return Freshness.fresh_max;
-      }
-
-      if (lifeSoFar >= freshnessTimePart && lifeSoFar < freshnessTime - freshnessTimePart) {
-        return Freshness.fresh_min;
-      }
-
-      return Freshness.ready;
     } else {
-      // Handle non range case.
-      int inflectionPoint = shelfLife.dayRangeStart.inDays;
-      if (lifeSoFar + 1 == inflectionPoint) {
+      if (lifeSoFar + 1 == freshnessTime) {
         return Freshness.in_range_end;
-      } else if (lifeSoFar < inflectionPoint) {
-        return Freshness.ready;
-      } else {
-        return Freshness.past;
+      }
+      
+      if (lifeSoFar > freshnessTime) {
+        return Freshness.past; 
       }
     }
 
-  
+    if (lifeSoFar >= freshnessTime - freshnessTimePart && lifeSoFar < freshnessTime) {
+      return Freshness.fresh_max;
+    }
+
+    if (lifeSoFar >= freshnessTimePart && lifeSoFar < freshnessTime - freshnessTimePart) {
+      return Freshness.fresh_min;
+    }
+
+    return Freshness.ready;
   }
 }

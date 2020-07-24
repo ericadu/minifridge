@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
@@ -34,18 +34,21 @@ class SingleItemNotifier extends ChangeNotifier {
     update();
   }
 
-  void updateRef(Timestamp expTime) async {
-    _item.setNewReference(expTime);
-    analytics.logEvent(
-      name: 'edit_item', 
-      parameters: {'item': _item.displayName, 'type': 'reference'});
+  void updateItem({String newDate, String newName}) async {
+    if (newName != null) {
+      _item.setNewName(newName);
+    }
+
+    if (newDate != null) {
+      _item.setNewReference(DateFormat.yMMMEd().parse(newDate));
+    }
+
     update();
   }
 
   void update() async {
     Map data = _item.toJson();
     notifyListeners();
-    print(data);
     return await _api.updateDocument(_item.id, data);
   }
 }

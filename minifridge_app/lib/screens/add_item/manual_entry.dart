@@ -6,13 +6,6 @@ import 'package:provider/provider.dart';
 
 class ManualEntryPage extends StatefulWidget {
   static const routeName = '/manual';
-  final DateTime existingDate;
-  final String existingName;
-
-  ManualEntryPage({
-    this.existingName,
-    this.existingDate
-  });
 
   @override
   _ManualEntryPageState createState() => _ManualEntryPageState();
@@ -24,12 +17,6 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
 
   @override
   void initState() {
-    if (widget.existingName != null) {
-      _itemNameController.text = widget.existingName;
-    }
-    if (widget.existingDate != null) {
-      _dateController.text = DateFormat.yMMMEd().format(widget.existingDate);
-    }
     super.initState();
   }
 
@@ -113,23 +100,23 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
         return Column(
           children: [
             Expanded(
-            child: Stepper(
-              steps: steps,
-              controlsBuilder: (BuildContext context, { VoidCallback onStepContinue, VoidCallback onStepCancel }) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: <Widget>[
-                    _buildLeftButton(onStepCancel, manual),
-                    SizedBox(height: 100, width: 20),
-                    ManualAddRightButton(callback: onStepContinue)
-                  ]
-                );
-              },
-              currentStep: manual.currentStep,
-              onStepContinue: () => { manual.next(_itemNameController.text) },
-              onStepTapped: (step) => manual.goTo(step),
-              onStepCancel: manual.cancel
-            )
+              child: Stepper(
+                steps: steps,
+                controlsBuilder: (BuildContext context, { VoidCallback onStepContinue, VoidCallback onStepCancel }) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      _buildLeftButton(onStepCancel, manual),
+                      SizedBox(height: 100, width: 20),
+                      ManualAddRightButton(callback: onStepContinue)
+                    ]
+                  );
+                },
+                currentStep: manual.currentStep,
+                onStepContinue: () => { manual.next(_itemNameController.text) },
+                onStepTapped: (step) => manual.goTo(step),
+                onStepCancel: manual.cancel
+              )
           )],
         );
       }

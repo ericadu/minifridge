@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/screens/base_items/base_item_tile.dart';
 import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
 import 'package:minifridge_app/providers/base_items_notifier.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:provider/provider.dart';
 
@@ -160,6 +162,14 @@ class BaseItemsPage extends StatelessWidget {
                               baseItems.updateEndtype(item, EndType.eaten);
                               endtype = EndType.eaten;
                             }
+
+                            analytics.logEvent(
+                              name: 'remove_item', 
+                              parameters: {
+                                'item': item.displayName,
+                                'type': describeEnum(endtype),
+                                'user': Provider.of<AuthNotifier>(context, listen:false).user.uid,
+                              });
   
                             Scaffold
                               .of(context)

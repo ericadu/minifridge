@@ -15,6 +15,7 @@ class BaseItem {
   String storageType;
   String productId;
   EndType endType;
+  Timestamp endTimestamp;
   ShelfLife shelfLife;
   Timestamp referenceTimestamp;
   String addedByUserId;
@@ -33,6 +34,7 @@ class BaseItem {
     this.storageType,
     this.shelfLife,
     this.endType,
+    this.endTimestamp
   });
 
   BaseItem.fromMap(Map data, String docId) {
@@ -44,6 +46,7 @@ class BaseItem {
     this.price = data['price'];
     this.buyTimestamp = data['buyTimestamp'];
     this.referenceTimestamp = data['referenceTimestamp'];
+    this.endTimestamp = data['endTimestamp'];
     this.state = data['state'];
     this.storageType = data['storageType'];
     this.productId = data['productId'];
@@ -60,6 +63,7 @@ class BaseItem {
     data['price'] = this.price;
     data['buyTimestamp'] = this.buyTimestamp;
     data['referenceTimestamp'] = this.referenceTimestamp;
+    data['endTimestamp'] = this.endTimestamp;
     data['state'] = this.state;
     data['storageType'] = this.storageType;
     data['productId'] = this.productId;
@@ -76,6 +80,7 @@ class BaseItem {
 
   void setEnd(EndType endType) {
     this.endType = endType;
+    this.endTimestamp = Timestamp.fromDate(DateTime.now());
   }
 
   void decrement() {
@@ -86,8 +91,12 @@ class BaseItem {
     this.quantity = this.quantity + 1;
   }
 
-  void setNewReference(Timestamp refTime) {
-    this.referenceTimestamp = refTime;
+  void setNewReference(DateTime refTime) {
+    this.referenceTimestamp = Timestamp.fromDate(refTime);
+  }
+
+  void setNewName(String name) {
+    this.displayName = name;
   }
 
   DateTime referenceDatetime() {
