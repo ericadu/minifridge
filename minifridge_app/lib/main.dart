@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/providers/reports_notifier.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/landing.dart';
 import 'package:minifridge_app/screens/home.dart';
@@ -19,6 +20,9 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => AuthNotifier.instance(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ReportsNotifier()
         )
       ],
       child: MaterialApp(

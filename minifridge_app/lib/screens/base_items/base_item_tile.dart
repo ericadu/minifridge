@@ -3,11 +3,12 @@ import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
+import 'package:minifridge_app/screens/base_items/freshness_timeline.dart';
+import 'package:minifridge_app/screens/base_items/report_alert_dialog.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:provider/provider.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class BaseItemTile extends StatefulWidget {
   final BaseItem item;
@@ -64,15 +65,10 @@ class _BaseItemTileState extends State<BaseItemTile> {
     Freshness freshness = item.getFreshness();
     String message;
     switch(freshness) {
-      case Freshness.in_range_start:
-      case Freshness.in_range_min:
-      case Freshness.in_range_max:
-      case Freshness.in_range_end:
+      case Freshness.in_range:
         message = "⏰ Eat me next";
         break;
-      case Freshness.ready:
-      case Freshness.fresh_min:
-      case Freshness.fresh_max:       
+      case Freshness.ready:      
         if (item.getDays() == 1) {
           message = "⏳  1 day left";
         } else if (item.getDays() > 7) {
@@ -141,10 +137,18 @@ class _BaseItemTileState extends State<BaseItemTile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(right: 10),
+                Ink(
+                  decoration: ShapeDecoration(
+                    color: Colors.grey[300],
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        bottomLeft: Radius.circular(10)
+                      )
+                    )
+                  ),
                   child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.grey),
+                    icon: Icon(Icons.close, color: Colors.white),
                     onPressed: () {
                       setState(() {
                         view = true;
@@ -153,26 +157,38 @@ class _BaseItemTileState extends State<BaseItemTile> {
                     }
                   )
                 ),
-                IconButton(
-                  icon: Icon(Icons.done, color: Colors.grey),
-                  onPressed: () {
-                    setState(() {
-                      view = true;
-                      baseItem.updateItem(
-                        newName: _nameController.text,
-                        newDate: _dateController.text
-                      );
-                      
-                      analytics.logEvent(
-                        name: 'edit_item', 
-                        parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
-                        'type': 'tile'
+                Ink(
+                  decoration: ShapeDecoration(
+                    color: Colors.green,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(10),
+                        bottomRight: Radius.circular(10)
+                      )
+                    )
+                  ),
+                  child: IconButton(
+                    icon: Icon(Icons.done, color: Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        view = true;
+                        baseItem.updateItem(
+                          newName: _nameController.text,
+                          newDate: _dateController.text
+                        );
+                        
+                        analytics.logEvent(
+                          name: 'edit_item', 
+                          parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
+                          'type': 'tile'
+                        });
                       });
-                    });
-                  }
+                    }
+                  )
                 )
               ],
-            )
+            ),
+            SizedBox(height: 10)
           ],
         ),
       )
@@ -180,32 +196,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
   }
 
   Widget _buildTile(SingleItemNotifier baseItem) {
-    const Color inactiveGrey = const Color(0xffd6d6d6);
-    const Color activeColor = Colors.teal;
-
-    IndicatorStyle activeIndicator = const IndicatorStyle(
-      width: 18,
-      indicatorY: 0.5,
-      color: activeColor
-    );
-
-    LineStyle activeLine = const LineStyle(
-      color: activeColor,
-      width: 6,
-    );
-
-    IndicatorStyle inactiveIndicator = const IndicatorStyle(
-      width: 16,
-      indicatorY: 0.5,
-      color: inactiveGrey
-    );
-
-    LineStyle inactiveLine = const LineStyle(
-      color: inactiveGrey,
-    );
-
     BaseItem item = baseItem.item;
-    Freshness freshness = item.getFreshness();
 
     return ExpansionTile(
       initiallyExpanded: expanded,
@@ -228,114 +219,17 @@ class _BaseItemTileState extends State<BaseItemTile> {
       },
       children: <Widget>[
         Divider(color: Colors.grey[300]),
-        Padding(
-          padding: const EdgeInsets.only(left: 30, top: 3),
-          child: TimelineTile(
-            alignment: TimelineAlign.manual,
-            lineX: 0.3,
-            topLineStyle: activeLine,
-            indicatorStyle: freshness.index > 0 ? activeIndicator : inactiveIndicator,
-            bottomLineStyle: freshness.index > 1 ? activeLine : inactiveLine,
-            leftChild: Padding(
-              padding: EdgeInsets.only(left: 10),
-              child: Container(
-                  child: Text(DateFormat.MEd().format(item.referenceDatetime()))
-                ),
-              // child: Container(
-              //   child: RaisedButton(
-              //     padding: EdgeInsets.all(8),
-              //     child: Text(
-              //       DateFormat.MEd().format(item.referenceDatetime())
-              //     ),
-              //     onPressed: () => _callDatePicker(baseItem, context)
-              //   )
-              // )
-            ),
-            rightChild: Container(
-              constraints: const BoxConstraints(
-                minHeight: 55,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(top: 18, left: 25),
-                child: Text("✅  Ready to eat", style: TextStyle(fontSize: 17))
-              )
-            )
-          )
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 30),
-          child:TimelineTile(
-            alignment: TimelineAlign.manual,
-            lineX: 0.3,
-            topLineStyle: freshness.index > 2 ? activeLine : inactiveLine,
-            indicatorStyle: freshness.index > 3 ? activeIndicator : inactiveIndicator,
-            bottomLineStyle: freshness.index > 4 ? activeLine : inactiveLine,
-            leftChild: Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: Container(
-                child: Text(DateFormat.MEd().format(item.rangeStartDate()))
-              ),
-            ),
-            rightChild: Container(
-              constraints: const BoxConstraints(
-                minHeight: 70,
-              ),
-              child: Padding(
-                padding: EdgeInsets.only(top: 20, left: 25),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("🔎  Look for signs", style: TextStyle(fontSize: 17)),
-                    Padding(
-                      padding: EdgeInsets.only(top:5, left: 27),
-                      child: Text("In expiration zone")
-                    )
-                  ],
-                )
-              )
-            )
-          )
-        ),
-        if (item.hasRange())
-          Padding(
-            padding: const EdgeInsets.only(left: 30),
-            child:TimelineTile(
-              alignment: TimelineAlign.manual,
-              lineX: 0.3,
-              topLineStyle: freshness.index > 5 ? activeLine : inactiveLine,
-              indicatorStyle: freshness.index > 6 ? activeIndicator : inactiveIndicator,
-              bottomLineStyle: freshness.index > 7 ? activeLine : inactiveLine,
-              leftChild: Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: Container(
-                  child: Text(DateFormat.MEd().format(item.rangeEndDate()))
-                ),
-              ),
-              rightChild: Container(
-                constraints: const BoxConstraints(
-                  minHeight: 60,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 20, left: 25),
-                      child: Text("👻  To the after life", style: TextStyle(fontSize: 17))
-                    )
-                  ]
-                )
-              )
-            )
-          ),
+        FreshnessTimeline(item: item),
+        SizedBox(height: 10),
+        Divider(color: Colors.grey[300]),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Padding(
-              padding: EdgeInsets.only(right: 3),
+            Container(
+              padding: EdgeInsets.only(right: 20),
               child: IconButton(
-                icon: Icon(Icons.edit, color: Colors.grey),
+                iconSize: 32,
+                icon: Icon(Icons.edit, color: Colors.purple[300]),
                 onPressed: () {
                   setState(() {
                     view = false;
@@ -344,12 +238,19 @@ class _BaseItemTileState extends State<BaseItemTile> {
                 }
               )
             ),
-            Padding(
-              padding: EdgeInsets.only(right: 7),
+            Container(
+              padding: EdgeInsets.only(right: 20),
               child: IconButton(
-                icon: Icon(Icons.flag, color: Colors.grey),
+                iconSize: 32,
+                icon: Icon(Icons.flag, color: Colors.purple[300]),
                 onPressed: () {
                   expanded = true;
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return ReportAlertDialog();
+                    }
+                  );               
                 }
               )
             )

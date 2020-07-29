@@ -5,6 +5,7 @@ enum Freshness {
   ready,
   fresh_min,
   fresh_max,
+  in_range,
   in_range_start,
   in_range_min,
   in_range_max,
@@ -34,50 +35,28 @@ extension FreshnessUtil on BaseItem {
     }
 
     int freshnessTime = shelfLife.dayRangeStart.inDays;
-    double freshnessTimePart = freshnessTime > 2 ? freshnessTime / 5 : 0;
 
-    // if (shelfLife.dayRangeEnd != null) {
-      // Handle range case.
     if (shelfLife.dayRangeEnd != null) {
-      int range = shelfLife.dayRangeEnd.inDays - shelfLife.dayRangeStart.inDays;
-      int rangePart = range ~/ 4;
       int expirationTime = shelfLife.dayRangeEnd.inDays;
-
       if (lifeSoFar > expirationTime) {
         return Freshness.past;
       }
 
-      if (lifeSoFar == expirationTime) {
-        return Freshness.in_range_end;
+      if (lifeSoFar <= expirationTime && lifeSoFar >= freshnessTime) {
+        return Freshness.in_range;
       }
 
-      if (lifeSoFar >= (expirationTime - rangePart) && lifeSoFar < expirationTime) {
-        return Freshness.in_range_max;
-      }
-
-      if (lifeSoFar >= freshnessTime + rangePart && lifeSoFar < expirationTime - rangePart) {
-        return Freshness.in_range_min;
-      }
-
-      if (lifeSoFar >= freshnessTime && lifeSoFar < freshnessTime + rangePart) {
-        return Freshness.in_range_start;
-      }
-    } else {
-      if (lifeSoFar + 1 == freshnessTime) {
-        return Freshness.in_range_end;
-      }
-      
-      if (lifeSoFar > freshnessTime) {
-        return Freshness.past; 
+      if (lifeSoFar < freshnessTime) {
+        return Freshness.ready;
       }
     }
 
-    if (lifeSoFar >= freshnessTime - freshnessTimePart && lifeSoFar < freshnessTime) {
-      return Freshness.fresh_max;
+    if (lifeSoFar > freshnessTime) {
+      return Freshness.past; 
     }
 
-    if (lifeSoFar >= freshnessTimePart && lifeSoFar < freshnessTime - freshnessTimePart) {
-      return Freshness.fresh_min;
+    if (lifeSoFar == freshnessTime) {
+      return Freshness.in_range;
     }
 
     return Freshness.ready;
