@@ -126,7 +126,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
               padding: EdgeInsets.symmetric(vertical: 18),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: Colors.purple[400],
+                color: AppTheme.lightSecondaryColor,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(12),
                   bottomRight: Radius.circular(12)

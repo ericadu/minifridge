@@ -38,9 +38,9 @@ class SingleItemNotifier extends ChangeNotifier {
     if (newName != null) {
       _item.setNewName(newName);
     }
-
+    
     if (newDate != null) {
-      _item.setNewReference(DateFormat.yMMMEd().parse(newDate));
+      _item.setNewRangeStart(DateFormat.yMMMEd().parse(newDate));
     }
 
     update();

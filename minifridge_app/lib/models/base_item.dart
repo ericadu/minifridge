@@ -99,6 +99,22 @@ class BaseItem {
     this.displayName = name;
   }
 
+  void setNewRangeStart(DateTime newDate) {
+    Duration newDuration = newDate.difference(referenceDatetime());
+    if (shelfLife.dayRangeEnd != null) {
+      int range = shelfLife.dayRangeEnd.inDays - shelfLife.dayRangeStart.inDays;
+      Duration newRangeEnd = Duration(days: newDuration.inDays + range);
+      shelfLife = ShelfLife(
+        dayRangeStart: newDuration,
+        dayRangeEnd: newRangeEnd
+      );
+    }
+
+    shelfLife = ShelfLife(
+      dayRangeStart: newDuration,
+    );
+  }
+
   DateTime referenceDatetime() {
     return DateTime.fromMicrosecondsSinceEpoch(referenceTimestamp.microsecondsSinceEpoch);
   }

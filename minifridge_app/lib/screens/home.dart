@@ -102,11 +102,7 @@ class _HomePageState extends State<HomePage> {
           return Scaffold(
             body: BaseItemsPage(api: _baseApi),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            floatingActionButton: Container(
-              width: 70,
-              height: 70,
-              child: AddItemButton()
-            )
+            floatingActionButton: AddItemButton(),
           );
         }
       )

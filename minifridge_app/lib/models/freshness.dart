@@ -1,15 +1,10 @@
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/shelf_life.dart';
 
 enum Freshness {
   not_ready,
   ready,
-  fresh_min,
-  fresh_max,
   in_range,
-  in_range_start,
-  in_range_min,
-  in_range_max,
-  in_range_end,
   past
 }
 
@@ -22,13 +17,33 @@ extension FreshnessUtil on BaseItem {
     return utcRangeStart.difference(utcCurrent).inDays;
   }
 
-  Freshness getFreshness() {
+  int getLifeSoFar() {
     DateTime current = new DateTime.now();
     DateTime reference = referenceDatetime();
     DateTime utcCurrent = new DateTime.utc(current.year, current.month, current.day);
     DateTime utcReference = new DateTime.utc(reference.year, reference.month, reference.day);
+    return utcCurrent.difference(utcReference).inDays;
+  }
 
-    int lifeSoFar = utcCurrent.difference(utcReference).inDays;
+  int getDaysPast() {
+    int lifeSoFar = getLifeSoFar();
+    if (shelfLife.dayRangeEnd != null) {
+      return lifeSoFar - shelfLife.dayRangeEnd.inDays;
+    }
+
+    return lifeSoFar - shelfLife.dayRangeStart.inDays;
+  }
+
+  DateTime expirationDate() {
+    if (shelfLife.dayRangeEnd != null) { 
+      return rangeEndDate();
+    }
+
+    return rangeStartDate();
+  }
+
+  Freshness getFreshness() {
+    int lifeSoFar = getLifeSoFar();
     
     if (lifeSoFar < 0) {
       return Freshness.not_ready;

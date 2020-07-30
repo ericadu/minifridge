@@ -8,6 +8,7 @@ import 'package:minifridge_app/screens/base_items/report_alert_dialog.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
+import 'package:minifridge_app/theme.dart';
 import 'package:provider/provider.dart';
 
 class BaseItemTile extends StatefulWidget {
@@ -41,14 +42,14 @@ class _BaseItemTileState extends State<BaseItemTile> {
 
   void _resetControllers() {
     _nameController.text = widget.item.displayName;
-    _dateController.text = DateFormat.yMMMEd().format(widget.item.referenceDatetime());
+    _dateController.text = DateFormat.yMMMEd().format(widget.item.rangeStartDate());
   }
 
   void _callDatePicker(SingleItemNotifier userItem, BuildContext context) async {
     DateTime refDatetime = userItem.item.referenceDatetime();
     DateTime newExp = await showDatePicker(
       context: context,
-      initialDate: refDatetime,
+      initialDate: userItem.item.rangeStartDate(),
       firstDate: DateTime.now().subtract(Duration(days:30)),
       lastDate: refDatetime.add(new Duration(days: 365)),
     );
@@ -101,7 +102,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
               padding: EdgeInsets.only(top: 10, bottom:20),
               child: Text(
                 "Editing",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.orange[800])
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.lightSecondaryColor)
               )
             ),
             Row(
@@ -121,8 +122,8 @@ class _BaseItemTileState extends State<BaseItemTile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Ready Date", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                SizedBox(width: 25),
+                Text("Expiration", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                SizedBox(width: 32),
                 Flexible(
                   child: TextField(
                     controller: _dateController,
@@ -198,6 +199,8 @@ class _BaseItemTileState extends State<BaseItemTile> {
   Widget _buildTile(SingleItemNotifier baseItem) {
     BaseItem item = baseItem.item;
 
+    MaterialColor orange = AppTheme.generateMaterialColor(AppTheme.lightSecondaryColor);
+
     return ExpansionTile(
       initiallyExpanded: expanded,
       title: Text(item.displayName,
@@ -229,7 +232,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
               padding: EdgeInsets.only(right: 20),
               child: IconButton(
                 iconSize: 32,
-                icon: Icon(Icons.edit, color: Colors.purple[300]),
+                icon: Icon(Icons.edit, color: orange[300]),
                 onPressed: () {
                   setState(() {
                     view = false;
@@ -242,7 +245,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
               padding: EdgeInsets.only(right: 20),
               child: IconButton(
                 iconSize: 32,
-                icon: Icon(Icons.flag, color: Colors.purple[300]),
+                icon: Icon(Icons.flag, color: orange[300]),
                 onPressed: () {
                   expanded = true;
                   showDialog(
