@@ -48,7 +48,7 @@ class FreshnessTimeline extends StatelessWidget {
 
     return  IndicatorStyle(
       width: 16,
-      indicatorY: 0.5,
+      indicatorY: 0.7,
       color: inactiveGrey
     );
   }
@@ -101,23 +101,24 @@ class FreshnessTimeline extends StatelessWidget {
   FreshnessText _topText(BaseItem item) {
     Freshness freshness = item.getFreshness();
     int days = item.getDays();
+    String today = "Now, ${DateFormat.Md().format(DateTime.now())}";
 
     if (freshness == Freshness.not_ready) {
       return FreshnessText(
         title: "${-item.getLifeSoFar()} days until ready.",
-        date: "Today"
+        date: today
       );
     } else if (freshness == Freshness.ready) {
       return FreshnessText(
         title: "✅  Ready to eat",
-        date: "Today"
+        date: today
       );
     } else if (freshness == Freshness.in_range) {
       String sub = days == 0 ? "Day 1 in expiration zone." : "${-days} days in expiration zone.";
       return FreshnessText(
         title: "🔎  Look for signs",
         subtitle: sub,
-        date: "Today"
+        date: today
       );
     }
 
@@ -149,11 +150,11 @@ class FreshnessTimeline extends StatelessWidget {
 
     return FreshnessText(
       title: "${item.getDaysPast()} days since passed.",
-      date: "Today"
+      date: "Now, ${DateFormat.Md().format(DateTime.now())}"
     );
   }
 
-  Widget _buildTile(FreshnessText text, FreshnessStyle style) {
+  Widget _buildTile(FreshnessText text, FreshnessStyle style, Alignment alignment) {
     return Container(
       // padding: const EdgeInsets.only(left: 20),
       child: TimelineTile(
@@ -165,15 +166,15 @@ class FreshnessTimeline extends StatelessWidget {
         indicatorStyle: style.indicatorStyle,
         bottomLineStyle: style.bottomLineStyle,
         leftChild: Padding(
-          padding: EdgeInsets.only(left: 8, right: 20),
+          padding: EdgeInsets.only(top: 2, left: 8, right: 20),
           child: Container(
-              alignment: Alignment.centerRight,
+              alignment: alignment,
               child: Text(text.date, style: TextStyle(fontWeight: FontWeight.bold))
             ),
         ),
         rightChild: text.subtitle != null ? Container(
           constraints: const BoxConstraints(
-            minHeight: 70,
+            minHeight: 80,
           ),
           child: Padding(
             padding: EdgeInsets.only(top: 20, left: 20),
@@ -210,8 +211,8 @@ class FreshnessTimeline extends StatelessWidget {
     FreshnessStyle bottomStyle = _getStyle(item, false);
     return Column(
       children: [
-        _buildTile(topText, topStyle),
-        _buildTile(bottomText, bottomStyle)
+        _buildTile(topText, topStyle, Alignment.centerRight),
+        _buildTile(bottomText, bottomStyle, Alignment.centerRight)
       ]
     );
   }

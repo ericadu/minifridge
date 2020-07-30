@@ -26,6 +26,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
   bool expanded = false;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
+  TextEditingController _referenceController = TextEditingController();
 
   @override
   void initState() {
@@ -37,27 +38,33 @@ class _BaseItemTileState extends State<BaseItemTile> {
   void dispose() {
     _nameController.dispose();
     _dateController.dispose();
+    _referenceController.dispose();
     super.dispose();
   }
 
   void _resetControllers() {
     _nameController.text = widget.item.displayName;
     _dateController.text = DateFormat.yMMMEd().format(widget.item.rangeStartDate());
+    _referenceController.text = DateFormat.yMMMEd().format(widget.item.referenceDatetime());
   }
 
-  void _callDatePicker(SingleItemNotifier userItem, BuildContext context) async {
+  void _callDatePicker(SingleItemNotifier userItem, BuildContext context, bool reference) async {
     DateTime refDatetime = userItem.item.referenceDatetime();
     DateTime newExp = await showDatePicker(
       context: context,
-      initialDate: userItem.item.rangeStartDate(),
-      firstDate: DateTime.now().subtract(Duration(days:30)),
+      initialDate: reference ? userItem.item.referenceDatetime() : userItem.item.rangeStartDate(),
+      firstDate: reference ? DateTime.now().subtract(Duration(days:30)) : refDatetime,
       lastDate: refDatetime.add(new Duration(days: 365)),
     );
     
     // add a set date function to single item notifier
     if (newExp != null && newExp != refDatetime) {
       setState(() {
-        _dateController.text = DateFormat.yMMMEd().format(newExp);
+        if (reference) {
+          _referenceController.text = DateFormat.yMMMEd().format(newExp);
+        } else {
+          _dateController.text = DateFormat.yMMMEd().format(newExp);
+        }
       });
     }
   }
@@ -122,18 +129,35 @@ class _BaseItemTileState extends State<BaseItemTile> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                Text("Ready By", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                SizedBox(width: 34),
+                Flexible(
+                  child: TextField(
+                    controller: _referenceController,
+                    onTap: () {
+                      _callDatePicker(baseItem, context, true);
+                    },
+                  )
+                ),
+              ],
+            ),
+            SizedBox(height:15),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Text("Expiration", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 SizedBox(width: 32),
                 Flexible(
                   child: TextField(
                     controller: _dateController,
                     onTap: () {
-                      _callDatePicker(baseItem, context);
+                      _callDatePicker(baseItem, context, false);
                     },
                   )
                 ),
               ],
             ),
+
             SizedBox(height:20),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -173,16 +197,25 @@ class _BaseItemTileState extends State<BaseItemTile> {
                     onPressed: () {
                       setState(() {
                         view = true;
-                        baseItem.updateItem(
-                          newName: _nameController.text,
-                          newDate: _dateController.text
-                        );
-                        
-                        analytics.logEvent(
-                          name: 'edit_item', 
-                          parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
-                          'type': 'tile'
-                        });
+                        DateTime newReference = DateFormat.yMMMEd().parse(_referenceController.text);
+                        DateTime newExpiration = DateFormat.yMMMEd().parse(_dateController.text);
+                        if (newReference.isBefore(newExpiration)) {
+                          baseItem.updateItem(
+                            newName: _nameController.text,
+                            newDate: _dateController.text,
+                            newReference: _referenceController.text
+                          );
+                          
+                          analytics.logEvent(
+                            name: 'edit_item', 
+                            parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
+                            'type': 'tile'
+                          });
+                        } else {
+                          _resetControllers();
+                          showFailUpdateBar();
+                        }
+
                       });
                     }
                   )
@@ -192,6 +225,24 @@ class _BaseItemTileState extends State<BaseItemTile> {
             SizedBox(height: 10)
           ],
         ),
+      )
+    );
+  }
+
+  void showSuccessBar() {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Report submitted!"),
+        backgroundColor: AppTheme.lightSecondaryColor,
+      )
+    );
+  }
+
+  void showFailUpdateBar() {
+    Scaffold.of(context).showSnackBar(
+      SnackBar(
+        content: Text("Update failed: invalid dates."),
+        backgroundColor: Colors.red,
       )
     );
   }
@@ -251,7 +302,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return ReportAlertDialog();
+                      return ReportAlertDialog(itemId: item.id, onSubmit: showSuccessBar);
                     }
                   );               
                 }

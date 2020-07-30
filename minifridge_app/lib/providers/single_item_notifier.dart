@@ -34,13 +34,17 @@ class SingleItemNotifier extends ChangeNotifier {
     update();
   }
 
-  void updateItem({String newDate, String newName}) async {
+  void updateItem({String newDate, String newName, String newReference}) async {
     if (newName != null) {
       _item.setNewName(newName);
     }
-    
+
     if (newDate != null) {
       _item.setNewRangeStart(DateFormat.yMMMEd().parse(newDate));
+    }
+
+    if (newReference != null) {
+      _item.setNewReference(DateFormat.yMMMEd().parse(newReference));
     }
 
     update();

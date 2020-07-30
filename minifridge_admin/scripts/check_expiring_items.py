@@ -19,7 +19,7 @@ def send_to_token(token, items):
   if (len(items) < 3):
     text = "Your " + ' and '.join(items) + " are about to go bad. Maybe add them to the menu today!"
   else:
-    text = "Your " + items[0] + " and " + str(len(items) - 1) + "other items are about to go bad. Maybe add them to the menu today!"
+    text = "Your " + items[0] + " and " + str(len(items) - 1) + " other items are about to go bad. Maybe add them to the menu today!"
 
   message = messaging.Message(
     notification=messaging.Notification(
