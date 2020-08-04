@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
-import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 
 class SingleItemNotifier extends ChangeNotifier {
@@ -17,22 +16,6 @@ class SingleItemNotifier extends ChangeNotifier {
   BaseItem get item => _item;
   int get quantity => _item.quantity;
 
-
-  void decrement() async {
-    _item.decrement();
-    analytics.logEvent(
-      name: 'edit_item', 
-      parameters: {'item': _item.displayName, 'type': 'decrease'});
-    update();
-  }
-
-  void increment() async {
-    _item.increment();
-    analytics.logEvent(
-      name: 'edit_item', 
-      parameters: {'item': _item.displayName, 'type': 'increase'});
-    update();
-  }
 
   void updateItem({String newDate, String newName, String newReference}) async {
     if (newName != null) {

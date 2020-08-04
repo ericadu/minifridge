@@ -1,5 +1,4 @@
 import 'package:minifridge_app/models/base_item.dart';
-import 'package:minifridge_app/models/shelf_life.dart';
 
 enum Freshness {
   not_ready,

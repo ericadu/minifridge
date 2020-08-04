@@ -6,6 +6,7 @@ import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/screens/base_items/base_item_tile.dart';
+import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
 import 'package:minifridge_app/providers/base_items_notifier.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
@@ -76,44 +77,6 @@ class BaseItemsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildEmpty() {
-    return CustomScrollView(
-      slivers: <Widget>[
-        HomeAppBar(),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: 450,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, bottom: 10),
-                    child: Text("🍩", style: TextStyle(fontSize: 50)),
-                  ),
-                  Text("You do-nut have any items!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 10, left: 45, right: 20),
-                    child: Text("📷  Upload a photo of your last grocery receipt to add food.",
-                      style: TextStyle(fontSize: 16)),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 40, left: 50),
-                    child: Image.asset(
-                      "images/arrow.png",
-                      scale: 3.5,
-                    )
-                  )
-                ]
-              ),
-            )
-          )
-        )
-      ]
-    );
-  }
-
   bool _validItem(BaseItem item) {
     return item.endType == EndType.alive && item.quantity > 0;
   }
@@ -134,12 +97,25 @@ class BaseItemsPage extends StatelessWidget {
                 .where((item) => _validItem(item))
                 .toList();
               
+              // TODO: refactor a messy sort function.
               foods.sort((a, b) {
-                int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
-                if (comparison == 0) {
-                  return a.getDays().compareTo(b.getDays());
+                if (a.perishable && b.perishable) {
+                  int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
+                  if (comparison == 0) {
+                    return a.getDays().compareTo(b.getDays());
+                  }
+                  return comparison;
+                } else {
+                  if (a.perishable) {
+                    return -1;
+                  }
+
+                  if (b.perishable) {
+                    return 1;
+                  }
+
+                  return a.displayName.compareTo(b.displayName);
                 }
-                return comparison;
               });
 
               return CustomScrollView(
@@ -210,7 +186,7 @@ class BaseItemsPage extends StatelessWidget {
                 ]
               );
             } else {
-              return _buildEmpty();
+              return EmptyBase();
             }
           }
         );

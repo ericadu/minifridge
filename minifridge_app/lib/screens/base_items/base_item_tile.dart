@@ -9,6 +9,8 @@ import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/widgets/confirm_exit_buttons.dart';
+import 'package:minifridge_app/widgets/edit_item_header.dart';
 import 'package:provider/provider.dart';
 
 class BaseItemTile extends StatefulWidget {
@@ -72,46 +74,154 @@ class _BaseItemTileState extends State<BaseItemTile> {
   String _getMessage(BaseItem item) {
     Freshness freshness = item.getFreshness();
     String message;
-    switch(freshness) {
-      case Freshness.in_range:
-        message = "⏰ Eat me next";
-        break;
-      case Freshness.ready:      
-        if (item.getDays() == 1) {
-          message = "⏳  1 day left";
-        } else if (item.getDays() > 7) {
-          message = "💚​  Fresh AF";
-        } else {
-          message = "⏳  ${item.getDays()} days left";
-        }
-        break;
-      case Freshness.past:
-        message = "😬  Caution";
-        break;
-      case Freshness.not_ready:
-        message = "🐣  Not quite ready";
-        break;
-      default:
-        message = "⏳  " + item.getDays().toString() + " days left";
+    if (item.perishable) {
+      switch(freshness) {
+        case Freshness.in_range:
+          message = "⏰ Eat me next";
+          break;
+        case Freshness.ready:      
+          if (item.getDays() == 1) {
+            message = "⏳  1 day left";
+          } else if (item.getDays() > 7) {
+            message = "💚​  Fresh AF";
+          } else {
+            message = "⏳  ${item.getDays()} days left";
+          }
+          break;
+        case Freshness.past:
+          message = "😬  Caution";
+          break;
+        case Freshness.not_ready:
+          message = "🐣  Not quite ready";
+          break;
+        default:
+          message = "⏳  " + item.getDays().toString() + " days left";
+      }
+    } else {
+      message = "🦄  Forever young.";
     }
 
     return message;
   }
 
+
+
   Widget _buildEditTile(SingleItemNotifier baseItem) {
+    Function onCancel = () {
+      setState(() {
+        view = true;
+        _resetControllers();
+      });
+    };
+
+    Function onConfirm = () {
+      setState(() {
+        view = true;
+        DateTime newReference = DateFormat.yMMMEd().parse(_referenceController.text);
+        DateTime newExpiration = DateFormat.yMMMEd().parse(_dateController.text);
+        if (newReference.isBefore(newExpiration)) {
+          baseItem.updateItem(
+            newName: _nameController.text,
+            newDate: _dateController.text,
+            newReference: _referenceController.text
+          );
+          
+          analytics.logEvent(
+            name: 'edit_item', 
+            parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
+            'type': 'tile'
+          });
+        } else {
+          _resetControllers();
+          showFailUpdateBar();
+        }
+      });
+    };
+
+    Function onNonPerishableConfirm = () {
+      setState(() {
+        view = true;
+        baseItem.updateItem(
+          newName: _nameController.text
+        );
+      });
+
+      analytics.logEvent(
+        name: 'edit_item', 
+        parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
+        'type': 'tile'
+      });
+    };
+
+    if (baseItem.item.perishable) {
+      return Container(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              EditItemHeader(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Name", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(width: 70),
+                  Flexible(
+                    child: TextField(
+                      controller: _nameController
+                    )
+                  ),
+                  
+                ],
+              ),
+              SizedBox(height:15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Ready By", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(width: 34),
+                  Flexible(
+                    child: TextField(
+                      controller: _referenceController,
+                      onTap: () {
+                        _callDatePicker(baseItem, context, true);
+                      },
+                    )
+                  ),
+                ],
+              ),
+              SizedBox(height:15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Expiration", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  SizedBox(width: 32),
+                  Flexible(
+                    child: TextField(
+                      controller: _dateController,
+                      onTap: () {
+                        _callDatePicker(baseItem, context, false);
+                      },
+                    )
+                  ),
+                ],
+              ),
+
+              SizedBox(height:20),
+              ConfirmExitButtons(onConfirm: onConfirm, onCancel: onCancel),
+              SizedBox(height: 10)
+            ],
+          ),
+        )
+      );
+    }
     return Container(
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 10, bottom:20),
-              child: Text(
-                "Editing",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppTheme.lightSecondaryColor)
-              )
-            ),
+            EditItemHeader(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -122,109 +232,13 @@ class _BaseItemTileState extends State<BaseItemTile> {
                     controller: _nameController
                   )
                 ),
-                
               ],
             ),
-            SizedBox(height:15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Ready By", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                SizedBox(width: 34),
-                Flexible(
-                  child: TextField(
-                    controller: _referenceController,
-                    onTap: () {
-                      _callDatePicker(baseItem, context, true);
-                    },
-                  )
-                ),
-              ],
-            ),
-            SizedBox(height:15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Expiration", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                SizedBox(width: 32),
-                Flexible(
-                  child: TextField(
-                    controller: _dateController,
-                    onTap: () {
-                      _callDatePicker(baseItem, context, false);
-                    },
-                  )
-                ),
-              ],
-            ),
-
             SizedBox(height:20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Ink(
-                  decoration: ShapeDecoration(
-                    color: Colors.grey[300],
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(10),
-                        bottomLeft: Radius.circular(10)
-                      )
-                    )
-                  ),
-                  child: IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
-                    onPressed: () {
-                      setState(() {
-                        view = true;
-                        _resetControllers();
-                      });
-                    }
-                  )
-                ),
-                Ink(
-                  decoration: ShapeDecoration(
-                    color: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(10),
-                        bottomRight: Radius.circular(10)
-                      )
-                    )
-                  ),
-                  child: IconButton(
-                    icon: Icon(Icons.done, color: Colors.white),
-                    onPressed: () {
-                      setState(() {
-                        view = true;
-                        DateTime newReference = DateFormat.yMMMEd().parse(_referenceController.text);
-                        DateTime newExpiration = DateFormat.yMMMEd().parse(_dateController.text);
-                        if (newReference.isBefore(newExpiration)) {
-                          baseItem.updateItem(
-                            newName: _nameController.text,
-                            newDate: _dateController.text,
-                            newReference: _referenceController.text
-                          );
-                          
-                          analytics.logEvent(
-                            name: 'edit_item', 
-                            parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
-                            'type': 'tile'
-                          });
-                        } else {
-                          _resetControllers();
-                          showFailUpdateBar();
-                        }
-
-                      });
-                    }
-                  )
-                )
-              ],
-            ),
+            ConfirmExitButtons(onConfirm: onNonPerishableConfirm, onCancel: onCancel),
             SizedBox(height: 10)
-          ],
-        ),
+          ]
+        )
       )
     );
   }
@@ -272,9 +286,14 @@ class _BaseItemTileState extends State<BaseItemTile> {
         });
       },
       children: <Widget>[
-        Divider(color: Colors.grey[300]),
-        FreshnessTimeline(item: item),
-        SizedBox(height: 10),
+        if (item.perishable)
+          Column(
+            children: [
+              Divider(color: Colors.grey[300]),
+              FreshnessTimeline(item: item),
+              SizedBox(height: 10),
+            ]
+          ),
         Divider(color: Colors.grey[300]),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -283,7 +302,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
               padding: EdgeInsets.only(right: 20),
               child: IconButton(
                 iconSize: 32,
-                icon: Icon(Icons.edit, color: orange[300]),
+                icon: Icon(Icons.edit, color: orange),
                 onPressed: () {
                   setState(() {
                     view = false;
@@ -296,7 +315,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
               padding: EdgeInsets.only(right: 20),
               child: IconButton(
                 iconSize: 32,
-                icon: Icon(Icons.flag, color: orange[300]),
+                icon: Icon(Icons.flag, color: orange),
                 onPressed: () {
                   expanded = true;
                   showDialog(
