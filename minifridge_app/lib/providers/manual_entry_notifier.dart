@@ -6,8 +6,8 @@ class ManualEntryNotifier extends ChangeNotifier {
   int _currentStep = 0;
   bool _complete = false;
   int _stepLength;
-  String _itemName;
-  String _expDate;
+  String _itemName = "";
+  String _expDate = "";
   // static final _itemNameController = TextEditingController();
   // static final _dateController = TextEditingController();
 
@@ -41,7 +41,9 @@ class ManualEntryNotifier extends ChangeNotifier {
 
   next(String name) {
     _itemName = name;
-    goTo(currentStep + 1);
+    if (_itemName.isNotEmpty) {
+      goTo(currentStep + 1);
+    }
   }
 
   cancel() {

@@ -11,7 +11,6 @@ class BaseItem {
   String displayName;
   Timestamp endTimestamp;
   EndType endType;
-  bool perishable;
   double price;
   String productId;
   int quantity;
@@ -28,7 +27,6 @@ class BaseItem {
     this.displayName,
     this.endTimestamp,
     this.endType,
-    this.perishable,
     this.price,
     this.productId,
     this.quantity,
@@ -46,7 +44,6 @@ class BaseItem {
     this.displayName = data['displayName'];
     this.endTimestamp = data['endTimestamp'];
     this.endType = data['endType'] != null ? EndTypes.from(data['endType']): EndType.alive;
-    this.perishable = data['perishable'] ?? true;
     this.price = data['price'];
     this.productId = data['productId'];
     this.quantity = data['quantity'];
@@ -67,7 +64,6 @@ class BaseItem {
     data['displayName'] = this.displayName;
     data['endType'] = describeEnum(this.endType);
     data['endTimestamp'] = this.endTimestamp;
-    data['perishable'] = this.perishable;
     data['price'] = this.price;
     data['productId'] = this.productId;
     data['quantity'] = this.quantity;
@@ -99,12 +95,14 @@ class BaseItem {
       int range = shelfLife.dayRangeEnd.inDays - shelfLife.dayRangeStart.inDays;
       Duration newRangeEnd = Duration(days: newDuration.inDays + range);
       shelfLife = ShelfLife(
+        perishable: true,
         dayRangeStart: newDuration,
         dayRangeEnd: newRangeEnd
       );
     }
 
     shelfLife = ShelfLife(
+      perishable: true,
       dayRangeStart: newDuration,
     );
   }

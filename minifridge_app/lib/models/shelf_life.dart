@@ -1,28 +1,36 @@
-import 'package:meta/meta.dart';
-
 class ShelfLife {
+  bool perishable;
   Duration dayRangeStart;
   Duration dayRangeEnd;
 
   ShelfLife({
-    @required this.dayRangeStart,
+    this.perishable,
+    this.dayRangeStart,
     this.dayRangeEnd,
   });
 
   ShelfLife.fromMap(Map data) {
-    dayRangeStart = Duration(days: data['dayRangeStart']);
+    perishable = data['perishable'] ?? true;
 
-    if (data['dayRangeEnd'] != null) {
-      dayRangeEnd = Duration(days: data['dayRangeEnd']);
+    if (perishable) {
+      dayRangeStart = Duration(days: data['dayRangeStart']);
+
+      if (data['dayRangeEnd'] != null) {
+        dayRangeEnd = Duration(days: data['dayRangeEnd']);
+      }
     }
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dayRangeStart'] = this.dayRangeStart.inDays;
+    data['perishable'] = this.perishable;
 
-    if (this.dayRangeEnd != null) {
-      data['dayRangeEnd'] = this.dayRangeEnd.inDays;
+    if (this.perishable) {
+      data['dayRangeStart'] = this.dayRangeStart.inDays;
+
+      if (this.dayRangeEnd != null) {
+        data['dayRangeEnd'] = this.dayRangeEnd.inDays;
+      }
     }
     return data;
   }

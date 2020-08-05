@@ -13,6 +13,14 @@ import 'package:minifridge_app/widgets/confirm_exit_buttons.dart';
 import 'package:minifridge_app/widgets/edit_item_header.dart';
 import 'package:provider/provider.dart';
 
+class DatePickerMetadata {
+  DateTime initialDate;
+  DateTime firstDate;
+  Function onUpdate;
+
+  DatePickerMetadata({this.initialDate, this.firstDate, this.onUpdate});
+}
+
 class BaseItemTile extends StatefulWidget {
   final BaseItem item;
   final FoodBaseApi api;
@@ -28,6 +36,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
   bool expanded = false;
   TextEditingController _nameController = TextEditingController();
   TextEditingController _dateController = TextEditingController();
+  TextEditingController _endDateController = TextEditingController();
   TextEditingController _referenceController = TextEditingController();
 
   @override
@@ -40,41 +49,45 @@ class _BaseItemTileState extends State<BaseItemTile> {
   void dispose() {
     _nameController.dispose();
     _dateController.dispose();
+    _endDateController.dispose();
     _referenceController.dispose();
     super.dispose();
   }
 
   void _resetControllers() {
     _nameController.text = widget.item.displayName;
-    _dateController.text = DateFormat.yMMMEd().format(widget.item.rangeStartDate());
-    _referenceController.text = DateFormat.yMMMEd().format(widget.item.referenceDatetime());
+
+    if (widget.item.shelfLife.perishable) {
+      _dateController.text = DateFormat.yMMMEd().format(widget.item.rangeStartDate());
+      _referenceController.text = DateFormat.yMMMEd().format(widget.item.referenceDatetime());
+
+      if (widget.item.hasRange()) {
+        _endDateController.text = DateFormat.yMMMEd().format(widget.item.rangeEndDate());
+      }
+    }
+
   }
 
-  void _callDatePicker(SingleItemNotifier userItem, BuildContext context, bool reference) async {
+  void _callDatePicker(SingleItemNotifier userItem, BuildContext context, DatePickerMetadata metadata) async {
     DateTime refDatetime = userItem.item.referenceDatetime();
-    DateTime newExp = await showDatePicker(
+
+    DateTime newDate = await showDatePicker(
       context: context,
-      initialDate: reference ? userItem.item.referenceDatetime() : userItem.item.rangeStartDate(),
-      firstDate: reference ? DateTime.now().subtract(Duration(days:30)) : refDatetime,
-      lastDate: refDatetime.add(new Duration(days: 365)),
+      initialDate: metadata.initialDate,
+      firstDate: metadata.firstDate,
+      lastDate: refDatetime.add(new Duration(days: 365))
     );
     
     // add a set date function to single item notifier
-    if (newExp != null && newExp != refDatetime) {
-      setState(() {
-        if (reference) {
-          _referenceController.text = DateFormat.yMMMEd().format(newExp);
-        } else {
-          _dateController.text = DateFormat.yMMMEd().format(newExp);
-        }
-      });
+    if (newDate != null && newDate != refDatetime) {
+      metadata.onUpdate(newDate);
     }
   }
 
   String _getMessage(BaseItem item) {
-    Freshness freshness = item.getFreshness();
     String message;
-    if (item.perishable) {
+    if (item.shelfLife.perishable) {
+      Freshness freshness = item.getFreshness();
       switch(freshness) {
         case Freshness.in_range:
           message = "⏰ Eat me next";
@@ -104,7 +117,24 @@ class _BaseItemTileState extends State<BaseItemTile> {
     return message;
   }
 
-
+  Widget _buildFormRow(String label, TextEditingController controller, Function onTap) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(label.toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+        // SizedBox(width: 70),
+        Container(
+          width: 200,
+          child: TextField(
+            style: TextStyle(fontSize: 15),
+            controller: controller,
+            onTap: onTap
+          )
+        ),
+      ],
+    );
+  }
 
   Widget _buildEditTile(SingleItemNotifier baseItem) {
     Function onCancel = () {
@@ -153,7 +183,27 @@ class _BaseItemTileState extends State<BaseItemTile> {
       });
     };
 
-    if (baseItem.item.perishable) {
+    if (baseItem.item.shelfLife.perishable) {
+      DatePickerMetadata referenceDateMetadata = DatePickerMetadata(
+        firstDate: DateTime.now().subtract(Duration(days:30)),
+        initialDate: baseItem.item.referenceDatetime(),
+        onUpdate: (DateTime newDate) {
+          setState(() {
+            _referenceController.text = DateFormat.yMMMEd().format(newDate);
+          });
+        }
+      );
+
+      DatePickerMetadata rangeStartMetadata = DatePickerMetadata(
+        firstDate: baseItem.item.referenceDatetime(),
+        initialDate: baseItem.item.rangeStartDate(),
+        onUpdate: (DateTime newDate) {
+          setState(() {
+            _dateController.text = DateFormat.yMMMEd().format(newDate);
+          });
+        }
+      );
+
       return Container(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
@@ -161,52 +211,19 @@ class _BaseItemTileState extends State<BaseItemTile> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               EditItemHeader(),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Name", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(width: 70),
-                  Flexible(
-                    child: TextField(
-                      controller: _nameController
-                    )
-                  ),
-                  
-                ],
-              ),
-              SizedBox(height:15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Ready By", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(width: 34),
-                  Flexible(
-                    child: TextField(
-                      controller: _referenceController,
-                      onTap: () {
-                        _callDatePicker(baseItem, context, true);
-                      },
-                    )
-                  ),
-                ],
-              ),
-              SizedBox(height:15),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Expiration", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  SizedBox(width: 32),
-                  Flexible(
-                    child: TextField(
-                      controller: _dateController,
-                      onTap: () {
-                        _callDatePicker(baseItem, context, false);
-                      },
-                    )
-                  ),
-                ],
-              ),
-
+              _buildFormRow("name", _nameController, (){}),
+              _buildFormRow("ready by", _referenceController, () => _callDatePicker(baseItem, context, referenceDateMetadata)),
+              _buildFormRow(baseItem.item.hasRange() ? "wilty by" : "expired by", _dateController, () => _callDatePicker(baseItem, context, rangeStartMetadata)),
+              if (baseItem.item.hasRange())
+                _buildFormRow("expired by", _endDateController, () => _callDatePicker(baseItem, context, DatePickerMetadata(
+                  firstDate: baseItem.item.referenceDatetime(),
+                  initialDate: baseItem.item.rangeEndDate(),
+                  onUpdate: (DateTime newDate) {
+                    setState(() {
+                      _endDateController.text = DateFormat.yMMMEd().format(newDate);
+                    });
+                  }
+                ))),
               SizedBox(height:20),
               ConfirmExitButtons(onConfirm: onConfirm, onCancel: onCancel),
               SizedBox(height: 10)
@@ -280,13 +297,12 @@ class _BaseItemTileState extends State<BaseItemTile> {
       onExpansionChanged: (bool expanded) {
         analytics.logEvent(name: 'expand_item', parameters: {
           'item': item.displayName,
-          'daysLeft': item.getDays(),
           'action': expanded ? 'expand' : 'collapse',
           'user': Provider.of<AuthNotifier>(context, listen:false).user.uid
         });
       },
       children: <Widget>[
-        if (item.perishable)
+        if (item.shelfLife.perishable)
           Column(
             children: [
               Divider(color: Colors.grey[300]),

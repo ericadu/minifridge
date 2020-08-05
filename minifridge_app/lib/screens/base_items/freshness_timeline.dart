@@ -5,11 +5,10 @@ import 'package:minifridge_app/models/freshness.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class FreshnessText {
+  String weekday;
   String date;
   String title;
-  String subtitle;
-
-  FreshnessText({this.title, this.subtitle, this.date});
+  FreshnessText({this.title, this.weekday, this.date});
 }
 
 class FreshnessStyle {
@@ -40,15 +39,15 @@ class FreshnessTimeline extends StatelessWidget {
   IndicatorStyle _indicatorColor(bool active) {
     if (active) {
       return IndicatorStyle(
-        width: 18,
-        indicatorY: 0.5,
+        width: 15,
+        indicatorY: 0.4,
         color: activeColor
       );
     }
 
     return  IndicatorStyle(
-      width: 16,
-      indicatorY: 0.7,
+      width: 15,
+      indicatorY: 0.5,
       color: inactiveGrey
     );
   }
@@ -57,7 +56,7 @@ class FreshnessTimeline extends StatelessWidget {
     if (active) {
       return LineStyle(
         color: activeColor,
-        width: 6,
+        width: 5,
       );
     }
 
@@ -70,7 +69,7 @@ class FreshnessTimeline extends StatelessWidget {
     if (item.getFreshness() == Freshness.past) {
       if (top) {
         return FreshnessStyle(
-          isFirst: true,
+          isFirst: false,
           isLast: false,
           indicatorStyle: _indicatorColor(true),
           bottomLineStyle: _lineStyle(true),
@@ -89,92 +88,91 @@ class FreshnessTimeline extends StatelessWidget {
 
     return FreshnessStyle(
       isFirst: false,
-      isLast: !top,
+      isLast: false,
       indicatorStyle: _indicatorColor(top),
       bottomLineStyle: _lineStyle(top),
       topLineStyle: _lineStyle(top)
     );
   }
 
-  
-
   FreshnessText _topText(BaseItem item) {
     Freshness freshness = item.getFreshness();
     int days = item.getDays();
-    String today = "Now, ${DateFormat.Md().format(DateTime.now())}";
+    // String today = "Today, ${DateFormat.Md().format(DateTime.now())}";
+    String weekday = "Today";
+    String date = DateFormat.Md().format(DateTime.now());
 
     if (freshness == Freshness.not_ready) {
       return FreshnessText(
-        title: "${-item.getLifeSoFar()} days until ready.",
-        date: today
+        title: "🐛 ${-item.getLifeSoFar()} days until ready.",
+        weekday: weekday,
+        date: date
       );
     } else if (freshness == Freshness.ready) {
       return FreshnessText(
         title: "✅  Ready to eat",
-        date: today
+        weekday: weekday,
+        date: date
       );
     } else if (freshness == Freshness.in_range) {
-      String sub = days == 0 ? "Day 1 in expiration zone." : "${-days} days in expiration zone.";
+      String sub = days == 0 ? "First day in expiration zone." : "${-days + 1} days in expiration zone.";
       return FreshnessText(
-        title: "🔎  Look for signs",
-        subtitle: sub,
-        date: today
+        title: "🔎  Look for signs of expiration",
+        date: date,
+        weekday: weekday
       );
     }
 
     return FreshnessText(
       title: "👻  To the after life",
-      date: DateFormat.MEd().format(item.expirationDate())
+      date: DateFormat.Md().format(item.expirationDate()),
+      weekday: DateFormat.EEEE().format(item.expirationDate())
     );
   }
 
   FreshnessText _bottomText(BaseItem item) {
     Freshness freshness = item.getFreshness();
-
     if (freshness == Freshness.not_ready) {
       return FreshnessText(
-        title: "✅ Ready to eat",
-        date: DateFormat.MEd().format(item.referenceDatetime())
+        title: "✅  Ready to eat",
+        date: DateFormat.Md().format(item.referenceDatetime()),
+        weekday: DateFormat.EEEE().format(item.referenceDatetime())
       );
     } else if (freshness == Freshness.ready) {
       return FreshnessText(
-        title: "🔎  Look for signs",
-        date: DateFormat.MEd().format(item.rangeStartDate())
+        title: "🔎  Look for signs of expiration",
+        date: DateFormat.Md().format(item.rangeStartDate()),
+        weekday: DateFormat.E().format(item.rangeStartDate())
       );
     } else if (freshness == Freshness.in_range) {
       return FreshnessText(
         title: "👻  To the after life",
-        date: DateFormat.MEd().format(item.expirationDate())
+        date: DateFormat.Md().format(item.expirationDate()),
+        weekday: DateFormat.EEEE().format(item.expirationDate())
       );
     }
 
     return FreshnessText(
-      title: "${item.getDaysPast()} days since passed.",
-      date: "Now, ${DateFormat.Md().format(DateTime.now())}"
+      title: "${item.getDaysPast()} days since passed expiration.",
+      date: "${DateFormat.Md().format(DateTime.now())}",
+      weekday: "Today"
     );
   }
 
   Widget _buildTile(FreshnessText text, FreshnessStyle style, Alignment alignment) {
     return Container(
-      // padding: const EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 20),
       child: TimelineTile(
-        alignment: TimelineAlign.manual,
+        alignment: TimelineAlign.left,
         isFirst: style.isFirst,
         isLast: style.isLast,
-        lineX: 0.32,
         topLineStyle: style.topLineStyle,
         indicatorStyle: style.indicatorStyle,
         bottomLineStyle: style.bottomLineStyle,
-        leftChild: Padding(
-          padding: EdgeInsets.only(top: 2, left: 8, right: 20),
-          child: Container(
-              alignment: alignment,
-              child: Text(text.date, style: TextStyle(fontWeight: FontWeight.bold))
-            ),
-        ),
-        rightChild: text.subtitle != null ? Container(
+
+        rightChild: Container(
           constraints: const BoxConstraints(
-            minHeight: 80,
+            minHeight: 70,
           ),
           child: Padding(
             padding: EdgeInsets.only(top: 20, left: 20),
@@ -182,21 +180,14 @@ class FreshnessTimeline extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(text.title, style: TextStyle(fontSize: 17)),
-                Padding(
-                  padding: EdgeInsets.only(top:5, left: 27),
-                  child: Text(text.subtitle)
-                )
+                Text("${text.weekday}, ${text.date}".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+                Row(
+                  children: [
+                    Text(text.title, style: TextStyle(fontSize: 15)),
+                  ],
+                ),
               ],
             )
-          )
-        ) : Container(
-          constraints: const BoxConstraints(
-            minHeight: 55,
-          ),
-          child: Padding(
-            padding: EdgeInsets.only(top: 18, left: 20),
-            child: Text(text.title, style: TextStyle(fontSize: 17))
           )
         )
       )
@@ -211,8 +202,9 @@ class FreshnessTimeline extends StatelessWidget {
     FreshnessStyle bottomStyle = _getStyle(item, false);
     return Column(
       children: [
-        _buildTile(topText, topStyle, Alignment.centerRight),
-        _buildTile(bottomText, bottomStyle, Alignment.centerRight)
+        SizedBox(height: 10),
+        _buildTile(topText, topStyle, Alignment.centerLeft),
+        _buildTile(bottomText, bottomStyle, Alignment.centerLeft)
       ]
     );
   }

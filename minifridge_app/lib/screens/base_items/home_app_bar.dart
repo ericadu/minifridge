@@ -13,7 +13,7 @@ class HomeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 170,
+      expandedHeight: 130,
       floating: false,
       pinned: true,
       snap: false,
@@ -22,7 +22,7 @@ class HomeAppBar extends StatelessWidget {
         title: Text('foodbase',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16.0,
+              fontSize: 15.0,
             )),
         background: Image.asset(
           "images/hero.png",

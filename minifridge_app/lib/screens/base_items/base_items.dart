@@ -99,18 +99,18 @@ class BaseItemsPage extends StatelessWidget {
               
               // TODO: refactor a messy sort function.
               foods.sort((a, b) {
-                if (a.perishable && b.perishable) {
+                if (a.shelfLife.perishable && b.shelfLife.perishable) {
                   int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
                   if (comparison == 0) {
                     return a.getDays().compareTo(b.getDays());
                   }
                   return comparison;
                 } else {
-                  if (a.perishable) {
+                  if (a.shelfLife.perishable) {
                     return -1;
                   }
 
-                  if (b.perishable) {
+                  if (b.shelfLife.perishable) {
                     return 1;
                   }
 

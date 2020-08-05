@@ -74,7 +74,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                   padding: EdgeInsets.only(top: 18, bottom: 5),
                   child: Text("Nobody's pear-fect 🍐",
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black
                     )
@@ -83,21 +83,22 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                 Divider(),
                 Container(
                   padding: EdgeInsets.only(
-                    top: 20,
+                    top: 10,
                     left: 25,
                     right: 25,
                   ),
                   child: Text("Tell us what's wrong:",
                     style: TextStyle(
-                      fontSize: 19,
+                      fontSize: 16,
                     )
                   ),
                 ),
                 Container(
-                  padding: EdgeInsets.only(bottom: 20, top: 5),
+                  padding: EdgeInsets.only(bottom: 10),
                   child: Column(
                     children: reasons.map((data) => RadioListTile(
-                      title: Text('${data.reason}'),
+                      dense: true,
+                      title: Text('${data.reason}', style: TextStyle(fontSize: 15)),
                       groupValue: id,
                       value: data.index,
                       onChanged: (val) {
@@ -113,7 +114,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text('Additional info:',
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 19)
+                    style: TextStyle(fontSize: 16)
                   )
                 ),
                 Padding(
@@ -149,9 +150,9 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                         bottomRight: Radius.circular(12)
                       )
                     ),
-                    child: Text("Submit",
+                    child: Text("Submit".toUpperCase(),
                       style: TextStyle(
-                        fontSize: 19,
+                        fontSize: 15,
                       fontWeight: FontWeight.bold,
                         color: Colors.white
                       )

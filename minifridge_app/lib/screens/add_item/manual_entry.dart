@@ -74,6 +74,12 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
               children: <Widget>[
                 TextFormField(
                   controller: _itemNameController,
+                  // validator: (value) {
+                  //   if (value.isEmpty) {
+                  //     return 'Please enter some text';
+                  //   }
+                  //   return null;
+                  // },
                 )
               ]
             )
@@ -84,6 +90,7 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
             state: StepState.editing,
             content: Column(
               children: <Widget>[
+                Text("If item is non-perishable, please leave blank."),
                 TextFormField(
                   controller: _dateController,
                   onTap: () {

@@ -26,8 +26,11 @@ class ManualAddRightButton extends StatelessWidget {
               child: Text("Submit", style: TextStyle(color: Colors.white)),
               onPressed: () {
                 DateTime today = DateTime.now();
-                DateTime expDate = DateFormat.yMMMEd().parse(manual.expDate);
-                print(expDate.toString());
+                ShelfLife shelfLife = ShelfLife(perishable: false);
+                if (manual.expDate.isNotEmpty) {
+                  shelfLife = ShelfLife(dayRangeStart: DateFormat.yMMMEd().parse(manual.expDate).difference(today));
+                }
+                
                 BaseItem item = BaseItem(
                   displayName: manual.itemName,
                   quantity: 1,
@@ -35,7 +38,7 @@ class ManualAddRightButton extends StatelessWidget {
                   buyTimestamp: Timestamp.fromDate(today),
                   referenceTimestamp: Timestamp.fromDate(today),
                   addedByUserId: Provider.of<AuthNotifier>(context, listen: false).user.uid,
-                  shelfLife: ShelfLife(dayRangeStart: expDate.difference(today)),
+                  shelfLife: shelfLife,
                   endType: EndType.alive,
                 );
 
