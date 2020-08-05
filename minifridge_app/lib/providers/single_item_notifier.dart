@@ -36,6 +36,6 @@ class SingleItemNotifier extends ChangeNotifier {
   void update() async {
     Map data = _item.toJson();
     notifyListeners();
-    return await _api.updateDocument(_item.id, data);
+    return await _api.updateBaseItem(_item.id, data);
   }
 }

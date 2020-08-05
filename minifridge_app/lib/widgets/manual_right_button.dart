@@ -5,7 +5,7 @@ import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/models/shelf_life.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
-import 'package:minifridge_app/providers/base_items_notifier.dart';
+import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +18,7 @@ class ManualAddRightButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer3(
-      builder: (BuildContext context, ManualEntryNotifier manual, BaseItemsNotifier base, AuthNotifier user, _) {
+      builder: (BuildContext context, ManualEntryNotifier manual, BaseNotifier base, AuthNotifier user, _) {
         if (manual.currentStep + 1 == manual.stepLength) {
           return Container(
             color: AppTheme.lightTheme.accentColor,

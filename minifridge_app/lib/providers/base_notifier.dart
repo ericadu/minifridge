@@ -3,15 +3,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 
-class BaseItemsNotifier extends ChangeNotifier {
+class BaseNotifier extends ChangeNotifier {
   FoodBaseApi _api;
   List<BaseItem> _baseItems;
   
-  BaseItemsNotifier(FoodBaseApi api) {
+  BaseNotifier(FoodBaseApi api) {
     _api = api;
   }
+
+  FoodBaseApi get api => _api;
 
   Future<List<BaseItem>> getItems() async {
     QuerySnapshot result = await _api.getCollection();
@@ -27,13 +30,19 @@ class BaseItemsNotifier extends ChangeNotifier {
   }
 
   Future<DocumentReference> addNewItem(Map data) {
-    return _api.addDocument(data);
+    return _api.addItemToBase(data);
   }
 
-  void updateEndtype(BaseItem item, EndType endType) async {
+  void updateEndtype(BaseItem item, EndType endType, String uid) async {
     item.setEnd(endType);
+    analytics.logEvent(
+      name: 'remove_item', 
+      parameters: {
+        'item': item.displayName,
+        'type': describeEnum(endType),
+        'user': uid,
+      });
     Map data = item.toJson();
-    // notifyListeners();
-    return await _api.updateDocument(item.id, data);
+    return await _api.updateBaseItem(item.id, data);
   }
 }

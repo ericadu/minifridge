@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/signed_in_user.dart';
-import 'package:minifridge_app/providers/base_items_notifier.dart';
+import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/add_item/manual_entry.dart';
@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
           create: (_) => ImagePickerNotifier()
         ),
         ChangeNotifierProvider(
-          create: (_) => BaseItemsNotifier(_baseApi)
+          create: (_) => BaseNotifier(_baseApi)
         ),
         ChangeNotifierProvider(
           create: (_) => ManualEntryNotifier()

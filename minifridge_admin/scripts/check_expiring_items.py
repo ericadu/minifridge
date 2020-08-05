@@ -62,6 +62,9 @@ if __name__ == '__main__':
         for doc in user_items:
           item = doc.to_dict()
           if ('endType' not in item) or ('endType' in item and item['endType'] == 'alive'):
+            if ('perishable' in item['shelfLife'] and item['shelfLife']['perishable'] == False):
+              continue
+
             reference_timestamp = item['referenceTimestamp']
             days = datetime.timedelta(days=item['shelfLife']['dayRangeStart'])
             enter_zone = reference_timestamp + days

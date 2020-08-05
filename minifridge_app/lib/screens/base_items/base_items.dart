@@ -8,7 +8,7 @@ import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/screens/base_items/base_item_tile.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
-import 'package:minifridge_app/providers/base_items_notifier.dart';
+import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:provider/provider.dart';
@@ -87,9 +87,9 @@ class BaseItemsPage extends StatelessWidget {
     // final FoodBaseApi _baseApi = FoodBaseApi(user.baseId);
 
     return Consumer(
-      builder: (BuildContext context, BaseItemsNotifier baseItems, _) {
+      builder: (BuildContext context, BaseNotifier base, _) {
         return StreamBuilder(
-          stream: baseItems.streamItems(),
+          stream: base.streamItems(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasData && snapshot.data.documents.length > 0) {
               List<BaseItem> foods = snapshot.data.documents
@@ -117,6 +117,7 @@ class BaseItemsPage extends StatelessWidget {
                   return a.displayName.compareTo(b.displayName);
                 }
               });
+              String uid = Provider.of<AuthNotifier>(context, listen: false).user.uid;
 
               return CustomScrollView(
                 slivers: <Widget>[
@@ -129,13 +130,13 @@ class BaseItemsPage extends StatelessWidget {
                         return Dismissible(
                           background: slideRightBackground(),
                           secondaryBackground: slideLeftBackground(),
-                          key: Key(item.id),
+                          key: UniqueKey(),
                           onDismissed: (DismissDirection direction) {
                             if (direction == DismissDirection.startToEnd) {
-                              baseItems.updateEndtype(item, EndType.thrown);
+                              base.updateEndtype(item, EndType.thrown, uid);
                               endtype = EndType.thrown;
                             } else if (direction == DismissDirection.endToStart) {
-                              baseItems.updateEndtype(item, EndType.eaten);
+                              base.updateEndtype(item, EndType.eaten, uid);
                               endtype = EndType.eaten;
                             }
 
@@ -156,7 +157,7 @@ class BaseItemsPage extends StatelessWidget {
                                     label: "Undo",
                                     textColor: Colors.yellow,
                                     onPressed: () {
-                                      baseItems.updateEndtype(item, EndType.alive);
+                                      base.updateEndtype(item, EndType.alive, uid);
                                     }
                                   )
                                 )
