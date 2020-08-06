@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
-import 'package:minifridge_app/screens/base_items/freshness_timeline.dart';
+import 'package:minifridge_app/screens/base_items/tile/freshness_timeline.dart';
 import 'package:minifridge_app/screens/base_items/report_alert_dialog.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
@@ -111,7 +111,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
           message = "⏳  " + item.getDays().toString() + " days left";
       }
     } else {
-      message = "🦄  Forever young.";
+      message = "🦄  Forever young";
     }
 
     return message;
@@ -278,10 +278,6 @@ class _BaseItemTileState extends State<BaseItemTile> {
     );
   }
 
-  Widget _renderTimeline(item) {
-    return FreshnessTimeline(item: item);
-  }
-
   Widget _buildTile(SingleItemNotifier baseItem) {
     BaseItem item = baseItem.item;
 
@@ -307,7 +303,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
       },
       children: <Widget>[
         Divider(color: Colors.grey[300]),
-        _renderTimeline(item),
+        FreshnessTimeline(item: item),
         SizedBox(height: 10),
         Divider(color: Colors.grey[300]),
         Row(

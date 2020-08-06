@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
-import 'package:minifridge_app/screens/base_items/base_item_tile.dart';
+import 'package:minifridge_app/screens/base_items/tile/base_item_tile.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:provider/provider.dart';
 

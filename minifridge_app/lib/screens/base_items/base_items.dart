@@ -7,7 +7,7 @@ import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
-import 'package:minifridge_app/screens/base_items/slidable_tile.dart';
+import 'package:minifridge_app/screens/base_items/tile/slidable_tile.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:provider/provider.dart';
 

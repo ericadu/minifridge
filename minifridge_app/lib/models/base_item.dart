@@ -106,6 +106,9 @@ class BaseItem {
       dayRangeStart: newDuration,
     );
   }
+  DateTime buyDatetime() {
+    return DateTime.fromMicrosecondsSinceEpoch(buyTimestamp.microsecondsSinceEpoch);
+  } 
 
   DateTime referenceDatetime() {
     return DateTime.fromMicrosecondsSinceEpoch(referenceTimestamp.microsecondsSinceEpoch);
