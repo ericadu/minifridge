@@ -106,6 +106,18 @@ class BaseItem {
       dayRangeStart: newDuration,
     );
   }
+
+  void setNewShelfLife(DateTime rangeStart, DateTime rangeEnd) {
+    Duration newRangeStartDuration = rangeStart.difference(referenceDatetime());
+    Duration newRangeEndDuration = rangeEnd != null ? rangeEnd.difference(referenceDatetime()) : null;
+
+    shelfLife = ShelfLife(
+      perishable: true,
+      dayRangeStart: newRangeStartDuration,
+      dayRangeEnd: newRangeEndDuration
+    );
+  }
+
   DateTime buyDatetime() {
     return DateTime.fromMicrosecondsSinceEpoch(buyTimestamp.microsecondsSinceEpoch);
   } 

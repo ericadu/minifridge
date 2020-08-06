@@ -17,19 +17,22 @@ class SingleItemNotifier extends ChangeNotifier {
   int get quantity => _item.quantity;
 
 
-  void updateItem({String newDate, String newName, String newReference}) async {
-    if (newName != null) {
+  void updateItem({String newDate, String newName, String newReference, String newEndDate}) async {
+    if (newName.isNotEmpty) {
       _item.setNewName(newName);
     }
 
-    if (newDate != null) {
-      _item.setNewRangeStart(DateFormat.yMMMEd().parse(newDate));
-    }
-
-    if (newReference != null) {
+    if (newReference.isNotEmpty) {
       _item.setNewReference(DateFormat.yMMMEd().parse(newReference));
     }
 
+    if (_item.shelfLife.perishable) {
+      DateTime rangeStart = newDate.isNotEmpty ? DateFormat.yMMMEd().parse(newDate) : _item.rangeStartDate();
+      DateTime rangeEnd = newEndDate.isNotEmpty ? DateFormat.yMMMEd().parse(newEndDate) : _item.rangeEndDate();
+
+      _item.setNewShelfLife(rangeStart, rangeEnd);
+    }
+    
     update();
   }
 

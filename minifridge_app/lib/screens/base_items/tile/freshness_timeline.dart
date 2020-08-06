@@ -49,10 +49,6 @@ class FreshnessTimeline extends StatelessWidget {
     return _generateText("${item.getDaysPast()} days since passed expiration.", DateTime.now());
   }
 
-  FreshnessText _nonPerishableText(BaseItem item) {
-    return _generateText("🏠 Purchase date", item.buyDatetime());
-  }
-
   @override
   Widget build(BuildContext context) {
     if (item.shelfLife.perishable) {

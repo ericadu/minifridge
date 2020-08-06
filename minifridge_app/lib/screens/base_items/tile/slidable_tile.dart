@@ -44,7 +44,8 @@ class SlidableTile extends StatelessWidget {
           dismissal: SlidableDismissal(
             child: SlidableDrawerDismissal(),
             dismissThresholds: <SlideActionType, double>{
-              SlideActionType.primary: 1.0
+              SlideActionType.primary: 1.0,
+              SlideActionType.secondary: 0.1
             },
             onDismissed: (actionType) => onRemove(
               base,
