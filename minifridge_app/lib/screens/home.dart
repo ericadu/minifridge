@@ -7,7 +7,6 @@ import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/add_item/manual_entry.dart';
 import 'package:minifridge_app/screens/base_items/base_items.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
-import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
@@ -39,15 +38,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final FoodBaseApi _baseApi = FoodBaseApi(user.baseId);
-   
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
           create: (_) => ImagePickerNotifier()
         ),
         ChangeNotifierProvider(
-          create: (_) => BaseNotifier(_baseApi)
+          create: (_) => BaseNotifier(user)
         ),
         ChangeNotifierProvider(
           create: (_) => ManualEntryNotifier()
@@ -100,7 +97,7 @@ class _HomePageState extends State<HomePage> {
           }
 
           return Scaffold(
-            body: BaseItemsPage(api: _baseApi),
+            body: BaseItemsPage(),
             floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: AddItemButton(),
           );

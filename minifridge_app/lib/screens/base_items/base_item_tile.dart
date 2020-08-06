@@ -278,6 +278,10 @@ class _BaseItemTileState extends State<BaseItemTile> {
     );
   }
 
+  Widget _renderTimeline(item) {
+    return FreshnessTimeline(item: item);
+  }
+
   Widget _buildTile(SingleItemNotifier baseItem) {
     BaseItem item = baseItem.item;
 
@@ -302,14 +306,9 @@ class _BaseItemTileState extends State<BaseItemTile> {
         });
       },
       children: <Widget>[
-        if (item.shelfLife.perishable)
-          Column(
-            children: [
-              Divider(color: Colors.grey[300]),
-              FreshnessTimeline(item: item),
-              SizedBox(height: 10),
-            ]
-          ),
+        Divider(color: Colors.grey[300]),
+        _renderTimeline(item),
+        SizedBox(height: 10),
         Divider(color: Colors.grey[300]),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,

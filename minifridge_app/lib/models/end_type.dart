@@ -1,5 +1,5 @@
 enum EndType {
-  eaten, thrown, alive, incorrect
+  eaten, thrown, partial, alive, incorrect
 }
 
 extension EndTypes on EndType {
@@ -7,6 +7,7 @@ extension EndTypes on EndType {
     switch(name) {
       case 'eaten': return EndType.eaten;
       case 'thrown': return EndType.thrown;
+      case 'partial': return EndType.partial;
       case 'alive': return EndType.alive;
       case 'incorrect': return EndType.incorrect;
       default: throw RangeError("enum EndType contains no value $name");
