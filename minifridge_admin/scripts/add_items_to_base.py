@@ -72,7 +72,7 @@ if __name__ == '__main__':
         next(reader)
         for row in reader:
           new_item = {
-            'displayName': row[1],
+            'displayName': row[1].strip(),
             'buyTimestamp': get_datetime(row[2], timezone),
             'shelfLife': {
               'dayRangeStart': int(row[3]),

@@ -187,10 +187,10 @@ class _EditItemTileState extends State<EditItemTile> {
                   children: [
                     EditItemHeader(),
                     _buildFormRow("name", _nameController, (){}),
-                    _buildFormRow("ready by", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
-                    _buildFormRow(single.item.hasRange() ? "wilty by" : "expired by", _dateController, () => _callDatePicker(single, context, rangeStartMetadata)),
+                    _buildFormRow("ready to eat", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
+                    _buildFormRow(single.item.hasRange() ? "warn me by" : "caution by", _dateController, () => _callDatePicker(single, context, rangeStartMetadata)),
                     if (single.item.hasRange())
-                      _buildFormRow("expired by", _endDateController, () => _callDatePicker(single, context, DatePickerMetadata(
+                      _buildFormRow("caution by", _endDateController, () => _callDatePicker(single, context, DatePickerMetadata(
                         firstDate: single.item.referenceDatetime(),
                         initialDate: single.item.rangeEndDate(),
                         onUpdate: (DateTime newDate) {
