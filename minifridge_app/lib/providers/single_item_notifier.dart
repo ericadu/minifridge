@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
+import 'package:quiver/strings.dart';
+
 
 class SingleItemNotifier extends ChangeNotifier {
   FoodBaseApi _api;
@@ -18,17 +20,17 @@ class SingleItemNotifier extends ChangeNotifier {
 
 
   void updateItem({String newDate, String newName, String newReference, String newEndDate}) async {
-    if (newName.isNotEmpty) {
+    if (isNotEmpty(newName)) {
       _item.setNewName(newName);
     }
 
-    if (newReference.isNotEmpty) {
+    if (isNotEmpty(newReference)) {
       _item.setNewReference(DateFormat.yMMMEd().parse(newReference));
     }
 
     if (_item.shelfLife.perishable) {
-      DateTime rangeStart = newDate.isNotEmpty ? DateFormat.yMMMEd().parse(newDate) : _item.rangeStartDate();
-      DateTime rangeEnd = newEndDate.isNotEmpty ? DateFormat.yMMMEd().parse(newEndDate) : _item.rangeEndDate();
+      DateTime rangeStart = isNotEmpty(newDate) ? DateFormat.yMMMEd().parse(newDate) : _item.rangeStartDate();
+      DateTime rangeEnd = isNotEmpty(newEndDate) ? DateFormat.yMMMEd().parse(newEndDate) : null;
 
       _item.setNewShelfLife(rangeStart, rangeEnd);
     }

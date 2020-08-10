@@ -28,7 +28,10 @@ class ManualAddRightButton extends StatelessWidget {
                 DateTime today = DateTime.now();
                 ShelfLife shelfLife = ShelfLife(perishable: false);
                 if (manual.expDate.isNotEmpty) {
-                  shelfLife = ShelfLife(dayRangeStart: DateFormat.yMMMEd().parse(manual.expDate).difference(today));
+                  shelfLife = ShelfLife(
+                    dayRangeStart: DateFormat.yMMMEd().parse(manual.expDate).difference(today),
+                    perishable: true
+                  );
                 }
                 
                 BaseItem item = BaseItem(
