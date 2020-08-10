@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:quiver/strings.dart';
 
 class ManualEntryNotifier extends ChangeNotifier {
   bool _showManualAdd = false;
@@ -41,7 +42,7 @@ class ManualEntryNotifier extends ChangeNotifier {
 
   next(String name) {
     _itemName = name;
-    if (_itemName.isNotEmpty) {
+    if (isNotEmpty(_itemName)) {
       goTo(currentStep + 1);
     }
   }

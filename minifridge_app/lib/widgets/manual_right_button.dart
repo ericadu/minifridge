@@ -9,6 +9,7 @@ import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:provider/provider.dart';
+import 'package:quiver/strings.dart';
 
 class ManualAddRightButton extends StatelessWidget {
   final VoidCallback callback;
@@ -27,7 +28,7 @@ class ManualAddRightButton extends StatelessWidget {
               onPressed: () {
                 DateTime today = DateTime.now();
                 ShelfLife shelfLife = ShelfLife(perishable: false);
-                if (manual.expDate.isNotEmpty) {
+                if (isNotEmpty(manual.expDate)) {
                   shelfLife = ShelfLife(
                     dayRangeStart: DateFormat.yMMMEd().parse(manual.expDate).difference(today),
                     perishable: true
