@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:minifridge_app/screens/base_items/home_app_bar.dart';
+import 'package:minifridge_app/screens/home/home_app_bar.dart';
 
 class EmptyBase extends StatelessWidget {
   @override

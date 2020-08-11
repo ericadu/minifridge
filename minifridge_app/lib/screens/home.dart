@@ -10,7 +10,6 @@ import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
-import 'package:minifridge_app/widgets/add_item_button.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -56,51 +55,14 @@ class _HomePageState extends State<HomePage> {
           ManualEntryNotifier manual, _) {
           
           if (picker.hasImage()) {
-            return Scaffold (
-                appBar: AppBar(
-                  title: Text('Selected Photo', style: TextStyle(color: Colors.white))
-                ),
-                bottomNavigationBar: BottomAppBar(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      if (!picker.uploading())
-                        IconButton(
-                          icon: Icon(Icons.clear),
-                          onPressed: () => picker.clear()
-                        ),
-                      if (!picker.uploading())
-                        IconButton(
-                          icon: Icon(Icons.check, color: Colors.green),
-                          onPressed: () => picker.startUpload(user.id)
-                        ),
-                    ]
-                  )
-                ),
-                body: ImageUploadPage()
-            );
+            return ImageUploadPage();
           }
 
           if (manual.showManualAdd) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text('Add Manually', style: TextStyle(color: Colors.white)),
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.close, color: Colors.white),
-                    onPressed: () => manual.reset()
-                  )
-                ],
-              ),
-              body: ManualEntryPage()
-            );
+            return ManualEntryPage();
           }
 
-          return Scaffold(
-            body: BaseItemsPage(),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-            floatingActionButton: AddItemButton(),
-          );
+          return BaseItemsPage();
         }
       )
     );

@@ -104,27 +104,38 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
 
         manual.setStepLength(steps.length);
 
-        return Column(
-          children: [
-            Expanded(
-              child: Stepper(
-                steps: steps,
-                controlsBuilder: (BuildContext context, { VoidCallback onStepContinue, VoidCallback onStepCancel }) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      _buildLeftButton(onStepCancel, manual),
-                      SizedBox(height: 100, width: 20),
-                      ManualAddRightButton(callback: onStepContinue)
-                    ]
-                  );
-                },
-                currentStep: manual.currentStep,
-                onStepContinue: () => { manual.next(_itemNameController.text) },
-                onStepTapped: (step) => manual.goTo(step),
-                onStepCancel: manual.cancel
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('Add Manually', style: TextStyle(color: Colors.white)),
+            actions: [
+              IconButton(
+                icon: Icon(Icons.close, color: Colors.white),
+                onPressed: () => manual.reset()
               )
-          )],
+            ],
+          ),
+          body: Column(
+            children: [
+              Expanded(
+                child: Stepper(
+                  steps: steps,
+                  controlsBuilder: (BuildContext context, { VoidCallback onStepContinue, VoidCallback onStepCancel }) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        _buildLeftButton(onStepCancel, manual),
+                        SizedBox(height: 100, width: 20),
+                        ManualAddRightButton(callback: onStepContinue)
+                      ]
+                    );
+                  },
+                  currentStep: manual.currentStep,
+                  onStepContinue: () => { manual.next(_itemNameController.text) },
+                  onStepTapped: (step) => manual.goTo(step),
+                  onStepCancel: manual.cancel
+                )
+            )],
+          )
         );
       }
     );

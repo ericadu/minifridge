@@ -43,14 +43,36 @@ class ImageUploadPage extends StatelessWidget {
                 });
               }
 
-              return Column(
-                children: [
-                  LinearProgressIndicator(value: progressPercent),
-                  Container(
-                    padding: EdgeInsets.symmetric(vertical: 40, horizontal: 40),
-                    child: Image.file(picker.imageFile),
-                  ),
-                ],
+              return Scaffold (
+                appBar: AppBar(
+                  title: Text('Selected Photo', style: TextStyle(color: Colors.white))
+                ),
+                bottomNavigationBar: BottomAppBar(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      if (!picker.uploading())
+                        IconButton(
+                          icon: Icon(Icons.clear),
+                          onPressed: () => picker.clear()
+                        ),
+                      if (!picker.uploading())
+                        IconButton(
+                          icon: Icon(Icons.check, color: Colors.green),
+                          onPressed: () => picker.startUpload(user.user.uid)
+                        ),
+                    ]
+                  )
+                ),
+                body: Column(
+                  children: [
+                    LinearProgressIndicator(value: progressPercent),
+                    Container(
+                      padding: EdgeInsets.symmetric(vertical: 40, horizontal: 40),
+                      child: Image.file(picker.imageFile),
+                    ),
+                  ],
+                )
               );
             }
           );

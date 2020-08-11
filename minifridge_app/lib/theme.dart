@@ -13,7 +13,8 @@ class AppTheme {
     accentColor: Colors.teal[400],
     primarySwatch: generateMaterialColor(themeColor),
     appBarTheme: AppBarTheme(
-      color: themeColor
+      color: Colors.white,
+      shadowColor: themeColor
     ),
     colorScheme: ColorScheme.light(
       primary: themeColor,
