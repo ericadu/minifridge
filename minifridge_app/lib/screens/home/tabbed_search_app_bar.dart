@@ -28,7 +28,7 @@ class TabbedSearchAppBar extends StatelessWidget {
       //     ),
       //   ),
       // ),
-      bottom: TabBar(
+      title: TabBar(
         tabs: [
           Tab(text: 'All'),
           Tab(text: 'By Category')
