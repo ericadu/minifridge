@@ -2,11 +2,11 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 List<String> categories = [
-  'Dairy & Alternatives',
   'Proteins',
   'Grains',
   'Fruits',
   'Vegetables',
+  'Dairy & Substitutes',
   'Snacks & Sweets',
   'Sauces & Spreads',
   'Beverages',
@@ -17,6 +17,22 @@ List<String> categories = [
   'Uncategorized'
 ];
 
+List<String> emoji = [
+  '🍖',
+  '🍞',
+  '🍓',
+  '🥬',
+  '🧀',
+  '🍿',
+  '🍯',
+  '🧃',
+  '🍺',
+  '💊',
+  '🍱',
+  '🥡',
+  '🏷️'
+];
+
 class CategoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -24,17 +40,34 @@ class CategoryHeader extends StatelessWidget {
       pinned: true,
       floating: true,
       delegate: StickyRowDelegate(
-        collapsedHeight: 80.0,
-        expandedHeight: 80.0,
+        collapsedHeight: 110.0,
+        expandedHeight: 110.0,
         child: Container(
-          padding: EdgeInsets.only(top: 30, left: 15, right: 15),
+          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
           color: Colors.white,
-          height: 80,
+          height: 110,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
             itemBuilder: (BuildContext context, int index) {
-              return Text(categories[index]);
+              return Container(
+                width: 80,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 0, left: 10, right: 10),
+                      child: Text(emoji[index],
+                        style: TextStyle(fontSize: 45)
+                      )
+                    ),
+                    Text(categories[index],
+                      style: TextStyle(fontSize: 8)
+                    )
+                  ],
+                )
+              );
             }
           )
         )

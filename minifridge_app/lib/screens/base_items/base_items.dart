@@ -53,59 +53,61 @@ class BaseItemsPage extends StatelessWidget {
               return a.displayName.compareTo(b.displayName);
             }
           });
-
-          return DefaultTabController(
-            length: 2,
-            child: NestedScrollView(
-              headerSliverBuilder: (context, value) {
-                return [
-                  TabbedSearchAppBar()
-                ];
-              },
-              body: TabBarView(
-                children: [
-                  ListView.builder(
-                    padding: EdgeInsets.only(top: 0, bottom: 50),
-                    itemCount: foods.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      BaseItem item = foods[index];
-                      return SlidableTile(item: item);
-                    }
-                  ),
-                  // CustomScrollView(
-                  //   slivers: <Widget>[
-                  //     SliverList(
-                  //       delegate: SliverChildBuilderDelegate(
-                  //         (BuildContext context, int index) {
-                  //           BaseItem item = foods[index];
-                  //           return SlidableTile(item: item);
-                  //         },
-                  //         childCount: foods.length
-                  //       )
-                  //     ),
-                  //     SliverPadding(
-                  //       padding: EdgeInsets.only(bottom: 50),
-                  //     ),
-                  //   ]
-                  // ),
-                  CustomScrollView(
-                    slivers: <Widget>[
-                      CategoryHeader(),
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            BaseItem item = foods[index];
-                            return SlidableTile(item: item);
-                          },
-                          childCount: foods.length
-                        )
-                      ),
-                    ]
-                  )
-                ],
+          
+          if (foods.isNotEmpty) {
+            return DefaultTabController(
+              length: 2,
+              child: NestedScrollView(
+                headerSliverBuilder: (context, value) {
+                  return [
+                    TabbedSearchAppBar()
+                  ];
+                },
+                body: TabBarView(
+                  children: [
+                    ListView.builder(
+                      padding: EdgeInsets.only(top: 0, bottom: 50),
+                      itemCount: foods.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        BaseItem item = foods[index];
+                        return SlidableTile(item: item);
+                      }
+                    ),
+                    // CustomScrollView(
+                    //   slivers: <Widget>[
+                    //     SliverList(
+                    //       delegate: SliverChildBuilderDelegate(
+                    //         (BuildContext context, int index) {
+                    //           BaseItem item = foods[index];
+                    //           return SlidableTile(item: item);
+                    //         },
+                    //         childCount: foods.length
+                    //       )
+                    //     ),
+                    //     SliverPadding(
+                    //       padding: EdgeInsets.only(bottom: 50),
+                    //     ),
+                    //   ]
+                    // ),
+                    CustomScrollView(
+                      slivers: <Widget>[
+                        CategoryHeader(),
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (BuildContext context, int index) {
+                              BaseItem item = foods[index];
+                              return SlidableTile(item: item);
+                            },
+                            childCount: foods.length
+                          )
+                        ),
+                      ]
+                    )
+                  ],
+                )
               )
-            )
-          );
+            );
+          }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return CustomScrollView(
             slivers: <Widget>[
@@ -117,9 +119,9 @@ class BaseItemsPage extends StatelessWidget {
               )
             ]
           );
-        } else {
-          return EmptyBase();
-        }
+        } 
+
+        return EmptyBase();
       }
     );
   }

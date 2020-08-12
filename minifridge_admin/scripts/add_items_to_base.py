@@ -130,9 +130,9 @@ if __name__ == '__main__':
               'endType': 'alive'
             }
 
-            # userItemsRef.document().create(new_item)
+            userItemsRef.document().create(new_item)
             print(new_item)
       
-        # send_to_token(token)
+        send_to_token(token)
     else:
       print("invalid user or filepath.")
