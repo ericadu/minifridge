@@ -6,31 +6,29 @@ CREDS_PATH = "/Users/ericadu/github/minifridge/minifridge_admin/data/creds.json"
 
 
 categories = [
-  'dairy and dairy alternatives',
-  'animal-based protein',
-  'plant-based protein',
-  'grains',
-  'fruit',
-  'vegetables',
-  'snacks and sweets',
-  'condiments, sauces, and spreads',
-  'non-alcoholic beverages',
-  'alcohol',
-  'supplements',
-  'prepared meals',
-  'misc',
-  'uncategorized'
+  'Dairy & Alternatives',
+  'Proteins',
+  'Grains',
+  'Fruits',
+  'Vegetables',
+  'Snacks & Sweets',
+  'Sauces & Spreads',
+  'Beverages',
+  'Alcohol',
+  'Supplements',
+  'Prepared meals',
+  'Misc',
+  'Uncategorized'
 ]
 
 desc = [
   'Milk, plant-based milk, and other dairy adjacent products.',
-  'Meat, seafood, and eggs.',
-  'Lentils, legumes, nuts, soy, etc.',
+  'Meat, seafood, eggs, and plant based proteins (lentils, soy, etc).',
   'Rice, pasta, breads, cereal, etc.',
   'Fresh and frozen fruits.',
   'Fresh and frozen vegetables.',
   'Savory snacks, crackers, desserts, candy, etc.',
-  'Mustard, marinara, dips, gravies, jams, etc.',
+  'Condiments, marinara, dips, gravies, jams, etc.',
   'Coffee, tea, setlzer, and juices.',
   'Beer, wine, and liquor.',
   'Vitamins, protein powder, etc.',
@@ -47,7 +45,7 @@ if __name__ == '__main__':
 
   for index, category in enumerate(categories):
     new_category = {
-      'name': category.title(),
+      'name': category,
       'description': desc[index]
     }
 

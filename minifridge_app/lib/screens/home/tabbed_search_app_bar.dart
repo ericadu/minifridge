@@ -6,9 +6,9 @@ class TabbedSearchAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      expandedHeight: 80,
+      expandedHeight: 50,
       floating: true,
-      pinned: true,
+      // pinned: true,
       snap: false,
       // flexibleSpace: FlexibleSpaceBar(
       //   titlePadding: EdgeInsets.symmetric(vertical: 20),
@@ -34,19 +34,19 @@ class TabbedSearchAppBar extends StatelessWidget {
           Tab(text: 'By Category')
         ]
       ),
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.menu, color: AppTheme.themeColor),
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              builder: (context) {
-                return SettingsMenu();
-              }
-            );
-          },
-        ),
-      ],
+      // actions: <Widget>[
+      //   IconButton(
+      //     icon: const Icon(Icons.menu, color: AppTheme.themeColor),
+      //     onPressed: () {
+      //       showModalBottomSheet(
+      //         context: context,
+      //         builder: (context) {
+      //           return SettingsMenu();
+      //         }
+      //       );
+      //     },
+      //   ),
+      // ],
     );
   }
 }

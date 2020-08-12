@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/screens/base_items/categories/category_header.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/screens/base_items/tile/slidable_tile.dart';
@@ -63,24 +64,33 @@ class BaseItemsPage extends StatelessWidget {
               },
               body: TabBarView(
                 children: [
-                  CustomScrollView(
-                    slivers: <Widget>[
-                      SliverList(
-                        delegate: SliverChildBuilderDelegate(
-                          (BuildContext context, int index) {
-                            BaseItem item = foods[index];
-                            return SlidableTile(item: item);
-                          },
-                          childCount: foods.length
-                        )
-                      ),
-                      SliverPadding(
-                        padding: EdgeInsets.only(bottom: 50),
-                      ),
-                    ]
+                  ListView.builder(
+                    padding: EdgeInsets.only(top: 0, bottom: 50),
+                    itemCount: foods.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      BaseItem item = foods[index];
+                      return SlidableTile(item: item);
+                    }
                   ),
+                  // CustomScrollView(
+                  //   slivers: <Widget>[
+                  //     SliverList(
+                  //       delegate: SliverChildBuilderDelegate(
+                  //         (BuildContext context, int index) {
+                  //           BaseItem item = foods[index];
+                  //           return SlidableTile(item: item);
+                  //         },
+                  //         childCount: foods.length
+                  //       )
+                  //     ),
+                  //     SliverPadding(
+                  //       padding: EdgeInsets.only(bottom: 50),
+                  //     ),
+                  //   ]
+                  // ),
                   CustomScrollView(
                     slivers: <Widget>[
+                      CategoryHeader(),
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (BuildContext context, int index) {

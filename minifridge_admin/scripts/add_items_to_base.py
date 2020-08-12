@@ -9,6 +9,39 @@ import json
 PATH = "/Users/ericadu/dev/minifridge/minifridge-firebase-adminsdk-z4sw9-387a25099d.json"
 CREDS_PATH = "/Users/ericadu/github/minifridge/minifridge_admin/data/creds.json"
 
+categories = [
+  'Dairy & Alternatives',
+  'Proteins',
+  'Grains',
+  'Fruits',
+  'Vegetables',
+  'Snacks & Sweets',
+  'Sauces & Spreads',
+  'Beverages',
+  'Alcohol',
+  'Supplements',
+  'Prepared meals',
+  'Misc',
+  'Uncategorized'
+]
+
+category_map = {
+  'dairy': categories[0],
+  'animal based protein': categories[1],
+  'plant based protein': categories[1],
+  'protein': categories[1],
+  'grains': categories[2],
+  'fruit': categories[3],
+  'vegetables': categories[4],
+  'snacks and sweets': categories[5],
+  'sauces': categories[6],
+  'beverages': categories[7],
+  'alcohol': categories[8],
+  'supplements': categories[9],
+  'prepared': categories[10],
+  'misc': categories[11]
+}
+
 def get_datetime(time_string, time_zone):
   from_zone = tz.gettz('UTC')
   to_zone = tz.gettz(time_zone)
@@ -71,26 +104,35 @@ if __name__ == '__main__':
         reader = csv.reader(f)
         next(reader)
         for row in reader:
-          new_item = {
-            'displayName': row[1].strip(),
-            'buyTimestamp': get_datetime(row[2], timezone),
-            'shelfLife': {
-              'dayRangeStart': int(row[3]),
-              'dayRangeEnd': int(row[4])
-            },
-            'price': float(row[5]) if len(row[5]) > 0 else None,
-            'quantity': int(row[6]) if len(row[6]) > 0 else 1,
-            'referenceTimestamp': get_datetime(row[2], timezone),
-            'unit': row[7],
-            'addedByUserId': user_id,
-            'storageType': row[8],
-            'state': row[9],
-            'endType': 'alive'
-          }
+          if len(row[0]) > 0:
+            shelf_life = {
+              'perishable': True if len(row[6]) > 0 or len(row[10]) > 0 else False
+            }
 
-          userItemsRef.document().create(new_item)
-          print(new_item)
+            if (len(row[10]) > 0):
+              shelf_life['dayRangeStart'] = int(row[10])
+            
+            if (len(row[11]) > 0):
+              shelf_life['dayRangeEnd'] = int(row[11])
+
+            new_item = {
+              'displayName': row[0].strip(),
+              'category': category_map[row[1]] if len(row[1]) > 0  else 'Uncategorized',
+              'buyTimestamp': get_datetime(row[2], timezone),
+              'shelfLife': shelf_life,
+              'price': float(row[3]) if len(row[3]) > 0 else None,
+              'quantity': int(float(row[4])) if len(row[4]) > 0 else 1,
+              'referenceTimestamp': get_datetime(row[2], timezone),
+              'unit': row[5],
+              'addedByUserId': user_id,
+              'storageType': row[7],
+              'state': row[8],
+              'endType': 'alive'
+            }
+
+            # userItemsRef.document().create(new_item)
+            print(new_item)
       
-      send_to_token(token)
+        # send_to_token(token)
     else:
       print("invalid user or filepath.")
