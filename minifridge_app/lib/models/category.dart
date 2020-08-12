@@ -2,17 +2,20 @@ class Category {
   String id;
   String name;
   String description;
+  String image;
 
   Category({
     this.id,
     this.name,
-    this.description
+    this.description,
+    this.image
   });
 
   Category.fromMap(Map data, String docId) {
     this.id = docId;
     this.name = data['name'];
     this.description = data['description'];
+    this.image = data['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -23,6 +26,7 @@ class Category {
 
     data['name'] = this.name;
     data['description'] = this.description;
+    data['image'] = this.image;
     
     return data;
   }

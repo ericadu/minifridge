@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/screens/base_items/categories/categorized_items.dart';
 import 'package:minifridge_app/screens/base_items/categories/category_header.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
@@ -73,36 +74,7 @@ class BaseItemsPage extends StatelessWidget {
                         return SlidableTile(item: item);
                       }
                     ),
-                    // CustomScrollView(
-                    //   slivers: <Widget>[
-                    //     SliverList(
-                    //       delegate: SliverChildBuilderDelegate(
-                    //         (BuildContext context, int index) {
-                    //           BaseItem item = foods[index];
-                    //           return SlidableTile(item: item);
-                    //         },
-                    //         childCount: foods.length
-                    //       )
-                    //     ),
-                    //     SliverPadding(
-                    //       padding: EdgeInsets.only(bottom: 50),
-                    //     ),
-                    //   ]
-                    // ),
-                    CustomScrollView(
-                      slivers: <Widget>[
-                        CategoryHeader(),
-                        SliverList(
-                          delegate: SliverChildBuilderDelegate(
-                            (BuildContext context, int index) {
-                              BaseItem item = foods[index];
-                              return SlidableTile(item: item);
-                            },
-                            childCount: foods.length
-                          )
-                        ),
-                      ]
-                    )
+                    CategorizedItems(foods: foods)
                   ],
                 )
               )

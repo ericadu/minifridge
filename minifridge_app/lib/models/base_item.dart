@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/models/shelf_life.dart';
+import 'package:quiver/strings.dart';
 
 class BaseItem {
   String id;
@@ -19,6 +20,7 @@ class BaseItem {
   String state;
   String storageType;
   String unit;
+  String category;
 
   BaseItem({
     this.id,
@@ -34,7 +36,8 @@ class BaseItem {
     this.shelfLife,
     this.state,
     this.storageType,
-    this.unit
+    this.unit,
+    this.category
   });
 
   BaseItem.fromMap(Map data, String docId) {
@@ -43,7 +46,7 @@ class BaseItem {
     this.buyTimestamp = data['buyTimestamp'];
     this.displayName = data['displayName'];
     this.endTimestamp = data['endTimestamp'];
-    this.endType = data['endType'] != null ? EndTypes.from(data['endType']): EndType.alive;
+    this.endType = isNotEmpty(data['endType']) ? EndTypes.from(data['endType']): EndType.alive;
     this.price = data['price'];
     this.productId = data['productId'];
     this.quantity = data['quantity'];
@@ -52,6 +55,7 @@ class BaseItem {
     this.state = data['state'];
     this.storageType = data['storageType'];
     this.unit = data['unit'];
+    this.category = isNotEmpty(data['category']) ? data['category'] : 'Uncategorized';
   }
 
   Map<String, dynamic> toJson() {
@@ -72,6 +76,7 @@ class BaseItem {
     data['state'] = this.state;
     data['storageType'] = this.storageType; 
     data['unit'] = this.unit;
+    data['category'] = this.category;
 
     return data;
   }

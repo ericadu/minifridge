@@ -1,39 +1,15 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-
-List<String> categories = [
-  'Proteins',
-  'Grains',
-  'Fruits',
-  'Vegetables',
-  'Dairy & Substitutes',
-  'Snacks & Sweets',
-  'Sauces & Spreads',
-  'Beverages',
-  'Alcohol',
-  'Supplements',
-  'Prepared meals',
-  'Misc',
-  'Uncategorized'
-];
-
-List<String> emoji = [
-  '🍖',
-  '🍞',
-  '🍓',
-  '🥬',
-  '🧀',
-  '🍿',
-  '🍯',
-  '🧃',
-  '🍺',
-  '💊',
-  '🍱',
-  '🥡',
-  '🏷️'
-];
+import 'package:minifridge_app/models/category.dart';
+import 'package:minifridge_app/theme.dart';
 
 class CategoryHeader extends StatelessWidget {
+  final List<Category> categories;
+
+  CategoryHeader({
+    this.categories
+  });
+
   @override
   Widget build(BuildContext context) {
     return SliverPersistentHeader(
@@ -43,13 +19,15 @@ class CategoryHeader extends StatelessWidget {
         collapsedHeight: 110.0,
         expandedHeight: 110.0,
         child: Container(
-          padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+          // padding: EdgeInsets.only(top: 20, left: 20, right: 20),
           color: Colors.white,
           height: 110,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
             itemBuilder: (BuildContext context, int index) {
+              Category category = categories[index];
+
               return Container(
                 width: 80,
                 child: Column(
@@ -57,15 +35,20 @@ class CategoryHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Padding(
-                      padding: EdgeInsets.only(top: 0, left: 10, right: 10),
-                      child: Text(emoji[index],
+                      padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                      child: Text(category.image,
                         style: TextStyle(fontSize: 45)
                       )
                     ),
-                    Text(categories[index],
+                    Text(category.name,
                       style: TextStyle(fontSize: 8)
                     )
                   ],
+                ),
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(width: 3, color: AppTheme.themeColor)
+                  )
                 )
               );
             }
