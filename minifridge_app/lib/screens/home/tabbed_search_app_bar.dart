@@ -21,19 +21,18 @@ class TabbedSearchAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      // expandedHeight: 50,
       floating: true,
-      pinned: true,
+      pinned: false,
       snap: false,
       title: TabBar(
         tabs: tabs.map((tab) => Tab(text: tab.title)).toList(),
         controller: controller
       ),
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight(110),
+        preferredSize: Size.fromHeight(90),
         child: Container(
           // padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-          height: 110,
+          height: 90,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             itemCount: categories.length,
@@ -49,7 +48,7 @@ class TabbedSearchAppBar extends StatelessWidget {
                   );
                 },
                 child: Container(
-                  width: 100,
+                  width: 80,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,7 +56,7 @@ class TabbedSearchAppBar extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                         child: Text(category.image,
-                          style: TextStyle(fontSize: 45)
+                          style: TextStyle(fontSize: 35)
                         )
                       ),
                       Text(category.name,

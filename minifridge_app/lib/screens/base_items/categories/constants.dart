@@ -12,7 +12,6 @@ List<String> names = [
   'Sauces & Spreads',
   'Beverages',
   'Alcohol',
-  'Supplements',
   'Prepared meals',
   'Misc',
   'Uncategorized'
@@ -20,15 +19,14 @@ List<String> names = [
 
 List<String> emoji = [
   '🍞',
-  '🍖',
-  '🍓',
-  '🥬',
-  '🧀',
-  '🍿',
+  '🥩',
+  '🍇',
+  '🥒',
+  '🥛',
+  '🍫',
   '🍯',
   '🧃',
-  '🍺',
-  '💊',
+  '🍻',
   '🍱',
   '🥡',
   '🏷️'
