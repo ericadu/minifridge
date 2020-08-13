@@ -42,11 +42,19 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
     groupByCategory
   ];
 
+  final List<ItemScrollController> _scrollControllers = categories.map((category) {
+    return new ItemScrollController();
+  }).toList();
+
+  final List<ItemPositionsListener> positionsListeners = categories.map((category) {
+    return ItemPositionsListener.create();
+  }).toList();
+
   TabController _controller;
   ViewTab _currentHandler;
   List<Category> _currentCategorization = perishables;
-  final ItemScrollController itemScrollController = ItemScrollController();
-final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
+  // final ItemScrollController itemScrollController = ItemScrollController();
+  // final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
   void initState() {
     super.initState();
@@ -110,7 +118,8 @@ final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create
                   TabbedSearchAppBar(
                     controller: _controller,
                     tabs: _tabs,
-                    categories: _currentCategorization
+                    categories: _currentCategorization,
+                    scrollControllers: _scrollControllers
                   )
                 ];
               },
@@ -132,10 +141,22 @@ final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create
                   //     return SlidableTile(item: item);
                   //   }
                   // ),
-                  CategorizedGroups(
-                    foods: foods,
-                    categories: _categories[0],
-                    groupBy: groupBys[0]
+                  // CategorizedGroups(
+                  //   foods: foods,
+                  //   categories: _categories[0],
+                  //   groupBy: groupBys[0]
+                  // ),
+                  ScrollablePositionedList.builder(
+                    itemCount: _categories[0].length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Category category = _categories[0][index];
+                      Map<String, List<BaseItem>> foodsByCategory = groupBys[0](foods);
+                      List<BaseItem> foodsInCategory = foodsByCategory.containsKey(category.name) ? foodsByCategory[category.name] : [];
+                      
+                      return CategorizedItems(category: category, foods: foodsInCategory);
+                    },
+                    itemScrollController: _scrollControllers[0],
+                    itemPositionsListener: positionsListeners[0]
                   ),
                   // ListView.builder(
                   //   padding: EdgeInsets.only(top: 0, bottom: 50),
@@ -145,11 +166,18 @@ final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create
                   //     return SlidableTile(item: item);
                   //   }
                   // ),
-                  CategorizedGroups(
-                    foods: foods,
-                    categories: _categories[1],
-                    groupBy: groupBys[1]
-                  )
+                  ScrollablePositionedList.builder(
+                    itemCount: _categories[1].length,
+                    itemBuilder: (BuildContext context, int index) {
+                      Category category = _categories[1][index];
+                      Map<String, List<BaseItem>> foodsByCategory = groupBys[1](foods);
+                      List<BaseItem> foodsInCategory = foodsByCategory.containsKey(category.name) ? foodsByCategory[category.name] : [];
+                      
+                      return CategorizedItems(category: category, foods: foodsInCategory);
+                    },
+                    itemScrollController: _scrollControllers[1],
+                    itemPositionsListener: positionsListeners[1]
+                  ),
                 ],
               )
             );
