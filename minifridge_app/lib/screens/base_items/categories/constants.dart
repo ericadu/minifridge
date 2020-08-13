@@ -43,6 +43,7 @@ List<Category> categories = names.asMap().entries.map((MapEntry entry) {
 
 List<Category> perishables = [
   Category(name: 'Perishable', image: '🥑'),
+  Category(name: 'Printed Date', image: '🥛'),
   Category(name: 'Shelf Stable', image: '🥫'),
   Category(name: 'Unknown', image: '🏷️')
 ];
@@ -54,6 +55,7 @@ Map<String, List<BaseItem>> groupByCategory(List<BaseItem> foods) {
 Map<String, List<BaseItem>> groupByPerishable(List<BaseItem> foods) {
   Map<String, List<BaseItem>> mapByPerishability = {
     'Perishable': [],
+    'Printed Date': [],
     'Shelf Stable': [],
     'Unknown': []
   };
