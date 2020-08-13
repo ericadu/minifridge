@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/category.dart';
 import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/screens/base_items/categories/categorized_groups.dart';
 import 'package:minifridge_app/screens/base_items/categories/categorized_items.dart';
 import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
@@ -12,6 +13,7 @@ import 'package:minifridge_app/screens/home/tabbed_search_app_bar.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/widgets/add_item_button.dart';
 import 'package:provider/provider.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class ViewTab {
   String title;
@@ -35,9 +37,16 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
   final List<ViewTab> _tabs = [
     ViewTab(title: 'By Expiration'), ViewTab(title: 'By Category')
   ];
+  final List<Function> groupBys = [
+    groupByPerishable,
+    groupByCategory
+  ];
+
   TabController _controller;
   ViewTab _currentHandler;
   List<Category> _currentCategorization = perishables;
+  final ItemScrollController itemScrollController = ItemScrollController();
+final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
   void initState() {
     super.initState();
@@ -108,22 +117,39 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
               body: TabBarView(
                 controller: _controller,
                 children: [
-                  ListView.builder(
-                    padding: EdgeInsets.only(top: 0, bottom: 50),
-                    itemCount: foods.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      BaseItem item = foods[index];
-                      return SlidableTile(item: item);
-                    }
+                  // ListView.builder(
+                  //   padding: EdgeInsets.only(top: 0, bottom: 50),
+                  //   itemCount: foods.length,
+                  //   itemBuilder: (BuildContext context, int index) {
+                  //     BaseItem item = foods[index];
+                  //     return SlidableTile(item: item);
+                  //   }
+                  // ),
+                  // ScrollablePositionedList.builder(
+                  //   itemCount: foods.length,
+                  //   itemBuilder: (BuildContext context, int index) {
+                  //     BaseItem item = foods[index];
+                  //     return SlidableTile(item: item);
+                  //   }
+                  // ),
+                  CategorizedGroups(
+                    foods: foods,
+                    categories: _categories[0],
+                    groupBy: groupBys[0]
                   ),
-                  ListView.builder(
-                    padding: EdgeInsets.only(top: 0, bottom: 50),
-                    itemCount: foods.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      BaseItem item = foods[index];
-                      return SlidableTile(item: item);
-                    }
-                  ),
+                  // ListView.builder(
+                  //   padding: EdgeInsets.only(top: 0, bottom: 50),
+                  //   itemCount: foods.length,
+                  //   itemBuilder: (BuildContext context, int index) {
+                  //     BaseItem item = foods[index];
+                  //     return SlidableTile(item: item);
+                  //   }
+                  // ),
+                  CategorizedGroups(
+                    foods: foods,
+                    categories: _categories[1],
+                    groupBy: groupBys[1]
+                  )
                 ],
               )
             );

@@ -1,77 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/category.dart';
-import 'package:minifridge_app/screens/base_items/categories/constants.dart';
-import 'package:minifridge_app/screens/home/tabbed_search_app_bar.dart';
+import 'package:minifridge_app/screens/base_items/categories/categorized_items.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
-class CategorizedGroups extends StatefulWidget {
-  @override
-  _CategorizedGroupsState createState() => _CategorizedGroupsState();
-}
+class CategorizedGroups extends StatelessWidget {
+  final List<BaseItem> foods;
+  final List<Category> categories;
+  final Function groupBy;
 
-class ViewTab {
-  String title;
-  String color;
-
-  ViewTab(this.title, this.color);
-}
-
-class _CategorizedGroupsState extends State<CategorizedGroups> with TickerProviderStateMixin {
-  List<List<Category>> _categories = [
-    perishables, categories
-  ];
-
-  final List<ViewTab> _tabs = [
-    ViewTab('By Expiration', 'By Category')
-  ];
-
-  TabController _controller;
-  ViewTab _currentHandler;
-  List<Category> _currentCategorization;
-
-  void initState() {
-    super.initState();
-    _controller = new TabController(length: 2, vsync: this);
-    _currentHandler = _tabs[0];
-    _currentCategorization = _categories[0];
-    _controller.addListener(_handleSelected);
-  }
-
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handleSelected() {
-    setState(() {
-      _currentHandler = _tabs[_controller.index];
-      _currentCategorization = _categories[_controller.index];
-    });
-  }
+  CategorizedGroups({
+    this.foods,
+    this.categories,
+    this.groupBy
+  });
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-              length: 2,
-              child: NestedScrollView(
-                headerSliverBuilder: (context, value) {
-                  return [
-                    TabbedSearchAppBar()
-                  ];
-                },
-                body: TabBarView(
-                  children: [
-                    ListView.builder(
-                      padding: EdgeInsets.only(top: 0, bottom: 50),
-                      itemCount: foods.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        BaseItem item = foods[index];
-                        return SlidableTile(item: item);
-                      }
-                    ),
-                    CategorizedItems(foods: foods)
-                  ],
-                )
-              )
-            );
+    Map<String, List<BaseItem>> foodsByCategory = groupBy(foods);
+
+    return ScrollablePositionedList.builder(
+      itemCount: categories.length,
+      itemBuilder: (BuildContext context, int index) {
+        Category category = categories[index];
+        List<BaseItem> foodsInCategory = foodsByCategory.containsKey(category.name) ? foodsByCategory[category.name] : [];
+        
+        return CategorizedItems(category: category, foods: foodsInCategory);
+      }
+    );
   }
 }
