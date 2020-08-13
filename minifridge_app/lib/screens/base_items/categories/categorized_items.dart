@@ -3,47 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/category.dart';
 import 'package:minifridge_app/screens/base_items/categories/category_header.dart';
+import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/screens/base_items/tile/slidable_tile.dart';
 import 'package:minifridge_app/theme.dart';
 
-List<String> names = [
-  'Grains',
-  'Proteins',
-  'Fruits',
-  'Vegetables',
-  'Dairy & Substitutes',
-  'Snacks & Sweets',
-  'Sauces & Spreads',
-  'Beverages',
-  'Alcohol',
-  'Supplements',
-  'Prepared meals',
-  'Misc',
-  'Uncategorized'
-];
 
-List<String> emoji = [
-  '🍞',
-  '🍖',
-  '🍓',
-  '🥬',
-  '🧀',
-  '🍿',
-  '🍯',
-  '🧃',
-  '🍺',
-  '💊',
-  '🍱',
-  '🥡',
-  '🏷️'
-];
-
-List<Category> categories = names.asMap().entries.map((MapEntry entry) {
-  return Category(
-    name: entry.value,
-    image: emoji[entry.key]
-  );
-}).toList();
 
 class CategorizedItems extends StatelessWidget {
   final List<BaseItem> foods;
@@ -58,7 +22,7 @@ class CategorizedItems extends StatelessWidget {
 
   List<Widget> _buildSlivers() {
     List<Widget> slivers = [
-      CategoryHeader(categories: categories)
+      
     ];
 
     Map<String, List<BaseItem>> foodsByCategory = _groupBy(foods);

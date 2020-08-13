@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
-import 'package:minifridge_app/models/freshness.dart';
+import 'package:minifridge_app/models/category.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/screens/base_items/categories/categorized_items.dart';
+import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/screens/base_items/tile/slidable_tile.dart';
@@ -13,11 +13,51 @@ import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/widgets/add_item_button.dart';
 import 'package:provider/provider.dart';
 
-class BaseItemsPage extends StatelessWidget {
+class ViewTab {
+  String title;
+  String color;
+
+  ViewTab({this.title, this.color});
+}
+
+class BaseItemsPage extends StatefulWidget {
   final FoodBaseApi api;
   static const routeName = '/items';
 
   const BaseItemsPage({Key key, this.api}) : super(key: key);
+
+  @override
+  _BaseItemsPageState createState() => _BaseItemsPageState();
+}
+
+class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateMixin{
+  final List<List<Category>> _categories = [ perishables, categories ];
+  final List<ViewTab> _tabs = [
+    ViewTab(title: 'By Expiration'), ViewTab(title: 'By Category')
+  ];
+  TabController _controller;
+  ViewTab _currentHandler;
+  List<Category> _currentCategorization = perishables;
+
+  void initState() {
+    super.initState();
+    _controller = new TabController(length: _tabs.length, vsync: this);
+    _currentHandler = _tabs[0];
+    _currentCategorization = _categories[0];
+    _controller.addListener(_handleSelected);
+  }
+
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _handleSelected() {
+    setState(() {
+      _currentHandler = _tabs[_controller.index];
+      _currentCategorization = _categories[_controller.index];
+    });
+  }
 
   bool _validItem(BaseItem item) {
     return item.endType == EndType.alive && item.quantity > 0;
@@ -34,50 +74,82 @@ class BaseItemsPage extends StatelessWidget {
             .toList();
           
           // TODO: refactor a messy sort function.
-          foods.sort((a, b) {
-            if (a.shelfLife.perishable && b.shelfLife.perishable) {
-              int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
-              if (comparison == 0) {
-                return a.getDays().compareTo(b.getDays());
-              }
-              return comparison;
-            } else {
-              if (a.shelfLife.perishable) {
-                return -1;
-              }
+          // foods.sort((a, b) {
+          //   if (a.shelfLife.perishable && b.shelfLife.perishable) {
+          //     int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
+          //     if (comparison == 0) {
+          //       return a.getDays().compareTo(b.getDays());
+          //     }
+          //     return comparison;
+          //   } else {
+          //     if (a.shelfLife.perishable) {
+          //       return -1;
+          //     }
 
-              if (b.shelfLife.perishable) {
-                return 1;
-              }
+          //     if (b.shelfLife.perishable) {
+          //       return 1;
+          //     }
 
-              return a.displayName.compareTo(b.displayName);
-            }
-          });
+          //     return a.displayName.compareTo(b.displayName);
+          //   }
+          // });
           
           if (foods.isNotEmpty) {
-            return DefaultTabController(
-              length: 2,
-              child: NestedScrollView(
-                headerSliverBuilder: (context, value) {
-                  return [
-                    TabbedSearchAppBar()
-                  ];
-                },
-                body: TabBarView(
-                  children: [
-                    ListView.builder(
-                      padding: EdgeInsets.only(top: 0, bottom: 50),
-                      itemCount: foods.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        BaseItem item = foods[index];
-                        return SlidableTile(item: item);
-                      }
-                    ),
-                    CategorizedItems(foods: foods)
-                  ],
-                )
+            return NestedScrollView(
+              headerSliverBuilder: (context, value) {
+                return [
+                  TabbedSearchAppBar(
+                    controller: _controller,
+                    tabs: _tabs,
+                    categories: _currentCategorization
+                  )
+                ];
+              },
+              body: TabBarView(
+                controller: _controller,
+                children: [
+                  ListView.builder(
+                    padding: EdgeInsets.only(top: 0, bottom: 50),
+                    itemCount: foods.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      BaseItem item = foods[index];
+                      return SlidableTile(item: item);
+                    }
+                  ),
+                  ListView.builder(
+                    padding: EdgeInsets.only(top: 0, bottom: 50),
+                    itemCount: foods.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      BaseItem item = foods[index];
+                      return SlidableTile(item: item);
+                    }
+                  ),
+                ],
               )
             );
+            // return DefaultTabController(
+            //   length: 2,
+            //   child: NestedScrollView(
+            //     headerSliverBuilder: (context, value) {
+            //       return [
+            //         TabbedSearchAppBar()
+            //       ];
+            //     },
+            //     body: TabBarView(
+            //       children: [
+                    // ListView.builder(
+                    //   padding: EdgeInsets.only(top: 0, bottom: 50),
+                    //   itemCount: foods.length,
+                    //   itemBuilder: (BuildContext context, int index) {
+                    //     BaseItem item = foods[index];
+                    //     return SlidableTile(item: item);
+                    //   }
+                    // ),
+            //         CategorizedItems(foods: foods)
+            //       ],
+            //     )
+            //   )
+            // );
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return CustomScrollView(
