@@ -25,24 +25,6 @@ class TabbedSearchAppBar extends StatelessWidget {
       floating: true,
       pinned: true,
       snap: false,
-      // flexibleSpace: FlexibleSpaceBar(
-      //   titlePadding: EdgeInsets.symmetric(vertical: 20),
-      //   title: Padding(
-      //     padding: EdgeInsets.symmetric(vertical: 20),
-      //     child: TextField(
-      //       decoration: InputDecoration(
-      //         contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      //         border: OutlineInputBorder(
-      //           borderRadius: BorderRadius.all(
-      //             Radius.circular(10.0)
-      //           )
-      //         ),
-      //         hintStyle: new TextStyle(color: Colors.grey),
-      //         hintText: "Search foodbase",
-      //       )
-      //     ),
-      //   ),
-      // ),
       title: TabBar(
         tabs: tabs.map((tab) => Tab(text: tab.title)).toList(),
         controller: controller

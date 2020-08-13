@@ -4,11 +4,9 @@ import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/category.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/screens/base_items/categories/categorized_groups.dart';
-import 'package:minifridge_app/screens/base_items/categories/categorized_items.dart';
 import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
-import 'package:minifridge_app/screens/base_items/tile/slidable_tile.dart';
 import 'package:minifridge_app/screens/home/tabbed_search_app_bar.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/widgets/add_item_button.dart';
@@ -51,15 +49,11 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
   }).toList();
 
   TabController _controller;
-  ViewTab _currentHandler;
   List<Category> _currentCategorization = perishables;
-  // final ItemScrollController itemScrollController = ItemScrollController();
-  // final ItemPositionsListener itemPositionsListener = ItemPositionsListener.create();
 
   void initState() {
     super.initState();
     _controller = new TabController(length: _tabs.length, vsync: this);
-    _currentHandler = _tabs[0];
     _currentCategorization = _categories[0];
     _controller.addListener(_handleSelected);
   }
@@ -71,7 +65,6 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
 
   void _handleSelected() {
     setState(() {
-      _currentHandler = _tabs[_controller.index];
       _currentCategorization = _categories[_controller.index];
     });
   }
@@ -90,27 +83,6 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
             .where((item) => _validItem(item))
             .toList();
           
-          // TODO: refactor a messy sort function.
-          // foods.sort((a, b) {
-          //   if (a.shelfLife.perishable && b.shelfLife.perishable) {
-          //     int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
-          //     if (comparison == 0) {
-          //       return a.getDays().compareTo(b.getDays());
-          //     }
-          //     return comparison;
-          //   } else {
-          //     if (a.shelfLife.perishable) {
-          //       return -1;
-          //     }
-
-          //     if (b.shelfLife.perishable) {
-          //       return 1;
-          //     }
-
-          //     return a.displayName.compareTo(b.displayName);
-          //   }
-          // });
-          
           if (foods.isNotEmpty) {
             return NestedScrollView(
               headerSliverBuilder: (context, value) {
@@ -125,85 +97,17 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
               },
               body: TabBarView(
                 controller: _controller,
-                children: [
-                  // ListView.builder(
-                  //   padding: EdgeInsets.only(top: 0, bottom: 50),
-                  //   itemCount: foods.length,
-                  //   itemBuilder: (BuildContext context, int index) {
-                  //     BaseItem item = foods[index];
-                  //     return SlidableTile(item: item);
-                  //   }
-                  // ),
-                  // ScrollablePositionedList.builder(
-                  //   itemCount: foods.length,
-                  //   itemBuilder: (BuildContext context, int index) {
-                  //     BaseItem item = foods[index];
-                  //     return SlidableTile(item: item);
-                  //   }
-                  // ),
-                  // CategorizedGroups(
-                  //   foods: foods,
-                  //   categories: _categories[0],
-                  //   groupBy: groupBys[0]
-                  // ),
-                  ScrollablePositionedList.builder(
-                    itemCount: _categories[0].length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Category category = _categories[0][index];
-                      Map<String, List<BaseItem>> foodsByCategory = groupBys[0](foods);
-                      List<BaseItem> foodsInCategory = foodsByCategory.containsKey(category.name) ? foodsByCategory[category.name] : [];
-                      
-                      return CategorizedItems(category: category, foods: foodsInCategory);
-                    },
-                    itemScrollController: _scrollControllers[0],
-                    itemPositionsListener: positionsListeners[0]
-                  ),
-                  // ListView.builder(
-                  //   padding: EdgeInsets.only(top: 0, bottom: 50),
-                  //   itemCount: foods.length,
-                  //   itemBuilder: (BuildContext context, int index) {
-                  //     BaseItem item = foods[index];
-                  //     return SlidableTile(item: item);
-                  //   }
-                  // ),
-                  ScrollablePositionedList.builder(
-                    itemCount: _categories[1].length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Category category = _categories[1][index];
-                      Map<String, List<BaseItem>> foodsByCategory = groupBys[1](foods);
-                      List<BaseItem> foodsInCategory = foodsByCategory.containsKey(category.name) ? foodsByCategory[category.name] : [];
-                      
-                      return CategorizedItems(category: category, foods: foodsInCategory);
-                    },
-                    itemScrollController: _scrollControllers[1],
-                    itemPositionsListener: positionsListeners[1]
-                  ),
-                ],
+                children: Iterable<int>.generate(_tabs.length).toList().map((idx) {
+                  return CategorizedGroups(
+                    foods: foods,
+                    categories: _categories[idx],
+                    groupBy: groupBys[idx],
+                    scrollController: _scrollControllers[idx],
+                    positionsListener: positionsListeners[idx],
+                  );
+                }).toList()
               )
             );
-            // return DefaultTabController(
-            //   length: 2,
-            //   child: NestedScrollView(
-            //     headerSliverBuilder: (context, value) {
-            //       return [
-            //         TabbedSearchAppBar()
-            //       ];
-            //     },
-            //     body: TabBarView(
-            //       children: [
-                    // ListView.builder(
-                    //   padding: EdgeInsets.only(top: 0, bottom: 50),
-                    //   itemCount: foods.length,
-                    //   itemBuilder: (BuildContext context, int index) {
-                    //     BaseItem item = foods[index];
-                    //     return SlidableTile(item: item);
-                    //   }
-                    // ),
-            //         CategorizedItems(foods: foods)
-            //       ],
-            //     )
-            //   )
-            // );
           }
         } else if (snapshot.connectionState == ConnectionState.waiting) {
           return CustomScrollView(

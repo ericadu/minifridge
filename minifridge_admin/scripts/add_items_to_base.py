@@ -27,18 +27,23 @@ categories = [
 
 category_map = {
   'dairy': categories[0],
+  'dairy and alternatives': categories[0],
   'animal based protein': categories[1],
   'plant based protein': categories[1],
   'protein': categories[1],
+  'protein (animal and plant based)': categories[1],
   'grains': categories[2],
   'fruit': categories[3],
   'vegetables': categories[4],
   'snacks and sweets': categories[5],
   'sauces': categories[6],
+  'condiments, sauces, spreads': categories[6],
   'beverages': categories[7],
+  'beverages, non alcoholic': categories[7],
   'alcohol': categories[8],
   'supplements': categories[9],
   'prepared': categories[10],
+  'prepared meals': categories[10],
   'misc': categories[11]
 }
 
@@ -127,7 +132,8 @@ if __name__ == '__main__':
               'addedByUserId': user_id,
               'storageType': row[7],
               'state': row[8],
-              'endType': 'alive'
+              'endType': 'alive',
+              'hasPrintedDate': True if len(row[9]) > 0 else False
             }
 
             userItemsRef.document().create(new_item)
