@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
+import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/category_dropdown.dart';
 import 'package:minifridge_app/widgets/manual_right_button.dart';
 import 'package:provider/provider.dart';
@@ -123,6 +124,7 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
 
         return Scaffold(
           appBar: AppBar(
+            backgroundColor: AppTheme.themeColor,
             title: Text('Add Manually', style: TextStyle(color: Colors.white)),
             actions: [
               IconButton(
