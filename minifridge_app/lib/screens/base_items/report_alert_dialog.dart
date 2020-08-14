@@ -74,7 +74,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                   padding: EdgeInsets.only(top: 18, bottom: 5),
                   child: Text("Nobody's pear-fect 🍐",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       color: Colors.black
                     )
@@ -89,7 +89,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                   ),
                   child: Text("Tell us what's wrong:",
                     style: TextStyle(
-                      fontSize: 16,
+                      fontSize: 15,
                     )
                   ),
                 ),
@@ -98,7 +98,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                   child: Column(
                     children: reasons.map((data) => RadioListTile(
                       dense: true,
-                      title: Text('${data.reason}', style: TextStyle(fontSize: 15)),
+                      title: Text('${data.reason}', style: TextStyle(fontSize: 14)),
                       groupValue: id,
                       value: data.index,
                       onChanged: (val) {
@@ -114,11 +114,11 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text('Additional info:',
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 16)
+                    style: TextStyle(fontSize: 15)
                   )
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
                   child: TextFormField(
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -152,7 +152,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                     ),
                     child: Text("Submit".toUpperCase(),
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 14,
                       fontWeight: FontWeight.bold,
                         color: Colors.white
                       )

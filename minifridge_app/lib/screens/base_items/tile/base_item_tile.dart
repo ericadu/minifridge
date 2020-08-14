@@ -72,7 +72,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
     return Card(
       elevation: 1.0,
       child: Padding(
-        padding: const EdgeInsets.only(top: 3, bottom: 10),
+        padding: const EdgeInsets.only(top: 2, bottom: 5),
         child: Theme(
           data: newTheme,
           child: view ? 

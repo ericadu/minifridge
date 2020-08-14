@@ -138,9 +138,9 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Padding(
-                                      padding: EdgeInsets.only(top: 10),
+                                      padding: EdgeInsets.only(top: 10, bottom: 2),
                                       child: Text(category.image,
-                                        style: TextStyle(fontSize: 35)
+                                        style: TextStyle(fontSize: 32)
                                       )
                                     ),
                                     Text(category.name,

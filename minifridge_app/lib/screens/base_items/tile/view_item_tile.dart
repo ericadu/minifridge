@@ -57,12 +57,18 @@ class ViewItemTile extends StatelessWidget {
       initiallyExpanded: expanded,
       title: Text(item.displayName,
         style: const TextStyle(
-          fontWeight: FontWeight.bold
+          fontWeight: FontWeight.bold,
+          fontSize: 14
         )
       ),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 3),
-        child: Text(_getMessage(item))
+        child: Text(
+          _getMessage(item),
+          style: TextStyle(
+            fontSize: 13
+          )
+        )
       ),
       onExpansionChanged: (bool expanded) {
         analytics.logEvent(name: 'expand_item', parameters: {

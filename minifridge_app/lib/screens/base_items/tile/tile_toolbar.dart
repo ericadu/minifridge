@@ -19,32 +19,17 @@ class TileToolbar extends StatelessWidget {
         Container(
           padding: EdgeInsets.only(right: 20),
           child: IconButton(
-            iconSize: 32,
+            iconSize: 24,
             icon: Icon(Icons.edit, color: orange),
             onPressed: onEdit
-            // onPressed: () {
-            //   setState(() {
-            //     view = false;
-            //     expanded = true;
-            //   });                  
-            // }
           )
         ),
         Container(
           padding: EdgeInsets.only(right: 20),
           child: IconButton(
-            iconSize: 32,
+            iconSize: 24,
             icon: Icon(Icons.flag, color: orange),
             onPressed: onFlag
-            // onPressed: () {
-            //   expanded = true;
-            //   showDialog(
-            //     context: context,
-            //     builder: (BuildContext context) {
-            //       return ReportAlertDialog(itemId: item.id, onSubmit: showSuccessBar);
-            //     }
-            //   );               
-            // }
           )
         )
       ],

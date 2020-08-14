@@ -38,14 +38,14 @@ class FreshnessTile extends StatelessWidget {
   IndicatorStyle _indicatorColor(bool active) {
     if (active) {
       return IndicatorStyle(
-        width: 15,
+        width: 12,
         indicatorY: 0.4,
         color: activeColor
       );
     }
 
     return  IndicatorStyle(
-      width: 15,
+      width: 12,
       indicatorY: 0.5,
       color: inactiveGrey
     );
@@ -55,12 +55,13 @@ class FreshnessTile extends StatelessWidget {
     if (active) {
       return LineStyle(
         color: activeColor,
-        width: 5,
+        width: 4,
       );
     }
 
     return LineStyle(
       color: inactiveGrey,
+      width: 3
     );
   }
 
@@ -98,7 +99,10 @@ class FreshnessTile extends StatelessWidget {
                 Text("${text.weekday}, ${text.date}".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
                 Row(
                   children: [
-                    Text(text.title, style: TextStyle(fontSize: 15)),
+                    Padding(
+                      padding: EdgeInsets.only(top: 3),
+                      child: Text(text.title, style: TextStyle(fontSize: 13)),
+                    )
                   ],
                 ),
               ],

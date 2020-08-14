@@ -16,9 +16,9 @@ class CategorizedItems extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> slivers = [
       SizedBox(
-        height: 80,
+        height: 70,
         child: Padding(
-          padding: EdgeInsets.only(top: 20),
+          padding: EdgeInsets.only(top: 15),
           child: Card(
             child: Container(
               
@@ -27,10 +27,10 @@ class CategorizedItems extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(right: 10),
-                    child: Text(category.image, style: TextStyle(fontSize: 25))
+                    child: Text(category.image, style: TextStyle(fontSize: 20))
                   ),
                   Text(category.name,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)
                   )
                 ]
               ),
