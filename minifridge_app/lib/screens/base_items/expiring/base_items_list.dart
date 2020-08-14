@@ -16,6 +16,9 @@ class BaseItemsList extends StatelessWidget {
     
     return ListView.builder(
       itemBuilder: (BuildContext context, index) {
+        if (index == foods.length - 1) {
+          return SizedBox(height: 90);
+        }
         return SlidableTile(
           item: foods[index]
         );

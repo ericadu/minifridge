@@ -11,13 +11,15 @@ class CategorizedGroups extends StatelessWidget {
   final Function groupBy;
   final ItemScrollController scrollController;
   final ItemPositionsListener positionsListener;
+  final int initialIndex;
 
   CategorizedGroups({
     this.foods,
     this.categories,
     this.groupBy,
     this.scrollController,
-    this.positionsListener
+    this.positionsListener,
+    this.initialIndex
   });
 
   @override
@@ -34,7 +36,8 @@ class CategorizedGroups extends StatelessWidget {
         return CategorizedItems(category: category, foods: foodsInCategory, isLast: index == categories.length - 1);
       },
       itemScrollController: scrollController,
-      itemPositionsListener: positionsListener
+      itemPositionsListener: positionsListener,
+      initialScrollIndex: initialIndex ?? 0,
     );
   }
 }

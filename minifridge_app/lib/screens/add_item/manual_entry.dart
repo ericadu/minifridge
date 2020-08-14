@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
-import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/widgets/category_dropdown.dart';
 import 'package:minifridge_app/widgets/manual_right_button.dart';
 import 'package:provider/provider.dart';
+import 'package:quiver/strings.dart';
 
 class ManualEntryPage extends StatefulWidget {
   static const routeName = '/manual';
@@ -16,7 +16,6 @@ class ManualEntryPage extends StatefulWidget {
 class _ManualEntryPageState extends State<ManualEntryPage> {
   final _itemNameController = TextEditingController();
   final _dateController = TextEditingController();
-  String category = 'Uncategorized';
 
   @override
   void initState() {
@@ -66,20 +65,13 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
 
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<String>> _dropdownMenuItems = names.map((name) {
-      return DropdownMenuItem(
-        child: Text(name),
-        value: name
-      );
-    }).toList();
-
     return Consumer(
       builder: (BuildContext context, ManualEntryNotifier manual, _) {
         List<Step> steps = [
           Step(
             title: const Text('Item Name'),
-            isActive: true,
-            state: StepState.complete,
+            isActive: manual.currentStep >= 0 ? true : false,
+            state: manual.currentStep > 0 ? StepState.complete : StepState.editing,
             content: Column(
               children: <Widget>[
                 TextFormField(
@@ -96,16 +88,14 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
           ),
           Step(
             title: const Text('Select Category'),
-            isActive: false,
-            state: StepState.editing,
+            isActive: manual.currentStep >= 1 ? true : false,
+            state: manual.currentStep > 1 ? StepState.complete : StepState.editing,
             content: Column(
               children: <Widget>[
                 CategoryDropdown(
-                  value: category,
+                  value: manual.category,
                   onChanged: (value) {
-                    setState(() {
-                      category = value;
-                    });
+                    manual.setCategory(value);
                   }
                 )
               ]
@@ -158,7 +148,7 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
                   },
                   currentStep: manual.currentStep,
                   onStepContinue: () => {
-                    manual.next(_itemNameController.text, category)
+                    manual.next(_itemNameController.text)
                   },
                   onStepTapped: (step) => manual.goTo(step),
                   onStepCancel: manual.cancel

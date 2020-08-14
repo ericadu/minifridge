@@ -4,6 +4,7 @@ import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/category.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/screens/base_items/categories/categorized_groups.dart';
+import 'package:minifridge_app/screens/base_items/categories/category_header.dart';
 import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/screens/base_items/categories/tabbed_categories_bar.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
@@ -34,32 +35,19 @@ class BaseItemsPage extends StatefulWidget {
 }
 
 class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateMixin{
-  final List<List<Category>> _categories = [ perishables, groupings ];
   final List<ViewTab> _tabs = [
     ViewTab(title: 'Expiring Soon'), ViewTab(title: 'All Items')
   ];
-  final List<Function> groupBys = [
-    groupByPerishable,
-    groupByCategory
-  ];
-
-  final List<ItemScrollController> _scrollControllers = groupings.map((category) {
-    return new ItemScrollController();
-  }).toList();
-
-  final List<ItemPositionsListener> positionsListeners = groupings.map((category) {
-    return ItemPositionsListener.create();
-  }).toList();
-
+  ItemScrollController _scrollController = new ItemScrollController();
+  ItemPositionsListener _positionsListener = new ItemPositionsListener.create();
   int selectedCategory = 0;
-
+  int currentTab = 0;
   TabController _controller;
-  List<Category> _currentCategorization = perishables;
 
   void initState() {
     super.initState();
     _controller = new TabController(length: _tabs.length, vsync: this);
-    _currentCategorization = _categories[0];
+    // _currentCategorization = _categories[0];
     _controller.addListener(_handleSelected);
   }
 
@@ -70,8 +58,13 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
 
   void _handleSelected() {
     setState(() {
-      _currentCategorization = _categories[_controller.index];
+      currentTab = _controller.index;
     });
+    // if (currentTab == 1) {
+    //   _scrollController.jumpTo(
+    //     index: selectedCategory,
+    //   );
+    // }
   }
 
   void _handleCategorySelect(int idx) {
@@ -95,71 +88,70 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
             .toList();
           
           if (foods.isNotEmpty) {
-            List<Category> categories = _currentCategorization;
+            // List<Category> categories = _currentCategorization;
             return NestedScrollView(
               headerSliverBuilder: (context, value) {
-                Widget horizCat = PreferredSize(preferredSize: Size.fromHeight(72),
-                  child: Container(
-                        // padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                        color: Colors.white,
-                        height: 72,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categories.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            Category category = categories[index];
+                // Widget horizCat = PreferredSize(preferredSize: Size.fromHeight(72),
+                //   child: Container(
+                //     color: Colors.white,
+                //     height: 72,
+                //     child: ListView.builder(
+                //       scrollDirection: Axis.horizontal,
+                //       itemCount: categories.length,
+                //       itemBuilder: (BuildContext context, int index) {
+                //         Category category = categories[index];
+                        
+                //         // int  min = positionsListeners[1].itemPositions.value
+                //         //   .where((ItemPosition position) => position.itemTrailingEdge > 0)
+                //         //   .reduce((ItemPosition min, ItemPosition position) =>
+                //         //       position.itemTrailingEdge < min.itemTrailingEdge
+                //         //           ? position
+                //         //           : min)
+                //         //   .index;
+
+                //         Color isSelected = index == selectedCategory ? AppTheme.lightTheme.accentColor : Colors.grey[300];
+
+                //         return InkWell(
+                //           onTap: () {
+                //             _handleCategorySelect(index);
+                //             _scrollController.scrollTo(
+                //               index: index,
+                //               duration: Duration(seconds: 1),
+                //               curve: Curves.easeInOutCubic
+                //             );
+                //             // .then((event) {
+                //             //   print(positionsListeners[1].itemPositions.value.first.index);
+                //             // });
                             
-                            // int  min = positionsListeners[1].itemPositions.value
-                            //   .where((ItemPosition position) => position.itemTrailingEdge > 0)
-                            //   .reduce((ItemPosition min, ItemPosition position) =>
-                            //       position.itemTrailingEdge < min.itemTrailingEdge
-                            //           ? position
-                            //           : min)
-                            //   .index;
-
-                            Color isSelected = index == selectedCategory ? AppTheme.lightTheme.accentColor : Colors.grey[300];
-
-                            return InkWell(
-                              onTap: () {
-                                _handleCategorySelect(index);
-                                _scrollControllers[_controller.index].scrollTo(
-                                  index: index,
-                                  duration: Duration(seconds: 1),
-                                  curve: Curves.easeInOutCubic
-                                );
-                                // .then((event) {
-                                //   print(positionsListeners[1].itemPositions.value.first.index);
-                                // });
-                                
-                              },
-                              child: Container(
-                                width: 80,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10, bottom: 2),
-                                      child: Text(category.image,
-                                        style: TextStyle(fontSize: 32)
-                                      )
-                                    ),
-                                    Text(category.name,
-                                      style: TextStyle(fontSize: 8, color: isSelected)
-                                    )
-                                  ],
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(width: 2, color: isSelected)
-                                  )
-                                )
-                              ),
-                              
-                            );
-                          }
-                        ),
-                      ));
+                //           },
+                //           child: Container(
+                //             width: 80,
+                //             child: Column(
+                //               mainAxisAlignment: MainAxisAlignment.start,
+                //               crossAxisAlignment: CrossAxisAlignment.center,
+                //               children: [
+                //                 Padding(
+                //                   padding: EdgeInsets.only(top: 10, bottom: 2),
+                //                   child: Text(category.image,
+                //                     style: TextStyle(fontSize: 32)
+                //                   )
+                //                 ),
+                //                 Text(category.name,
+                //                   style: TextStyle(fontSize: 8, color: isSelected)
+                //                 )
+                //               ],
+                //             ),
+                //             decoration: BoxDecoration(
+                //               border: Border(
+                //                 bottom: BorderSide(width: 2, color: isSelected)
+                //               )
+                //             )
+                //           ),
+                          
+                //         );
+                //       }
+                //     ),
+                //   ));
                 return [
                   SliverAppBar(
                     pinned: false,
@@ -186,10 +178,14 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
                         controller: _controller,
                         indicatorColor: AppTheme.themeColor
                       ),
-                      if (_controller.index == 1)
-                        horizCat
+                      if (currentTab == 1)
+                        CategoryHeader(
+                          selectedCategory: selectedCategory,
+                          handleCategorySelect: _handleCategorySelect,
+                          scrollController: _scrollController,
+                        )
                    ],
-                    height: _controller.index == 1 ? 120 : 48
+                    height: currentTab == 1 ? 120 : 48
                   )
                 ];
               },
@@ -208,10 +204,11 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
                   BaseItemsList(foods: foods.where((item) => item.shelfLife.perishable).toList()),
                   CategorizedGroups(
                     foods: foods,
-                    categories: _categories[1],
-                    groupBy: groupBys[1],
-                    scrollController: _scrollControllers[1],
-                    positionsListener: positionsListeners[1],
+                    categories: groupings,
+                    groupBy: groupByCategory,
+                    scrollController: _scrollController,
+                    positionsListener: _positionsListener,
+                    initialIndex: selectedCategory,
                   )
                 ]
               )
@@ -248,3 +245,16 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
     );
   }
 }
+  // List<Category> _currentCategorization = perishables;
+  // final List<List<Category>> _categories = [ perishables, groupings ];
+  // final List<Function> groupBys = [
+  //   groupByPerishable,
+  //   groupByCategory
+  // ];
+  // final List<ItemScrollController> _scrollControllers = _categories.map((category) {
+  //   return new ItemScrollController();
+  // }).toList();
+
+  // final List<ItemPositionsListener> positionsListeners = _cate.map((category) {
+  //   return ItemPositionsListener.create();
+  // }).toList();

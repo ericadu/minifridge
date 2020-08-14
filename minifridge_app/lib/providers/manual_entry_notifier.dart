@@ -32,6 +32,11 @@ class ManualEntryNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setCategory(String newCategory) {
+    _category = newCategory;
+    notifyListeners();
+  }
+
   show() {
     _showManualAdd = true;
     notifyListeners();
@@ -42,9 +47,9 @@ class ManualEntryNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  next(String name, String category) {
+  next(String name) {
     _itemName = name;
-    _category = category;
+    
     if (isNotEmpty(_itemName)) {
       goTo(currentStep + 1);
     }

@@ -34,7 +34,6 @@ class ManualAddRightButton extends StatelessWidget {
                     perishable: true
                   );
                 }
-                
                 BaseItem item = BaseItem(
                   displayName: manual.itemName,
                   category: manual.category,
