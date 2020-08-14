@@ -6,10 +6,12 @@ import 'package:minifridge_app/screens/base_items/tile/slidable_tile.dart';
 class CategorizedItems extends StatelessWidget {
   final Category category;
   final List<BaseItem> foods;
+  final bool isLast;
 
   CategorizedItems({
     this.category,
-    this.foods
+    this.foods,
+    this.isLast
   });
 
   @override
@@ -54,9 +56,12 @@ class CategorizedItems extends StatelessWidget {
       );
     }
 
-    slivers.add(
-      SizedBox(height: 20)
-    );
+    if (isLast) {
+      slivers.add(
+        SizedBox(height: 90)
+      );
+    }
+
     
     return Column(
       children: slivers

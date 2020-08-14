@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
-import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/category.dart';
 import 'package:minifridge_app/screens/base_items/categories/categorized_items.dart';
+import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 class CategorizedGroups extends StatelessWidget {
@@ -29,27 +29,9 @@ class CategorizedGroups extends StatelessWidget {
         Map<String, List<BaseItem>> foodsByCategory = groupBy(foods);
         List<BaseItem> foodsInCategory = foodsByCategory.containsKey(category.name) ? foodsByCategory[category.name] : [];
 
-        foodsInCategory.sort((a, b) {
-          if (a.shelfLife.perishable && b.shelfLife.perishable) {
-            int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
-            if (comparison == 0) {
-              return a.getDays().compareTo(b.getDays());
-            }
-            return comparison;
-          } else {
-            if (a.shelfLife.perishable) {
-              return -1;
-            }
-
-            if (b.shelfLife.perishable) {
-              return 1;
-            }
-
-            return a.displayName.compareTo(b.displayName);
-          }
-        });
+        foodsInCategory.sort(sortBy);
         
-        return CategorizedItems(category: category, foods: foodsInCategory);
+        return CategorizedItems(category: category, foods: foodsInCategory, isLast: index == categories.length - 1);
       },
       itemScrollController: scrollController,
       itemPositionsListener: positionsListener

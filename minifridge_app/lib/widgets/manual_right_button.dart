@@ -37,6 +37,7 @@ class ManualAddRightButton extends StatelessWidget {
                 
                 BaseItem item = BaseItem(
                   displayName: manual.itemName,
+                  category: manual.category,
                   quantity: 1,
                   unit: 'item',
                   buyTimestamp: Timestamp.fromDate(today),

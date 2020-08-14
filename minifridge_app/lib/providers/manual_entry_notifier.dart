@@ -8,6 +8,7 @@ class ManualEntryNotifier extends ChangeNotifier {
   bool _complete = false;
   int _stepLength;
   String _itemName = "";
+  String _category = "Uncategorized";
   String _expDate = "";
   // static final _itemNameController = TextEditingController();
   // static final _dateController = TextEditingController();
@@ -16,6 +17,7 @@ class ManualEntryNotifier extends ChangeNotifier {
   int get currentStep => _currentStep;
   bool get complete => _complete;
   String get itemName => _itemName;
+  String get category => _category;
   String get expDate => _expDate;
   int get stepLength => _stepLength;
   // TextEditingController get itemNameController => _itemNameController;
@@ -40,8 +42,9 @@ class ManualEntryNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  next(String name) {
+  next(String name, String category) {
     _itemName = name;
+    _category = category;
     if (isNotEmpty(_itemName)) {
       goTo(currentStep + 1);
     }

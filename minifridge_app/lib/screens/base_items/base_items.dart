@@ -8,6 +8,7 @@ import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/screens/base_items/categories/tabbed_categories_bar.dart';
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
+import 'package:minifridge_app/screens/base_items/expiring/base_items_list.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/add_item_button.dart';
@@ -35,7 +36,7 @@ class BaseItemsPage extends StatefulWidget {
 class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateMixin{
   final List<List<Category>> _categories = [ perishables, groupings ];
   final List<ViewTab> _tabs = [
-    ViewTab(title: '⏰'), ViewTab(title: 'All Items')
+    ViewTab(title: 'Expiring Soon'), ViewTab(title: 'All Items')
   ];
   final List<Function> groupBys = [
     groupByPerishable,
@@ -194,15 +195,25 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
               },
               body: TabBarView(
                 controller: _controller,
-                children: Iterable<int>.generate(_tabs.length).toList().map((idx) {
-                  return CategorizedGroups(
+                // children: Iterable<int>.generate(_tabs.length).toList().map((idx) {
+                //   return CategorizedGroups(
+                //     foods: foods,
+                //     categories: _categories[idx],
+                //     groupBy: groupBys[idx],
+                //     scrollController: _scrollControllers[idx],
+                //     positionsListener: positionsListeners[idx],
+                //   );
+                // }).toList()
+                children:  [
+                  BaseItemsList(foods: foods.where((item) => item.shelfLife.perishable).toList()),
+                  CategorizedGroups(
                     foods: foods,
-                    categories: _categories[idx],
-                    groupBy: groupBys[idx],
-                    scrollController: _scrollControllers[idx],
-                    positionsListener: positionsListeners[idx],
-                  );
-                }).toList()
+                    categories: _categories[1],
+                    groupBy: groupBys[1],
+                    scrollController: _scrollControllers[1],
+                    positionsListener: positionsListeners[1],
+                  )
+                ]
               )
             );
           }

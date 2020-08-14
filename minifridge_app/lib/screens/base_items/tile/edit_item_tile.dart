@@ -6,6 +6,7 @@ import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
+import 'package:minifridge_app/widgets/category_dropdown.dart';
 import 'package:minifridge_app/widgets/confirm_exit_buttons.dart';
 import 'package:minifridge_app/widgets/edit_item_header.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,7 @@ class _EditItemTileState extends State<EditItemTile> {
   TextEditingController _dateController = TextEditingController();
   TextEditingController _endDateController = TextEditingController();
   TextEditingController _referenceController = TextEditingController();
+  String _category;
 
   @override
   void initState() {
@@ -63,6 +65,8 @@ class _EditItemTileState extends State<EditItemTile> {
         _endDateController.text = DateFormat.yMMMEd().format(widget.item.rangeEndDate());
       }
     }
+
+    _category = widget.item.category;
   }
 
   Widget _buildFormRow(String label, TextEditingController controller, Function onTap) {
@@ -137,6 +141,7 @@ class _EditItemTileState extends State<EditItemTile> {
             setState(() {
               single.updateItem(
                 newName: _nameController.text,
+                newCategory: _category,
                 newReference: _referenceController.text
               );
             });
@@ -151,6 +156,7 @@ class _EditItemTileState extends State<EditItemTile> {
               if (newReference.isBefore(newExpiration)) {
                 single.updateItem(
                   newName: _nameController.text,
+                  newCategory: _category,
                   newDate: _dateController.text,
                   newReference: _referenceController.text,
                   newEndDate: _endDateController.text
@@ -187,6 +193,25 @@ class _EditItemTileState extends State<EditItemTile> {
                   children: [
                     EditItemHeader(),
                     _buildFormRow("name", _nameController, (){}),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("category".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+                        // SizedBox(width: 70),
+                        Container(
+                          width: 200,
+                          child: CategoryDropdown(
+                            value: _category,
+                            onChanged: (value) {
+                              setState(() {
+                                _category = value;
+                              });
+                            },
+                          )
+                        ),
+                      ],
+                    ),
                     _buildFormRow("ready to eat", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
                     _buildFormRow(single.item.hasRange() ? "warn me by" : "caution by", _dateController, () => _callDatePicker(single, context, rangeStartMetadata)),
                     if (single.item.hasRange())
@@ -199,6 +224,7 @@ class _EditItemTileState extends State<EditItemTile> {
                           });
                         }
                       ))),
+                    
                     SizedBox(height:20),
                     ConfirmExitButtons(onConfirm: onConfirm, onCancel: onCancel),
                     SizedBox(height: 10)
@@ -216,6 +242,25 @@ class _EditItemTileState extends State<EditItemTile> {
                 children: [
                   EditItemHeader(),
                   _buildFormRow("name", _nameController, (){}),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("category".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+                        // SizedBox(width: 70),
+                        Container(
+                          width: 200,
+                          child: CategoryDropdown(
+                            value: _category,
+                            onChanged: (value) {
+                              setState(() {
+                                _category = value;
+                              });
+                            },
+                          )
+                        ),
+                      ],
+                    ),
                   _buildFormRow("purchased", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
                   SizedBox(height:20),
                   ConfirmExitButtons(onConfirm: onNonPerishableConfirm, onCancel: onCancel),

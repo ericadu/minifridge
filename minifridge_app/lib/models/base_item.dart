@@ -94,6 +94,10 @@ class BaseItem {
     this.displayName = name;
   }
 
+  void setNewCategory(String category) {
+    this.category = category;
+  }
+
   void setNewRangeStart(DateTime newDate) {
     Duration newDuration = newDate.difference(referenceDatetime());
     if (shelfLife.dayRangeEnd != null) {

@@ -19,7 +19,12 @@ class SingleItemNotifier extends ChangeNotifier {
   int get quantity => _item.quantity;
 
 
-  void updateItem({String newDate, String newName, String newReference, String newEndDate}) async {
+  void updateItem({String newDate,
+    String newName,
+    String newCategory,
+    String newReference,
+    String newEndDate
+  }) async {
     if (isNotEmpty(newName)) {
       _item.setNewName(newName);
     }
@@ -33,6 +38,10 @@ class SingleItemNotifier extends ChangeNotifier {
       DateTime rangeEnd = isNotEmpty(newEndDate) ? DateFormat.yMMMEd().parse(newEndDate) : null;
 
       _item.setNewShelfLife(rangeStart, rangeEnd);
+    }
+
+    if (isNotEmpty(newCategory)) {
+      _item.setNewCategory(newCategory);
     }
     
     update();
