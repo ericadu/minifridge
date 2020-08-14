@@ -23,6 +23,9 @@ class ViewItemTile extends StatelessWidget {
     if (item.shelfLife.perishable) {
       Freshness freshness = item.getFreshness();
       switch(freshness) {
+        case Freshness.invalid:
+          message = "🙈  No info available.";
+          break;
         case Freshness.in_range:
           message = "⏰ Eat me next";
           break;

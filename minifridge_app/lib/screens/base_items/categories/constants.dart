@@ -8,7 +8,7 @@ List<String> names = [
   'Proteins',
   'Fruits',
   'Vegetables',
-  'Dairy & Alts',
+  'Dairy & Alternatives',
   'Snacks & Sweets',
   'Sauces & Spreads',
   'Beverages',

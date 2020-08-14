@@ -1,10 +1,11 @@
 import 'package:minifridge_app/models/base_item.dart';
 
 enum Freshness {
+  invalid,
   not_ready,
   ready,
   in_range,
-  past
+  past,
 }
 
 extension FreshnessUtil on BaseItem {
@@ -41,11 +42,19 @@ extension FreshnessUtil on BaseItem {
     return rangeStartDate();
   }
 
+  bool isValidFreshness() {
+    return getFreshness() != Freshness.invalid;
+  }
+
   Freshness getFreshness() {
     int lifeSoFar = getLifeSoFar();
     
     if (lifeSoFar < 0) {
       return Freshness.not_ready;
+    }
+
+    if (shelfLife.dayRangeStart == null) {
+      return Freshness.invalid;
     }
 
     int freshnessTime = shelfLife.dayRangeStart.inDays;

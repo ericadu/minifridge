@@ -51,7 +51,7 @@ class FreshnessTimeline extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (item.shelfLife.perishable) {
+    if (item.shelfLife.perishable && item.getFreshness() != Freshness.invalid) {
       FreshnessText topText = _topText(item);
       FreshnessText bottomText = _bottomText(item);
 

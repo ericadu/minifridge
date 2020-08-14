@@ -13,7 +13,9 @@ class ShelfLife {
     perishable = data['perishable'] ?? true;
 
     if (perishable) {
-      dayRangeStart = Duration(days: data['dayRangeStart']);
+      if (data['dayRangeStart'] != null) {
+        dayRangeStart = Duration(days: data['dayRangeStart']);
+      }
 
       if (data['dayRangeEnd'] != null) {
         dayRangeEnd = Duration(days: data['dayRangeEnd']);

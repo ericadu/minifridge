@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
@@ -58,7 +59,7 @@ class _EditItemTileState extends State<EditItemTile> {
     _nameController.text = widget.item.displayName;
     _referenceController.text = DateFormat.yMMMEd().format(widget.item.referenceDatetime());
 
-    if (widget.item.shelfLife.perishable) {
+    if (widget.item.shelfLife.perishable && widget.item.isValidFreshness()) {
       _dateController.text = DateFormat.yMMMEd().format(widget.item.rangeStartDate());
 
       if (widget.item.hasRange()) {
@@ -177,7 +178,7 @@ class _EditItemTileState extends State<EditItemTile> {
           if (single.item.shelfLife.perishable) {
             DatePickerMetadata rangeStartMetadata = DatePickerMetadata(
               firstDate: single.item.referenceDatetime(),
-              initialDate: single.item.rangeStartDate(),
+              initialDate: widget.item.isValidFreshness() ? single.item.rangeStartDate() : single.item.referenceDatetime(),
               onUpdate: (DateTime newDate) {
                 setState(() {
                   _dateController.text = DateFormat.yMMMEd().format(newDate);
