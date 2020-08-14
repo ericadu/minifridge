@@ -47,6 +47,13 @@ class ManualAddRightButton extends StatelessWidget {
                 );
 
                 base.addNewItem(item.toJson()).then((doc) {
+                  // TODO: figure out why this doesn't work
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.green,
+                      content: Text("Success! 🎉 ${manual.itemName} added to base."),
+                    )
+                  );
                   manual.reset();
                 });
 
