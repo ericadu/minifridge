@@ -7,7 +7,7 @@ List<String> names = [
   'Proteins',
   'Fruits',
   'Vegetables',
-  'Dairy & Substitutes',
+  'Dairy & Alts',
   'Snacks & Sweets',
   'Sauces & Spreads',
   'Beverages',
@@ -32,7 +32,7 @@ List<String> emoji = [
   '🏷️'
 ];
 
-List<Category> categories = names.asMap().entries.map((MapEntry entry) {
+List<Category> groupings = names.asMap().entries.map((MapEntry entry) {
   return Category(
     name: entry.value,
     image: emoji[entry.key]
@@ -41,9 +41,9 @@ List<Category> categories = names.asMap().entries.map((MapEntry entry) {
 
 List<Category> perishables = [
   Category(name: 'Perishable', image: '🥑'),
-  Category(name: 'Printed Date', image: '🥛'),
+  // Category(name: 'Printed Date', image: '🥛'),
   Category(name: 'Shelf Stable', image: '🥫'),
-  Category(name: 'Unknown', image: '🏷️')
+  // Category(name: 'Unknown', image: '🏷️')
 ];
 
 Map<String, List<BaseItem>> groupByCategory(List<BaseItem> foods) {

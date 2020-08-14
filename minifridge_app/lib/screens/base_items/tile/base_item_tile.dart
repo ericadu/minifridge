@@ -70,6 +70,7 @@ class _BaseItemTileState extends State<BaseItemTile> {
     TileToolbar toolbar = TileToolbar(onEdit: onEdit, onFlag: onFlag);
 
     return Card(
+      elevation: 1.0,
       child: Padding(
         padding: const EdgeInsets.only(top: 3, bottom: 10),
         child: Theme(
