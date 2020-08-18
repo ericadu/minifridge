@@ -6,6 +6,9 @@
 2. In `creds.json`, replace all `filepath` strings in foodbase creds with where you will be saving user data locally. CTRL+F and replace `/Users/ericadu/github/minifridge/minifridge_admin/data/` in `creds.json`. Note: never push user creds to github. `data/*` is in `.gitignore` so you can create a `data` folder in the `minifridge_admin` folder.
 
 ### On New User
+1. Add another user to `creds.json` filling out all necessary items.
+2. Create an Airtable tab
+3. Add to firebase functions
 
 ### On New Upload
 1. After processing on Airtable, export as CSV and download.
