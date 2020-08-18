@@ -83,10 +83,12 @@ def send_to_token(token):
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
   parser.add_argument('--user', action='store', help='Firestore USER_ID', default="erica")
-
+  parser.add_argument('--dryrun', dest='dryrun', action='store_true')
+  parser.set_defaults(dryrun=False)
   args = parser.parse_args()
 
   USER_NAME = args.user
+  DRYRUN = args.dryrun
 
   with open (CREDS_PATH) as d:
     creds_dict = json.load(d)
@@ -136,9 +138,17 @@ if __name__ == '__main__':
               'hasPrintedDate': True if len(row[9]) > 0 else False
             }
 
-            userItemsRef.document().create(new_item)
+            if not DRYRUN:
+              userItemsRef.document().create(new_item)
+              print("Created: ")
+            else:
+              print("Generated: ")
+
             print(new_item)
       
-        send_to_token(token)
+        if not DRYRUN:
+          send_to_token(token)
+        else:
+          print("\ncompleted dryrun!")
     else:
       print("invalid user or filepath.")
