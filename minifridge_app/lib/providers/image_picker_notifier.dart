@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +7,12 @@ import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class ImagePickerNotifier extends ChangeNotifier {
-  File _imageFile;
+  // File _imageFile;
   List<Asset> _images = List<Asset>();
   List<ByteData> _bytes = List<ByteData>();
   StorageUploadTask _uploadTask;
   List<String> _urllist = [];
-  ImageSource _source;
+  // ImageSource _source;
   int _current = 0;
   int _currentlyUploading = -1;
 
@@ -21,9 +20,9 @@ class ImagePickerNotifier extends ChangeNotifier {
 
   final picker = ImagePicker();
 
-  File get imageFile => _imageFile;
+  // File get imageFile => _imageFile;
   StorageUploadTask get uploadTask => _uploadTask;
-  ImageSource get source => _source;
+  // ImageSource get source => _source;
   List<Asset> get images => _images;
   List<ByteData> get bytes => _bytes;
   int get current => _current;
@@ -32,28 +31,29 @@ class ImagePickerNotifier extends ChangeNotifier {
   int get currentlyUploading => _currentlyUploading;
   int get totalImages => _bytes.length > 0 ? _bytes.length : 1;
 
-  bool hasImage() => imageFile != null || _images.length > 0;
+  bool hasImage() => _images.length > 0;
   bool uploading() => _uploadTask != null;
 
   void startUpload(String userId) async {
     _currentlyUploading = 0;
     notifyListeners();
-    if (_source == ImageSource.camera) {
-      String filePath = '$userId/images/${DateTime.now()}.png';
-      _uploadTask = _storage.ref().child(filePath).putFile(_imageFile);
-      StorageTaskSnapshot downloadUrl = await _uploadTask.onComplete;
-      _urllist = [await downloadUrl.ref.getDownloadURL()];
-      _currentlyUploading = 1;
-      notifyListeners();
-    } else {
-      await uploadImage(userId);
-    }
+    // if (_source == ImageSource.camera) {
+    //   DateTime today = DateTime.now();
+    //   String folderPath = '$userId/images/${today.month}-${today.day}-${today.year}';
+    //   String filePath = '$folderPath/${DateTime.now()}.png';
+    //   _uploadTask = _storage.ref().child(filePath).putFile(_imageFile);
+    //   StorageTaskSnapshot downloadUrl = await _uploadTask.onComplete;
+    //   _urllist = [await downloadUrl.ref.getDownloadURL()];
+    //   _currentlyUploading = 1;
+    //   notifyListeners();
+    // } else {
+    await uploadImage(userId);
+    // }
   }
 
   Future uploadImage(String userId) async {
     List<int> numUploads = Iterable<int>.generate(_bytes.length).toList();
-    DateTime today = DateTime.now();
-    String folderPath = '$userId/images/${today.month}-${today.day}-${today.year}/';
+    String folderPath = '$userId/images/${DateTime.now()}';
     numUploads.forEach((idx) async {
       List<int> imageData = bytes[idx].buffer.asUint8List();
       StorageMetadata metadata = StorageMetadata(contentType: "image/jpeg");
@@ -79,7 +79,8 @@ class ImagePickerNotifier extends ChangeNotifier {
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
-        selectedAssets: images
+        selectedAssets: images,
+        enableCamera: true
       );
     } on Exception catch(e) {
       _error = e.toString();
@@ -100,34 +101,34 @@ class ImagePickerNotifier extends ChangeNotifier {
   }
 
   Future pickImage(ImageSource source) async {
-    _source = source;
+    await pickImages();
     notifyListeners();
+    // _source = source;
+    // notifyListeners();
 
-    if (source == ImageSource.camera) {
-      final pickedFile = await picker.getImage(source: source);
+    // if (source == ImageSource.camera) {
+    //   final pickedFile = await picker.getImage(source: source);
 
-      if (pickedFile != null) {
-        _imageFile = File(pickedFile.path);
+    //   if (pickedFile != null) {
+    //     _imageFile = File(pickedFile.path);
 
-        analytics.logEvent(name: 'add_item', parameters: {
-          'source': source == ImageSource.camera ? 'camera' : 'gallery'
-        });
+    //     analytics.logEvent(name: 'add_item', parameters: {
+    //       'source': source == ImageSource.camera ? 'camera' : 'gallery'
+    //     });
         
-        notifyListeners();
-      }
-    } else {
-      String error = await pickImages();
-      notifyListeners();
-    }
+    //     notifyListeners();
+    //   }
+    // } else {
+    //   String error = await pickImages();
+    //   notifyListeners();
+    // }
   }
 
   void clear() {
-    _imageFile = null;
     _uploadTask = null;
     _currentlyUploading = -1;
     _images = List<Asset>();
     _bytes = List<ByteData>();
-    _source = null;
     _urllist = [];
     
     notifyListeners();

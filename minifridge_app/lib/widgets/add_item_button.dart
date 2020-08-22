@@ -29,24 +29,16 @@ class AddItemButton extends StatelessWidget {
                   builder: (context) {
                     return Container(
                       color: Color(0xFF737373),
-                      height: 180,
+                      height: 120,
                       child: Container(
                         child: Column(
                           children: <Widget>[
                             ListTile(
                               leading: Icon(Icons.photo_camera),
-                              title: Text('Take photo'),
+                              title: Text('Add From Photo'),
                               onTap: () {
                                 Navigator.pop(context);
-                                picker.pickImage(ImageSource.camera);
-                              }
-                            ),
-                            ListTile(
-                              leading: Icon(Icons.photo_library),
-                              title: Text('Choose from library'),
-                              onTap: () {
-                                Navigator.pop(context);
-                                picker.pickImage(ImageSource.gallery);
+                                picker.pickImages();
                               }
                             ),
                             ListTile(

@@ -4,98 +4,56 @@ import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/screens/add_item/upload_status.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
-import 'package:minifridge_app/screens/home.dart';
 import 'package:provider/provider.dart';
 
 class ImageUploadPage extends StatelessWidget {
   static final routeName = '/image';
 
-  Widget _renderProgress(ImagePickerNotifier picker, BuildContext context) {
-    if (picker.urls.length == picker.totalImages) {
+  Widget _renderImage(ImagePickerNotifier picker, double height) {
+    // if (picker.source == ImageSource.camera) {
+    //   return Container(
+    //     child: Center(
+    //       child: Image.file(picker.imageFile, fit: BoxFit.cover, height: height)
+    //     )
+    //   );
+    // } else {
+    if (picker.processing) {
       return Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Center(
-            child: Text("🥚🎉")
+            child: CircularProgressIndicator()
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: Text("Eggs-cellent! Your items are processing and added to your base in <24 hours.")
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 20),
-            child: RaisedButton(
-              child: Text("Back to base"),
-              onPressed: () {
-                picker.clear();
-                Navigator.popAndPushNamed(context, HomePage.routeName);
-              },
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: Text('Preview loading...')
             )
           )
-        ],
-      );
-    }
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Center(
-          child: CircularProgressIndicator()
-        ),
-        Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Text("Uploading ${picker.currentlyUploading} out of ${picker.totalImages}")
-        )
-      ],
-    );
-  }
-
-  Widget _renderImage(ImagePickerNotifier picker, double height) {
-    if (picker.source == ImageSource.camera) {
-      return Container(
-        child: Center(
-          child: Image.file(picker.imageFile, fit: BoxFit.cover, height: height)
-        )
-      );
-    } else {
-      if (picker.processing) {
-        return Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
-              child: CircularProgressIndicator()
-            ),
-            Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: Text('Preview loading...')
-              )
-            )
-          ]
-        );
-      }
-      return CarouselSlider(
-        options: CarouselOptions(
-          height: height,
-          viewportFraction: 1.0,
-          enlargeCenterPage: false,
-          onPageChanged: (index, reason) {
-            picker.setCurrent(index);
-          }
-        ),
-        items: picker.bytes.length > 0 ? picker.bytes.map((item) {
-          return Container(
-            child: Center(
-              child: Image.memory(item.buffer.asUint8List(), fit: BoxFit.cover, height: height)
-            )
-          );
-        }).toList() : [
-          
         ]
       );
     }
+    return CarouselSlider(
+      options: CarouselOptions(
+        height: height,
+        viewportFraction: 1.0,
+        enlargeCenterPage: false,
+        onPageChanged: (index, reason) {
+          picker.setCurrent(index);
+        }
+      ),
+      items: picker.bytes.length > 0 ? picker.bytes.map((item) {
+        return Container(
+          child: Center(
+            child: Image.memory(item.buffer.asUint8List(), fit: BoxFit.cover, height: height)
+          )
+        );
+      }).toList() : [
+        
+      ]
+    );
+    // }
   }
 
   @override
@@ -107,7 +65,7 @@ class ImageUploadPage extends StatelessWidget {
 
           return Scaffold (
             appBar: AppBar(
-              title: Text('${picker.images.length } photo(s) selected', style: TextStyle(color: Colors.black))
+              title: Text('${picker.images.length} photo(s) selected', style: TextStyle(color: Colors.black))
             ),
             bottomNavigationBar: BottomAppBar(
               child: Row(
@@ -141,7 +99,7 @@ class ImageUploadPage extends StatelessWidget {
                       child: Column(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                            padding: EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 10),
                             child: Text("ℹ️ Please ensure receipt fills most of image and has no shadows. If receipt is long, break up reciept into multiple images."),
                           ),
                           Row(
