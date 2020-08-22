@@ -23,7 +23,6 @@ class CategorizedItems extends StatelessWidget {
           padding: EdgeInsets.only(top: 15),
           child: Card(
             child: Container(
-              
               padding: EdgeInsets.only(left: 20),
               child: Row(
                 children: [

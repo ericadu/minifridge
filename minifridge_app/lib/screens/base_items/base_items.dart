@@ -123,15 +123,6 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
               },
               body: TabBarView(
                 controller: _controller,
-                // children: Iterable<int>.generate(_tabs.length).toList().map((idx) {
-                //   return CategorizedGroups(
-                //     foods: foods,
-                //     categories: _categories[idx],
-                //     groupBy: groupBys[idx],
-                //     scrollController: _scrollControllers[idx],
-                //     positionsListener: positionsListeners[idx],
-                //   );
-                // }).toList()
                 children:  [
                   BaseItemsList(foods: foods.where((item) => item.shelfLife.perishable).toList()),
                   CategorizedGroups(
@@ -152,7 +143,14 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
               SliverToBoxAdapter(
                 child: SizedBox(
                   height: 450,
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator()
+                    ],
+                  ),
                 )
               )
             ]
@@ -177,16 +175,3 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
     );
   }
 }
-  // List<Category> _currentCategorization = perishables;
-  // final List<List<Category>> _categories = [ perishables, groupings ];
-  // final List<Function> groupBys = [
-  //   groupByPerishable,
-  //   groupByCategory
-  // ];
-  // final List<ItemScrollController> _scrollControllers = _categories.map((category) {
-  //   return new ItemScrollController();
-  // }).toList();
-
-  // final List<ItemPositionsListener> positionsListeners = _cate.map((category) {
-  //   return ItemPositionsListener.create();
-  // }).toList();

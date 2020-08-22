@@ -15,6 +15,7 @@ class BaseItemsList extends StatelessWidget {
     foods.sort(sortBy);
     
     return ListView.builder(
+      padding: EdgeInsets.only(top: 8),
       itemBuilder: (BuildContext context, index) {
         if (index == foods.length - 1) {
           return SizedBox(height: 90);

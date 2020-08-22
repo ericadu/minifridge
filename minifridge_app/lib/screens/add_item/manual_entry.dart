@@ -35,7 +35,7 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
       context: context,
       initialDate: today,
       firstDate: today.subtract(Duration(days: 30)),
-      lastDate: today.add(new Duration(days: 730)),
+      lastDate: today.add(new Duration(days: 3650)),
     );
     
     if (newExp != null) {
@@ -76,6 +76,7 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
             content: Column(
               children: <Widget>[
                 TextFormField(
+                  textCapitalization: TextCapitalization.sentences,
                   controller: _itemNameController,
                   // validator: (value) {
                   //   if (value.isEmpty) {

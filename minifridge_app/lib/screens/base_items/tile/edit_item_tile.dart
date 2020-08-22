@@ -5,6 +5,7 @@ import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
+import 'package:minifridge_app/providers/tile_view_notifier.dart';
 import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/widgets/category_dropdown.dart';
@@ -22,11 +23,9 @@ class DatePickerMetadata {
 
 class EditItemTile extends StatefulWidget {
   final BaseItem item;
-  final Function setViewMode;
 
   EditItemTile({
-    this.item,
-    this.setViewMode
+    this.item
   });
 
   @override
@@ -34,10 +33,11 @@ class EditItemTile extends StatefulWidget {
 }
 
 class _EditItemTileState extends State<EditItemTile> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _dateController = TextEditingController();
-  TextEditingController _endDateController = TextEditingController();
-  TextEditingController _referenceController = TextEditingController();
+  static final _formKey = GlobalKey<FormState>();
+  final TextEditingController _itemNameController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _endDateController = TextEditingController();
+  final TextEditingController _referenceController = TextEditingController();
   String _category;
 
   @override
@@ -48,7 +48,7 @@ class _EditItemTileState extends State<EditItemTile> {
 
   @override
   void dispose() {
-    _nameController.dispose();
+    _itemNameController.dispose();
     _dateController.dispose();
     _endDateController.dispose();
     _referenceController.dispose();
@@ -56,7 +56,7 @@ class _EditItemTileState extends State<EditItemTile> {
   }
 
   void _resetControllers() {
-    _nameController.text = widget.item.displayName;
+    _itemNameController.text = widget.item.displayName;
     _referenceController.text = DateFormat.yMMMEd().format(widget.item.referenceDatetime());
 
     if (widget.item.shelfLife.perishable && widget.item.isValidFreshness()) {
@@ -96,18 +96,13 @@ class _EditItemTileState extends State<EditItemTile> {
       context: context,
       initialDate: metadata.initialDate,
       firstDate: metadata.firstDate,
-      lastDate: refDatetime.add(new Duration(days: 365))
+      lastDate: DateTime.now().add(new Duration(days: 3650))
     );
     
     // add a set date function to single item notifier
     if (newDate != null && newDate != refDatetime) {
       metadata.onUpdate(newDate);
     }
-  }
-
-  void onCancel() {
-    widget.setViewMode();
-    _resetControllers();
   }
 
   void showFailUpdateBar() {
@@ -124,8 +119,8 @@ class _EditItemTileState extends State<EditItemTile> {
     FoodBaseApi api = Provider.of<BaseNotifier>(context, listen: false).api;
     return ChangeNotifierProvider(
       create: (_) => SingleItemNotifier(api, widget.item),
-      child: Consumer(
-        builder: (BuildContext context, SingleItemNotifier single, _) {
+      child: Consumer2(
+        builder: (BuildContext context, SingleItemNotifier single, TileViewNotifier tileView, _) {
           DatePickerMetadata referenceDateMetadata = DatePickerMetadata(
             firstDate: DateTime.now().subtract(Duration(days:30)),
             initialDate: single.item.referenceDatetime(),
@@ -136,12 +131,17 @@ class _EditItemTileState extends State<EditItemTile> {
             }
           );
 
+          Function onCancel = () {
+            tileView.onView();
+            _resetControllers();
+          };
+
           Function onNonPerishableConfirm = () {
-            widget.setViewMode();
+            tileView.onView();
 
             setState(() {
               single.updateItem(
-                newName: _nameController.text,
+                newName: _itemNameController.text,
                 newCategory: _category,
                 newReference: _referenceController.text
               );
@@ -149,14 +149,14 @@ class _EditItemTileState extends State<EditItemTile> {
           };
 
           Function onConfirm = () {
-            widget.setViewMode();
+            tileView.onView();
 
             setState(() {
               DateTime newReference = DateFormat.yMMMEd().parse(_referenceController.text);
               DateTime newExpiration = DateFormat.yMMMEd().parse(_dateController.text);
               if (newReference.isBefore(newExpiration)) {
                 single.updateItem(
-                  newName: _nameController.text,
+                  newName: _itemNameController.text,
                   newCategory: _category,
                   newDate: _dateController.text,
                   newReference: _referenceController.text,
@@ -186,87 +186,107 @@ class _EditItemTileState extends State<EditItemTile> {
               }
             );   
 
-            return Container(
+            return Form(
+              key: _formKey,
+              child: Container(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      EditItemHeader(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("name".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+                          Container(
+                            width: 200,
+                            child: TextFormField(
+                              textCapitalization: TextCapitalization.sentences,
+                              style: TextStyle(fontSize: 15),
+                              controller: _itemNameController,
+                            )
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("category".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+                          // SizedBox(width: 70),
+                          Container(
+                            width: 200,
+                            child: CategoryDropdown(
+                              value: _category,
+                              onChanged: (value) {
+                                setState(() {
+                                  _category = value;
+                                });
+                              },
+                            )
+                          ),
+                        ],
+                      ),
+                      _buildFormRow("ready to eat", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
+                      _buildFormRow(single.item.hasRange() ? "warn me by" : "caution by", _dateController, () => _callDatePicker(single, context, rangeStartMetadata)),
+                      if (single.item.hasRange())
+                        _buildFormRow("caution by", _endDateController, () => _callDatePicker(single, context, DatePickerMetadata(
+                          firstDate: single.item.referenceDatetime(),
+                          initialDate: single.item.rangeEndDate(),
+                          onUpdate: (DateTime newDate) {
+                            setState(() {
+                              _endDateController.text = DateFormat.yMMMEd().format(newDate);
+                            });
+                          }
+                        ))),
+                      
+                      SizedBox(height:20),
+                      ConfirmExitButtons(onConfirm: onConfirm, onCancel: onCancel),
+                      SizedBox(height: 10)
+                    ],
+                  ),
+                )
+              )
+            ); 
+          }
+
+          return Form(
+            key: _formKey,
+            child: Container(
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     EditItemHeader(),
-                    _buildFormRow("name", _nameController, (){}),
+                    _buildFormRow("name", _itemNameController, (){}),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("category".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
-                        // SizedBox(width: 70),
-                        Container(
-                          width: 200,
-                          child: CategoryDropdown(
-                            value: _category,
-                            onChanged: (value) {
-                              setState(() {
-                                _category = value;
-                              });
-                            },
-                          )
-                        ),
-                      ],
-                    ),
-                    _buildFormRow("ready to eat", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
-                    _buildFormRow(single.item.hasRange() ? "warn me by" : "caution by", _dateController, () => _callDatePicker(single, context, rangeStartMetadata)),
-                    if (single.item.hasRange())
-                      _buildFormRow("caution by", _endDateController, () => _callDatePicker(single, context, DatePickerMetadata(
-                        firstDate: single.item.referenceDatetime(),
-                        initialDate: single.item.rangeEndDate(),
-                        onUpdate: (DateTime newDate) {
-                          setState(() {
-                            _endDateController.text = DateFormat.yMMMEd().format(newDate);
-                          });
-                        }
-                      ))),
-                    
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text("category".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
+                          // SizedBox(width: 70),
+                          Container(
+                            width: 200,
+                            child: CategoryDropdown(
+                              value: _category,
+                              onChanged: (value) {
+                                setState(() {
+                                  _category = value;
+                                });
+                              },
+                            )
+                          ),
+                        ],
+                      ),
+                    _buildFormRow("purchased", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
                     SizedBox(height:20),
-                    ConfirmExitButtons(onConfirm: onConfirm, onCancel: onCancel),
+                    ConfirmExitButtons(onConfirm: onNonPerishableConfirm, onCancel: onCancel),
                     SizedBox(height: 10)
-                  ],
-                ),
-              )
-            );   
-          }
-
-          return Container(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  EditItemHeader(),
-                  _buildFormRow("name", _nameController, (){}),
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("category".toUpperCase(), style: TextStyle(fontWeight: FontWeight.bold)),
-                        // SizedBox(width: 70),
-                        Container(
-                          width: 200,
-                          child: CategoryDropdown(
-                            value: _category,
-                            onChanged: (value) {
-                              setState(() {
-                                _category = value;
-                              });
-                            },
-                          )
-                        ),
-                      ],
-                    ),
-                  _buildFormRow("purchased", _referenceController, () => _callDatePicker(single, context, referenceDateMetadata)),
-                  SizedBox(height:20),
-                  ConfirmExitButtons(onConfirm: onNonPerishableConfirm, onCancel: onCancel),
-                  SizedBox(height: 10)
-                ]
+                  ]
+                )
               )
             )
           );
