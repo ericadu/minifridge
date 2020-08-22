@@ -12,8 +12,10 @@ class ImagePickerNotifier extends ChangeNotifier {
   List<Asset> _images = List<Asset>();
   List<ByteData> _bytes = List<ByteData>();
   StorageUploadTask _uploadTask;
+  List<String> _urllist = [];
   ImageSource _source;
   int _current = 0;
+  int _currentlyUploading = -1;
 
   final FirebaseStorage _storage = FirebaseStorage(storageBucket: 'gs://minifridge.appspot.com');
 
@@ -26,19 +28,44 @@ class ImagePickerNotifier extends ChangeNotifier {
   List<ByteData> get bytes => _bytes;
   int get current => _current;
   bool get processing => _images.length > 0 && _bytes.length == 0;
+  List<String> get urls => _urllist;
+  int get currentlyUploading => _currentlyUploading;
+  int get totalImages => _bytes.length > 0 ? _bytes.length : 1;
 
   bool hasImage() => imageFile != null || _images.length > 0;
   bool uploading() => _uploadTask != null;
 
-  void startUpload(String userId) {
+  void startUpload(String userId) async {
+    _currentlyUploading = 0;
+    notifyListeners();
     if (_source == ImageSource.camera) {
       String filePath = '$userId/images/${DateTime.now()}.png';
       _uploadTask = _storage.ref().child(filePath).putFile(_imageFile);
+      StorageTaskSnapshot downloadUrl = await _uploadTask.onComplete;
+      _urllist = [await downloadUrl.ref.getDownloadURL()];
+      _currentlyUploading = 1;
+      notifyListeners();
     } else {
-
+      await uploadImage(userId);
     }
-    
-    notifyListeners();
+  }
+
+  Future uploadImage(String userId) async {
+    List<int> numUploads = Iterable<int>.generate(_bytes.length).toList();
+    DateTime today = DateTime.now();
+    String folderPath = '$userId/images/${today.month}-${today.day}-${today.year}/';
+    numUploads.forEach((idx) async {
+      List<int> imageData = bytes[idx].buffer.asUint8List();
+      StorageMetadata metadata = StorageMetadata(contentType: "image/jpeg");
+      _uploadTask = _storage.ref().child('$folderPath/$idx.png')
+        .putData(imageData, metadata);
+      _currentlyUploading = idx + 1;
+      notifyListeners();
+      StorageTaskSnapshot downloadUrl = await _uploadTask.onComplete;
+      String _url = await downloadUrl.ref.getDownloadURL();
+      _urllist.add(_url);
+      notifyListeners();
+    });
   }
 
   void setCurrent(int index) {
@@ -97,9 +124,11 @@ class ImagePickerNotifier extends ChangeNotifier {
   void clear() {
     _imageFile = null;
     _uploadTask = null;
+    _currentlyUploading = -1;
     _images = List<Asset>();
     _bytes = List<ByteData>();
     _source = null;
+    _urllist = [];
     
     notifyListeners();
   }
