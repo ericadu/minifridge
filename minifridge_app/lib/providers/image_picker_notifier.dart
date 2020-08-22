@@ -25,13 +25,19 @@ class ImagePickerNotifier extends ChangeNotifier {
   List<Asset> get images => _images;
   List<ByteData> get bytes => _bytes;
   int get current => _current;
+  bool get processing => _images.length > 0 && _bytes.length == 0;
 
   bool hasImage() => imageFile != null || _images.length > 0;
   bool uploading() => _uploadTask != null;
 
   void startUpload(String userId) {
-    String filePath = '$userId/images/${DateTime.now()}.png';
-    _uploadTask = _storage.ref().child(filePath).putFile(_imageFile);
+    if (_source == ImageSource.camera) {
+      String filePath = '$userId/images/${DateTime.now()}.png';
+      _uploadTask = _storage.ref().child(filePath).putFile(_imageFile);
+    } else {
+
+    }
+    
     notifyListeners();
   }
 
@@ -46,7 +52,6 @@ class ImagePickerNotifier extends ChangeNotifier {
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 300,
-        enableCamera: true,
         selectedAssets: images
       );
     } on Exception catch(e) {
@@ -56,6 +61,8 @@ class ImagePickerNotifier extends ChangeNotifier {
 
     if (_error == null) {
       _images = resultList;
+      notifyListeners();
+
       _bytes = await Future.wait(resultList.map((asset) async => await asset.getByteData()));
 
       notifyListeners();
@@ -67,6 +74,7 @@ class ImagePickerNotifier extends ChangeNotifier {
 
   Future pickImage(ImageSource source) async {
     _source = source;
+    notifyListeners();
 
     if (source == ImageSource.camera) {
       final pickedFile = await picker.getImage(source: source);
@@ -91,6 +99,7 @@ class ImagePickerNotifier extends ChangeNotifier {
     _uploadTask = null;
     _images = List<Asset>();
     _bytes = List<ByteData>();
+    _source = null;
     
     notifyListeners();
   }

@@ -1,10 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/screens/add_item/upload_status.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
-import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:provider/provider.dart';
 
 class ImageUploadPage extends StatelessWidget {
@@ -12,6 +11,55 @@ class ImageUploadPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Widget _renderImage(ImagePickerNotifier picker, double height) {
+      if (picker.source == ImageSource.camera) {
+        return Container(
+          child: Center(
+            child: Image.file(picker.imageFile, fit: BoxFit.cover, height: height)
+          )
+        );
+      } else {
+        if (picker.processing) {
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(
+                child: CircularProgressIndicator()
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20),
+                  child: Text('Preview loading...')
+                )
+              )
+            ]
+          );
+        }
+
+        return CarouselSlider(
+          options: CarouselOptions(
+            height: height,
+            viewportFraction: 1.0,
+            enlargeCenterPage: false,
+            onPageChanged: (index, reason) {
+              picker.setCurrent(index);
+            }
+          ),
+          items: picker.bytes.length > 0 ? picker.bytes.map((item) {
+            return Container(
+              child: Center(
+                child: Image.memory(item.buffer.asUint8List(), fit: BoxFit.cover, height: height)
+              )
+            );
+          }).toList() : [
+            
+          ]
+        );
+      }
+
+    }
 
     return Consumer2(
         builder: (BuildContext context, ImagePickerNotifier picker, AuthNotifier user, _) {
@@ -40,23 +88,7 @@ class ImageUploadPage extends StatelessWidget {
             ),
             body: Stack(
               children: [
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: height,
-                    viewportFraction: 1.0,
-                    enlargeCenterPage: false,
-                    onPageChanged: (index, reason) {
-                      picker.setCurrent(index);
-                    }
-                  ),
-                  items: picker.bytes.map((item) {
-                    return Container(
-                      child: Center(
-                        child: Image.memory(item.buffer.asUint8List(), fit: BoxFit.cover, height: height)
-                      )
-                    );
-                  }).toList()
-                ),
+                _renderImage(picker, height),
                 UploadStatus(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -68,8 +100,8 @@ class ImageUploadPage extends StatelessWidget {
                       child: Column(
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: 20),
-                            child: Text("Please ensure receipt fills most of image"),
+                            padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                            child: Text("ℹ️ Please ensure receipt fills most of image and has no shadows. If receipt is long, break up reciept into multiple images."),
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
