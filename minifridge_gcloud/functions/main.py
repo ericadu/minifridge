@@ -28,7 +28,7 @@ image = cv2.imread(args["image"])
 
 # TRANSFORM!!
 if len(first_response.text_annotations) > 0:
-	print(first_response.text_annotations[0].description)
+	# print(first_response.text_annotations[0].description)
 	bounding_box = [(vert.x, vert.y) for vert in first_response.text_annotations[0].bounding_poly.vertices]
 	pts = np.array(bounding_box, dtype="float32")
 
@@ -41,7 +41,7 @@ gray = cv2.fastNlMeansDenoising(gray,None,8)
 thresh = cv2.adaptiveThreshold(gray,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_BINARY,11,2)
 # edged = cv2.Canny(gray, 75, 200)
 
-retval, buf = cv2.imencode('.png', image)
+retval, buf = cv2.imencode('.png', thresh)
 vision_image = types.Image(content=buf.tobytes())
 
 # 2) Call OCR Client
@@ -98,11 +98,10 @@ if len(response.text_annotations) > 0:
 		line = lines[line_num]
 		text_line = ' '.join(line)
 
-		m = p_line_items.match(text_line)
+		m = p_line_items.search(text_line)
 
 		if m:
-			print(m.group(1))
-			print(m.group(2))
+			print(m.group(0))
 
 	# p_items = re.compile(r'[A-Z]+')
 	# p_prices = re.compile(r'\$\d+\.\d\d')
