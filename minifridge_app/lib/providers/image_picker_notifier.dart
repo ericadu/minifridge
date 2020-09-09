@@ -3,7 +3,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 
 class ImagePickerNotifier extends ChangeNotifier {
@@ -103,25 +102,6 @@ class ImagePickerNotifier extends ChangeNotifier {
   Future pickImage(ImageSource source) async {
     await pickImages();
     notifyListeners();
-    // _source = source;
-    // notifyListeners();
-
-    // if (source == ImageSource.camera) {
-    //   final pickedFile = await picker.getImage(source: source);
-
-    //   if (pickedFile != null) {
-    //     _imageFile = File(pickedFile.path);
-
-    //     analytics.logEvent(name: 'add_item', parameters: {
-    //       'source': source == ImageSource.camera ? 'camera' : 'gallery'
-    //     });
-        
-    //     notifyListeners();
-    //   }
-    // } else {
-    //   String error = await pickImages();
-    //   notifyListeners();
-    // }
   }
 
   void clear() {

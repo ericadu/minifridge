@@ -4,6 +4,7 @@ import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/landing.dart';
 import 'package:minifridge_app/screens/home.dart';
 import 'package:minifridge_app/screens/base_items/base_items.dart';
+import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => ReportsNotifier()
+        ),
+        Provider(
+          create: (_) => AnalyticsService()
         )
       ],
       child: MaterialApp(

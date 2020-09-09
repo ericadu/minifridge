@@ -4,6 +4,7 @@ import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/providers/tile_view_notifier.dart';
 import 'package:minifridge_app/screens/base_items/tile/freshness_timeline.dart';
 import 'package:minifridge_app/screens/base_items/tile/tile_toolbar.dart';
+import 'package:minifridge_app/services/amplitude.dart';
 import 'package:provider/provider.dart';
 
 class ViewItemTile extends StatelessWidget {
@@ -73,7 +74,11 @@ class ViewItemTile extends StatelessWidget {
             )
           ),
           onExpansionChanged: (bool expanded) {
-            // tileView.setExpanded(expanded);
+            Provider.of<AnalyticsService>(context, listen: false).logEvent(
+              'toggle_tile', {
+                'type': expanded ? 'expand' : 'collapse'
+              }
+            );
           },
           children: <Widget>[
             Divider(color: Colors.grey[300]),

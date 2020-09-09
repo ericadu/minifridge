@@ -6,6 +6,7 @@ import 'package:minifridge_app/providers/manual_entry_notifier.dart';
 import 'package:minifridge_app/screens/add_item/image_upload.dart';
 import 'package:minifridge_app/screens/add_item/manual_entry.dart';
 import 'package:minifridge_app/screens/base_items/base_items.dart';
+import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/services/push_notifications.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
@@ -14,7 +15,7 @@ import 'package:provider/provider.dart';
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
 
-  @override
+@override
   _HomePageState createState() => _HomePageState();
 }
 
@@ -23,10 +24,11 @@ class _HomePageState extends State<HomePage> {
 
   void initState() {
     super.initState();
-    
     user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
     final PushNotificationService _notificationService = PushNotificationService(user.id);
     _notificationService.init();
+
+    Provider.of<AnalyticsService>(context, listen: false).setUserId(user.id);
   }
 
   @override
