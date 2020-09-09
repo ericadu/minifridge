@@ -2,5 +2,6 @@
 minifridge_admin/data/*
 minifridge_gcloud/functions/__pycache__
 minifridge_gcloud/functions/functions
-minifridge_gcloud/functions/*.txt
 minifridge_gcloud/functions/*.png
+minifridge_gcloud/images/*
+minifridge_gcloud/outputs/*
