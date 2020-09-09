@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/signed_in_user.dart';
-import 'package:minifridge_app/services/firebase_analytics.dart';
 
 enum Status {
   Uninitialized,
@@ -33,8 +32,6 @@ class AuthNotifier with ChangeNotifier {
       _status = Status.Authenticating;
       notifyListeners();
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-
-      analytics.logLogin();
       return SUCCESS_MESSAGE;
     } catch (e) {
       _status = Status.Unauthenticated;
@@ -118,7 +115,6 @@ class AuthNotifier with ChangeNotifier {
       notifyListeners();
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
 
-      analytics.logSignUp(signUpMethod: 'email');
       return SUCCESS_MESSAGE;
     } catch (e) {
       _status = Status.Unauthenticated;

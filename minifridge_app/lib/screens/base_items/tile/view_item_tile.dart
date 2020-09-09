@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
-import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/providers/tile_view_notifier.dart';
 import 'package:minifridge_app/screens/base_items/tile/freshness_timeline.dart';
 import 'package:minifridge_app/screens/base_items/tile/tile_toolbar.dart';
-import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:provider/provider.dart';
 
 class ViewItemTile extends StatelessWidget {
@@ -76,11 +74,6 @@ class ViewItemTile extends StatelessWidget {
           ),
           onExpansionChanged: (bool expanded) {
             // tileView.setExpanded(expanded);
-            analytics.logEvent(name: 'expand_item', parameters: {
-              'item': item.displayName,
-              'action': expanded ? 'expand' : 'collapse',
-              'user': Provider.of<AuthNotifier>(context, listen:false).user.uid
-            });
           },
           children: <Widget>[
             Divider(color: Colors.grey[300]),

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
-import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/providers/tile_view_notifier.dart';
-import 'package:minifridge_app/services/firebase_analytics.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/widgets/category_dropdown.dart';
 import 'package:minifridge_app/widgets/confirm_exit_buttons.dart';
@@ -162,12 +160,6 @@ class _EditItemTileState extends State<EditItemTile> {
                   newReference: _referenceController.text,
                   newEndDate: _endDateController.text
                 );
-                
-                analytics.logEvent(
-                  name: 'edit_item', 
-                  parameters: {'user': Provider.of<AuthNotifier>(context, listen: false).user.uid,
-                  'type': 'tile'
-                });
               } else {
                 _resetControllers();
                 showFailUpdateBar();
