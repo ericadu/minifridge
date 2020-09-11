@@ -34,7 +34,7 @@ class SingleItemNotifier extends ChangeNotifier {
     }
 
     if (_item.shelfLife.perishable) {
-      DateTime rangeStart = isNotEmpty(newDate) ? DateFormat.yMMMEd().parse(newDate) : _item.rangeStartDate();
+      DateTime rangeStart = isNotEmpty(newDate) ? DateFormat.yMMMEd().parse(newDate) : _item.rangeStartDate;
       DateTime rangeEnd = isNotEmpty(newEndDate) ? DateFormat.yMMMEd().parse(newEndDate) : null;
 
       _item.setNewShelfLife(rangeStart, rangeEnd);

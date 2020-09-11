@@ -78,9 +78,9 @@ Map<String, List<BaseItem>> groupByPerishable(List<BaseItem> foods) {
 
 int sortBy(BaseItem a, BaseItem b) {
   if (a.shelfLife.perishable && b.shelfLife.perishable) {
-    int comparison = -(a.getFreshness().index.compareTo(b.getFreshness().index));
+    int comparison = -(a.freshness.index.compareTo(b.freshness.index));
     if (comparison == 0) {
-      return a.getDays().compareTo(b.getDays());
+      return a.daysFromRangeStart.compareTo(b.daysFromRangeStart);
     }
     return comparison;
   } else {

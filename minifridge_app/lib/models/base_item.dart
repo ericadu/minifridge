@@ -99,7 +99,7 @@ class BaseItem {
   }
 
   void setNewRangeStart(DateTime newDate) {
-    Duration newDuration = newDate.difference(referenceDatetime());
+    Duration newDuration = newDate.difference(referenceDatetime);
     if (shelfLife.dayRangeEnd != null) {
       int range = shelfLife.dayRangeEnd.inDays - shelfLife.dayRangeStart.inDays;
       Duration newRangeEnd = Duration(days: newDuration.inDays + range);
@@ -117,8 +117,8 @@ class BaseItem {
   }
 
   void setNewShelfLife(DateTime rangeStart, DateTime rangeEnd) {
-    Duration newRangeStartDuration = rangeStart.difference(referenceDatetime());
-    Duration newRangeEndDuration = rangeEnd != null ? rangeEnd.difference(referenceDatetime()) : null;
+    Duration newRangeStartDuration = rangeStart.difference(referenceDatetime);
+    Duration newRangeEndDuration = rangeEnd != null ? rangeEnd.difference(referenceDatetime) : null;
 
     shelfLife = ShelfLife(
       perishable: true,
@@ -127,23 +127,23 @@ class BaseItem {
     );
   }
 
-  DateTime buyDatetime() {
+  DateTime get buyDatetime {
     return DateTime.fromMicrosecondsSinceEpoch(buyTimestamp.microsecondsSinceEpoch);
   } 
 
-  DateTime referenceDatetime() {
+  DateTime get referenceDatetime {
     return DateTime.fromMicrosecondsSinceEpoch(referenceTimestamp.microsecondsSinceEpoch);
   }
 
-  DateTime rangeStartDate() {
-    return referenceDatetime().add(shelfLife.dayRangeStart);
+  DateTime get rangeStartDate {
+    return referenceDatetime.add(shelfLife.dayRangeStart);
   }
 
-  bool hasRange() {
+  bool get hasRange {
     return shelfLife.dayRangeEnd != null;
   }
 
-  DateTime rangeEndDate() {
-    return referenceDatetime().add(shelfLife.dayRangeEnd);
+  DateTime get rangeEndDate {
+    return referenceDatetime.add(shelfLife.dayRangeEnd);
   }
 }

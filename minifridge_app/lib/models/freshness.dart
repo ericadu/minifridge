@@ -9,24 +9,23 @@ enum Freshness {
 }
 
 extension FreshnessUtil on BaseItem {
-  int getDays() {
+  int get daysFromRangeStart {
     DateTime current = new DateTime.now();
     DateTime utcCurrent = new DateTime.utc(current.year, current.month, current.day);
 
-    DateTime utcRangeStart = new DateTime.utc(rangeStartDate().year, rangeStartDate().month, rangeStartDate().day);
+    DateTime utcRangeStart = new DateTime.utc(rangeStartDate.year, rangeStartDate.month, rangeStartDate.day);
     return utcRangeStart.difference(utcCurrent).inDays;
   }
 
-  int getLifeSoFar() {
+  int get lifeSoFar {
     DateTime current = new DateTime.now();
-    DateTime reference = referenceDatetime();
+    DateTime reference = referenceDatetime;
     DateTime utcCurrent = new DateTime.utc(current.year, current.month, current.day);
     DateTime utcReference = new DateTime.utc(reference.year, reference.month, reference.day);
     return utcCurrent.difference(utcReference).inDays;
   }
 
-  int getDaysPast() {
-    int lifeSoFar = getLifeSoFar();
+  int get daysPast {
     if (shelfLife.dayRangeEnd != null) {
       return lifeSoFar - shelfLife.dayRangeEnd.inDays;
     }
@@ -34,21 +33,19 @@ extension FreshnessUtil on BaseItem {
     return lifeSoFar - shelfLife.dayRangeStart.inDays;
   }
 
-  DateTime expirationDate() {
+  DateTime get expirationDate {
     if (shelfLife.dayRangeEnd != null) { 
-      return rangeEndDate();
+      return rangeEndDate;
     }
 
-    return rangeStartDate();
+    return rangeStartDate;
   }
 
   bool isValidFreshness() {
-    return getFreshness() != Freshness.invalid;
+    return freshness != Freshness.invalid;
   }
 
-  Freshness getFreshness() {
-    int lifeSoFar = getLifeSoFar();
-    
+  Freshness get freshness {    
     if (lifeSoFar < 0) {
       return Freshness.not_ready;
     }
@@ -84,4 +81,40 @@ extension FreshnessUtil on BaseItem {
 
     return Freshness.ready;
   }
+
+  String get freshnessMessage {
+    String message;
+    if (shelfLife.perishable) {
+      switch(freshness) {
+        case Freshness.invalid:
+          message = "🙈  No info available.";
+          break;
+        case Freshness.in_range:
+          message = "⏰ Eat me next";
+          break;
+        case Freshness.ready:      
+          if (daysFromRangeStart == 1) {
+            message = "⏳  1 day left";
+          } else if (daysFromRangeStart > 7) {
+            message = "💚​  Fresh AF";
+          } else {
+            message = "⏳  $daysFromRangeStart days left";
+          }
+          break;
+        case Freshness.past:
+          message = "😬  Caution";
+          break;
+        case Freshness.not_ready:
+          message = "🐣  Not quite ready";
+          break;
+        default:
+          message = "⏳  " + daysFromRangeStart.toString() + " days left";
+      }
+    } else {
+      message = "🦄  Forever young";
+    }
+
+    return message;
+  }
+
 }

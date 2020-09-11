@@ -23,35 +23,35 @@ class FreshnessTimeline extends StatelessWidget {
   }
 
   FreshnessText _topText(BaseItem item) {
-    Freshness freshness = item.getFreshness();
+    Freshness freshness = item.freshness;
     DateTime today = DateTime.now();
 
     if (freshness == Freshness.not_ready) {
-      return _generateText("🐛 ${-item.getLifeSoFar()} days until ready.", today);
+      return _generateText("🐛 ${-item.lifeSoFar} days until ready.", today);
 
     } else if (freshness == Freshness.ready) {
       return _generateText("✅  Ready to eat", today);
     } else if (freshness == Freshness.in_range) {
       return _generateText("🔎  Look for signs of expiration", today);
     }
-    return _generateText("👻  To the after life", item.expirationDate());
+    return _generateText("👻  To the after life", item.expirationDate);
   }
 
   FreshnessText _bottomText(BaseItem item) {
-    Freshness freshness = item.getFreshness();
+    Freshness freshness = item.freshness;
     if (freshness == Freshness.not_ready) {
-      return _generateText("✅  Ready to eat", item.referenceDatetime());
+      return _generateText("✅  Ready to eat", item.referenceDatetime);
     } else if (freshness == Freshness.ready) {
-      return _generateText("🔎  Look for signs of expiration", item.rangeStartDate());
+      return _generateText("🔎  Look for signs of expiration", item.rangeStartDate);
     } else if (freshness == Freshness.in_range) {
-      return _generateText("👻  To the after life", item.expirationDate());
+      return _generateText("👻  To the after life", item.expirationDate);
     }
-    return _generateText("${item.getDaysPast()} days since passed expiration.", DateTime.now());
+    return _generateText("${item.daysPast} days since passed expiration.", DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
-    if (item.shelfLife.perishable && item.getFreshness() != Freshness.invalid) {
+    if (item.shelfLife.perishable && item.freshness != Freshness.invalid) {
       FreshnessText topText = _topText(item);
       FreshnessText bottomText = _bottomText(item);
 
@@ -59,7 +59,7 @@ class FreshnessTimeline extends StatelessWidget {
         children: [
           SizedBox(height: 10),
           FreshnessTile(topText),
-          FreshnessTile(bottomText, isFirst: false, isUneven: item.getFreshness() == Freshness.past)
+          FreshnessTile(bottomText, isFirst: false, isUneven: item.freshness == Freshness.past)
         ]
       );
     }
@@ -67,7 +67,7 @@ class FreshnessTimeline extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 10),
-        FreshnessTile(_generateText("🏠  Purchase date", item.buyDatetime())),
+        FreshnessTile(_generateText("🏠  Purchase date", item.buyDatetime)),
       ],
     );
   }

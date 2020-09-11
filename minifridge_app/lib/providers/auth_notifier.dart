@@ -23,6 +23,7 @@ class AuthNotifier with ChangeNotifier {
     _auth.onAuthStateChanged.listen(_onAuthStateChanged);
   }
 
+  FirebaseAuth get auth => _auth;
   Status get status => _status;
   FirebaseUser get user => _user;
   SignedInUser get signedInUser => _signedInUser;

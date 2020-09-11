@@ -16,42 +16,6 @@ class ViewItemTile extends StatelessWidget {
     this.toolbar,
   });
 
-  String _getMessage(BaseItem item) {
-    String message;
-    if (item.shelfLife.perishable) {
-      Freshness freshness = item.getFreshness();
-      switch(freshness) {
-        case Freshness.invalid:
-          message = "🙈  No info available.";
-          break;
-        case Freshness.in_range:
-          message = "⏰ Eat me next";
-          break;
-        case Freshness.ready:      
-          if (item.getDays() == 1) {
-            message = "⏳  1 day left";
-          } else if (item.getDays() > 7) {
-            message = "💚​  Fresh AF";
-          } else {
-            message = "⏳  ${item.getDays()} days left";
-          }
-          break;
-        case Freshness.past:
-          message = "😬  Caution";
-          break;
-        case Freshness.not_ready:
-          message = "🐣  Not quite ready";
-          break;
-        default:
-          message = "⏳  " + item.getDays().toString() + " days left";
-      }
-    } else {
-      message = "🦄  Forever young";
-    }
-
-    return message;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer(
@@ -67,7 +31,7 @@ class ViewItemTile extends StatelessWidget {
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 3),
             child: Text(
-              _getMessage(item),
+              item.freshnessMessage,
               style: TextStyle(
                 fontSize: 13
               )

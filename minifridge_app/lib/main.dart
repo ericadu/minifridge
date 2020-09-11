@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         ),
         Provider(
           create: (_) => AnalyticsService()
-        )
+        ),
       ],
       child: MaterialApp(
         title: 'Minifridge',
