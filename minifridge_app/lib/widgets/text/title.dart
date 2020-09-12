@@ -11,12 +11,12 @@ class ThemeTitle extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(
         vertical: 10,
-        horizontal: 20
+        // horizontal: 20
       ),
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 22,
+          fontSize: 20,
           fontWeight: FontWeight.bold
         )
       )

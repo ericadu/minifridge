@@ -1,10 +1,13 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
-import 'package:minifridge_app/screens/base_items/tile/base_item_tile.dart';
+import 'package:minifridge_app/screens/base_items/tile/base_item_card.dart';
+import 'package:minifridge_app/screens/item/item.dart';
 import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/widgets/expanding_container.dart/open_container_wrapper.dart';
 import 'package:provider/provider.dart';
 
 class SlidableTile extends StatelessWidget {
@@ -40,7 +43,18 @@ class SlidableTile extends StatelessWidget {
         return Slidable(
           key: UniqueKey(),
           actionPane: SlidableDrawerActionPane(),
-          child: BaseItemTile(item: item),
+          child: Card(
+            child: OpenContainerWrapper(
+              transitionType: ContainerTransitionType.fade,
+              openBuilder: (BuildContext context, VoidCallback _) {
+                return ItemPage(item: item);
+              },
+              closedBuilder: (BuildContext _, VoidCallback openContainer) {
+                return BaseItemCard(item: item, openContainer: openContainer);
+              },
+              onClosed: (bool isMarkedAsDone) {},
+            )
+          ),
           dismissal: SlidableDismissal(
             child: SlidableDrawerDismissal(),
             dismissThresholds: <SlideActionType, double>{
