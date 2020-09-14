@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/screens/base_items/categories/constants.dart';
 import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/widgets/buttons/report_button.dart';
 import 'package:minifridge_app/widgets/freshness/meter.dart';
 import 'package:minifridge_app/widgets/text/title.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -52,6 +53,16 @@ class ItemPage extends StatelessWidget {
         ),
         shadowColor: Colors.white,
         backgroundColor: AppTheme.themeColor,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop()
+          ),
+          ReportButton(
+            color: Colors.white,
+            item: item
+          )
+        ],
       ),
       body: Container(
         color: Colors.white,
