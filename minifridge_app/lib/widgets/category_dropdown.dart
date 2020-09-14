@@ -12,7 +12,7 @@ class CategoryDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<DropdownMenuItem<String>> _dropdownMenuItems = names.map((name) {
+    List<DropdownMenuItem<String>> _dropdownMenuItems = categoryMapping.keys.map((name) {
       return DropdownMenuItem(
         child: Text(name),
         value: name

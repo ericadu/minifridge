@@ -17,6 +17,7 @@ class CategoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return PreferredSize(preferredSize: Size.fromHeight(72),
       child: Container(
         color: Colors.white,

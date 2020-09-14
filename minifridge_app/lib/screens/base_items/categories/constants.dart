@@ -3,42 +3,63 @@ import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/models/category.dart';
 
-List<String> names = [
-  'Grains',
-  'Proteins',
-  'Fruits',
-  'Vegetables',
-  'Dairy & Alternatives',
-  'Snacks & Sweets',
-  'Sauces & Spreads',
-  'Beverages',
-  'Alcohol',
-  'Prepared meals',
-  'Misc',
-  'Uncategorized'
-];
+Map<String, String> categoryMapping = {
+  'Grains':   '🍞',
+  'Proteins': '🥩',
+  'Fruits': '🍇',
+  'Vegetables': '🥒',
+  'Dairy & Alternatives': '🥛',
+  'Snacks & Sweets': '🍫',
+  'Sauces & Spreads': '🍯',
+  'Beverages': '🧃',
+  'Alcohol': '🍻',
+  'Prepared meals': '🍱',
+  'Misc': '🥡',
+  'Uncategorized': '🏷️'
+};
 
-List<String> emoji = [
-  '🍞',
-  '🥩',
-  '🍇',
-  '🥒',
-  '🥛',
-  '🍫',
-  '🍯',
-  '🧃',
-  '🍻',
-  '🍱',
-  '🥡',
-  '🏷️'
-];
+// List<String> names = [
+//   'Grains',
+//   'Proteins',
+//   'Fruits',
+//   'Vegetables',
+//   'Dairy & Alternatives',
+//   'Snacks & Sweets',
+//   'Sauces & Spreads',
+//   'Beverages',
+//   'Alcohol',
+//   'Prepared meals',
+//   'Misc',
+//   'Uncategorized'
+// ];
 
-List<Category> groupings = names.asMap().entries.map((MapEntry entry) {
+// List<String> emoji = [
+//   '🍞',
+//   '🥩',
+//   '🍇',
+//   '🥒',
+//   '🥛',
+//   '🍫',
+//   '🍯',
+//   '🧃',
+//   '🍻',
+//   '🍱',
+//   '🥡',
+//   '🏷️'
+// ];
+List<Category> groupings = categoryMapping.entries.map((MapEntry entry) {
   return Category(
-    name: entry.value,
-    image: emoji[entry.key]
-  );
+    name: entry.key,
+    image: entry.value
+  );  
 }).toList();
+
+// List<Category> groupings = names.asMap().entries.map((MapEntry entry) {
+//   return Category(
+//     name: entry.value,
+//     image: emoji[entry.key]
+//   );
+// }).toList();
 
 List<Category> perishables = [
   Category(name: 'Perishables', image: '🥑'),
