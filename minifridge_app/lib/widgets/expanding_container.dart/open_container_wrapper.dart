@@ -23,7 +23,7 @@ class OpenContainerWrapper extends StatelessWidget {
       tappable: false,
       closedBuilder: closedBuilder,
       closedElevation: 0.0,
-      transitionDuration: Duration(milliseconds: 400),
+      transitionDuration: Duration(milliseconds: 500),
     );
   }
 }

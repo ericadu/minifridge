@@ -5,7 +5,6 @@ import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/buttons/report_button.dart';
 import 'package:minifridge_app/widgets/freshness/meter.dart';
 import 'package:minifridge_app/widgets/text/title.dart';
-import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class ItemPage extends StatelessWidget {
   final BaseItem item;
@@ -15,36 +14,6 @@ class ItemPage extends StatelessWidget {
   });
 
   Widget build(BuildContext context) {
-
-    List<GaugeAnnotation> annotations = <GaugeAnnotation>[
-      GaugeAnnotation(
-        widget: Container(
-          child: Text('👻', style: TextStyle(fontSize: 23)),
-        ),
-        angle: 90.0,
-        positionFactor: 0.1
-      ),
-      GaugeAnnotation(
-        widget: Container(
-          child: Text('To the after life'),
-
-        ),
-        angle: 90.0,
-        positionFactor: 1.0
-      )
-    ];
-
-    List<GaugeRange> ranges = [
-      GaugeRange(
-        startValue: 0,
-        endValue: 30,
-        startWidth: 20,
-        endWidth: 20,
-        gradient: const SweepGradient(
-          colors: <Color>[Colors.redAccent, Colors.orange]
-        ),
-      )
-    ];
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -63,6 +32,14 @@ class ItemPage extends StatelessWidget {
             item: item
           )
         ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.close,
+          color: Colors.white
+        ),
+        onPressed: () => Navigator.of(context).pop()
       ),
       body: Container(
         color: Colors.white,
@@ -101,9 +78,7 @@ class ItemPage extends StatelessWidget {
             SizedBox(
               height: 150,
               child: FreshnessMeter(
-                thickness: 20,
-                annotations: annotations,
-                ranges: ranges
+                item: item,
               )
             ),
           ],

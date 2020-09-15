@@ -17,14 +17,14 @@ class BaseItemsList extends StatelessWidget {
     return ListView.builder(
       padding: EdgeInsets.only(top: 8),
       itemBuilder: (BuildContext context, index) {
-        if (index == foods.length - 1) {
+        if (index == foods.length) {
           return SizedBox(height: 90);
         }
         return SlidableTile(
           item: foods[index]
         );
       },
-      itemCount: foods.length
+      itemCount: foods.length + 1
     );
 }
 }

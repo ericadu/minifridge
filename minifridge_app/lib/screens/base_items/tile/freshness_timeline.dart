@@ -1,74 +1,74 @@
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:minifridge_app/models/base_item.dart';
-import 'package:minifridge_app/models/freshness.dart';
-import 'package:minifridge_app/widgets/tile/freshness_tile.dart';
+// import 'package:flutter/material.dart';
+// import 'package:intl/intl.dart';
+// import 'package:minifridge_app/models/base_item.dart';
+// import 'package:minifridge_app/models/freshness.dart';
+// import 'package:minifridge_app/widgets/tile/freshness_tile.dart';
 
-class FreshnessTimeline extends StatelessWidget {
-  final BaseItem item;
+// class FreshnessTimeline extends StatelessWidget {
+//   final BaseItem item;
 
-  FreshnessTimeline({
-    this.item
-  });
+//   FreshnessTimeline({
+//     this.item
+//   });
 
-  FreshnessText _generateText(String text, DateTime date) {
-    DateTime now = DateTime.now();
-    bool today = DateTime(now.year, now.month, now.day) == DateTime(date.year, date.month, date.day);
+//   FreshnessText _generateText(String text, DateTime date) {
+//     DateTime now = DateTime.now();
+//     bool today = DateTime(now.year, now.month, now.day) == DateTime(date.year, date.month, date.day);
 
-    return FreshnessText(
-      title: text,
-      date: DateFormat.Md().format(date),
-      weekday: today ? "Today" : DateFormat.EEEE().format(date)
-    );
-  }
+//     return FreshnessText(
+//       title: text,
+//       date: DateFormat.Md().format(date),
+//       weekday: today ? "Today" : DateFormat.EEEE().format(date)
+//     );
+//   }
 
-  FreshnessText _topText(BaseItem item) {
-    Freshness freshness = item.freshness;
-    DateTime today = DateTime.now();
+//   FreshnessText _topText(BaseItem item) {
+//     Freshness freshness = item.freshness;
+//     DateTime today = DateTime.now();
 
-    if (freshness == Freshness.not_ready) {
-      return _generateText("🐛 ${-item.lifeSoFar} days until ready.", today);
+//     if (freshness == Freshness.not_ready) {
+//       return _generateText("🐛 ${-item.lifeSoFar} days until ready.", today);
 
-    } else if (freshness == Freshness.ready) {
-      return _generateText("✅  Ready to eat", today);
-    } else if (freshness == Freshness.in_range) {
-      return _generateText("🔎  Look for signs of expiration", today);
-    }
-    return _generateText("👻  To the after life", item.expirationDate);
-  }
+//     } else if (freshness == Freshness.ready) {
+//       return _generateText("✅  Ready to eat", today);
+//     } else if (freshness == Freshness.in_range) {
+//       return _generateText("🔎  Look for signs of expiration", today);
+//     }
+//     return _generateText("👻  To the after life", item.expirationDate);
+//   }
+// r
+//   FreshnessText _bottomText(BaseItem item) {
+//     Freshness freshness = item.freshness;
+//     if (freshness == Freshness.not_ready) {
+//       return _generateText("✅  Ready to eat", item.referenceDatetime);
+//     } else if (freshness == Freshness.ready) {
+//       return _generateText("🔎  Look for signs of expiration", item.rangeStartDate);
+//     } else if (freshness == Freshness.in_range) {
+//       return _generateText("👻  To the after life", item.expirationDate);
+//     }
+//     return _generateText("${item.daysPast} days since passed expiration.", DateTime.now());
+//   }
 
-  FreshnessText _bottomText(BaseItem item) {
-    Freshness freshness = item.freshness;
-    if (freshness == Freshness.not_ready) {
-      return _generateText("✅  Ready to eat", item.referenceDatetime);
-    } else if (freshness == Freshness.ready) {
-      return _generateText("🔎  Look for signs of expiration", item.rangeStartDate);
-    } else if (freshness == Freshness.in_range) {
-      return _generateText("👻  To the after life", item.expirationDate);
-    }
-    return _generateText("${item.daysPast} days since passed expiration.", DateTime.now());
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     if (item.shelfLife.perishable && item.freshness != Freshness.invalid) {
+//       FreshnessText topText = _topText(item);
+//       FreshnessText bottomText = _bottomText(item);
 
-  @override
-  Widget build(BuildContext context) {
-    if (item.shelfLife.perishable && item.freshness != Freshness.invalid) {
-      FreshnessText topText = _topText(item);
-      FreshnessText bottomText = _bottomText(item);
-
-      return Column(
-        children: [
-          SizedBox(height: 10),
-          FreshnessTile(topText),
-          FreshnessTile(bottomText, isFirst: false, isUneven: item.freshness == Freshness.past)
-        ]
-      );
-    }
+//       return Column(
+//         children: [
+//           SizedBox(height: 10),
+//           FreshnessTile(topText),
+//           FreshnessTile(bottomText, isFirst: false, isUneven: item.freshness == Freshness.past)
+//         ]
+//       );
+//     }
     
-    return Column(
-      children: [
-        SizedBox(height: 10),
-        FreshnessTile(_generateText("🏠  Purchase date", item.buyDatetime)),
-      ],
-    );
-  }
-}
+//     return Column(
+//       children: [
+//         SizedBox(height: 10),
+//         FreshnessTile(_generateText("🏠  Purchase date", item.buyDatetime)),
+//       ],
+//     );
+//   }
+// }

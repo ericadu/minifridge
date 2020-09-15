@@ -16,7 +16,7 @@ class ThemeTitle extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-          fontSize: 20,
+          fontSize: 18,
           fontWeight: FontWeight.bold
         )
       )
