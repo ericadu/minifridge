@@ -14,14 +14,27 @@ class CategoryDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     List<DropdownMenuItem<String>> _dropdownMenuItems = categoryMapping.keys.map((name) {
       return DropdownMenuItem(
-        child: Text(name),
+        child: Chip(
+          backgroundColor: Colors.grey[300],
+          avatar: CircleAvatar(
+            backgroundColor: Colors.grey[300],
+            child: Text(categoryMapping[name]),
+          ),
+          label: Text(name, style: TextStyle(fontSize: 16)),
+          labelPadding: EdgeInsets.only(
+            top: 2, bottom: 2, right: 8
+          ),
+        ),
         value: name
       );
     }).toList();
-    return DropdownButton<String>(
-      value: value,
-      items: _dropdownMenuItems,
-      onChanged: onChanged
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        isExpanded: true,
+        value: value,
+        items: _dropdownMenuItems,
+        onChanged: onChanged, 
+      )
     );
   }
 }

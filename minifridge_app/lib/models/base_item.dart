@@ -81,24 +81,44 @@ class BaseItem {
     return data;
   }
 
-  void setEnd(EndType endType) {
-    this.endType = endType;
-    this.endTimestamp = Timestamp.fromDate(DateTime.now());
+  DateTime get buyDatetime {
+    return DateTime.fromMicrosecondsSinceEpoch(buyTimestamp.microsecondsSinceEpoch);
+  } 
+
+  DateTime get referenceDatetime {
+    return DateTime.fromMicrosecondsSinceEpoch(referenceTimestamp.microsecondsSinceEpoch);
   }
 
-  void setNewReference(DateTime refTime) {
-    this.referenceTimestamp = Timestamp.fromDate(refTime);
+  DateTime get rangeStartDate {
+    return referenceDatetime.add(shelfLife.dayRangeStart);
   }
 
-  void setNewName(String name) {
-    this.displayName = name;
+  bool get hasRange {
+    return shelfLife.dayRangeEnd != null;
   }
 
-  void setNewCategory(String category) {
-    this.category = category;
+  DateTime get rangeEndDate {
+    return referenceDatetime.add(shelfLife.dayRangeEnd);
   }
 
-  void setNewRangeStart(DateTime newDate) {
+  set name(String name) {
+    displayName = name;
+  }
+
+  set newCategory(String newCategory) {
+    category = newCategory;
+  }
+
+  set end(EndType endType) {
+    endType = endType;
+    endTimestamp = Timestamp.fromDate(DateTime.now());
+  }
+
+  set reference(DateTime refTime) {
+    referenceTimestamp = Timestamp.fromDate(refTime);
+  }
+
+  set rangeStart(DateTime newDate) {
     Duration newDuration = newDate.difference(referenceDatetime);
     if (shelfLife.dayRangeEnd != null) {
       int range = shelfLife.dayRangeEnd.inDays - shelfLife.dayRangeStart.inDays;
@@ -125,25 +145,5 @@ class BaseItem {
       dayRangeStart: newRangeStartDuration,
       dayRangeEnd: newRangeEndDuration
     );
-  }
-
-  DateTime get buyDatetime {
-    return DateTime.fromMicrosecondsSinceEpoch(buyTimestamp.microsecondsSinceEpoch);
-  } 
-
-  DateTime get referenceDatetime {
-    return DateTime.fromMicrosecondsSinceEpoch(referenceTimestamp.microsecondsSinceEpoch);
-  }
-
-  DateTime get rangeStartDate {
-    return referenceDatetime.add(shelfLife.dayRangeStart);
-  }
-
-  bool get hasRange {
-    return shelfLife.dayRangeEnd != null;
-  }
-
-  DateTime get rangeEndDate {
-    return referenceDatetime.add(shelfLife.dayRangeEnd);
   }
 }

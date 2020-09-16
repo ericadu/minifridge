@@ -25,24 +25,24 @@ class SingleItemNotifier extends ChangeNotifier {
     String newReference,
     String newEndDate
   }) async {
-    if (isNotEmpty(newName)) {
-      _item.setNewName(newName);
-    }
+    // if (isNotEmpty(newName)) {
+    //   _item.setNewName(newName);
+    // }
 
-    if (isNotEmpty(newReference)) {
-      _item.setNewReference(DateFormat.yMMMEd().parse(newReference));
-    }
+    // if (isNotEmpty(newReference)) {
+    //   _item.setNewReference(DateFormat.yMMMEd().parse(newReference));
+    // }
 
-    if (_item.shelfLife.perishable) {
-      DateTime rangeStart = isNotEmpty(newDate) ? DateFormat.yMMMEd().parse(newDate) : _item.rangeStartDate;
-      DateTime rangeEnd = isNotEmpty(newEndDate) ? DateFormat.yMMMEd().parse(newEndDate) : null;
+    // if (_item.shelfLife.perishable) {
+    //   DateTime rangeStart = isNotEmpty(newDate) ? DateFormat.yMMMEd().parse(newDate) : _item.rangeStartDate;
+    //   DateTime rangeEnd = isNotEmpty(newEndDate) ? DateFormat.yMMMEd().parse(newEndDate) : null;
 
-      _item.setNewShelfLife(rangeStart, rangeEnd);
-    }
+    //   _item.setNewShelfLife(rangeStart, rangeEnd);
+    // }
 
-    if (isNotEmpty(newCategory)) {
-      _item.setNewCategory(newCategory);
-    }
+    // if (isNotEmpty(newCategory)) {
+    //   _item.setNewCategory(newCategory);
+    // }
     
     update();
   }

@@ -5,6 +5,7 @@ import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/screens/base_items/tile/view_item_tile.dart';
+import 'package:minifridge_app/screens/item/edit_item.dart';
 import 'package:minifridge_app/screens/item/item.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/expanding_container.dart/open_container_wrapper.dart';
@@ -47,7 +48,7 @@ class SlidableTile extends StatelessWidget {
             child: OpenContainerWrapper(
               transitionType: ContainerTransitionType.fade,
               openBuilder: (BuildContext context, VoidCallback _) {
-                return ItemPage(item: item);
+                return EditItemPage(item: item, api: base.api);
                 // return ExpandedCard(item: item);
               },
               closedBuilder: (BuildContext _, VoidCallback openContainer) {

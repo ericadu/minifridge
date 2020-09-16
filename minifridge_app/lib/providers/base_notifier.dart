@@ -40,7 +40,7 @@ class BaseNotifier extends ChangeNotifier {
   }
 
   void updateEndtype(BaseItem item, EndType endType) async {
-    item.setEnd(endType);
+    item.end = endType;
     Map data = item.toJson();
     return await _api.updateBaseItem(item.id, data);
   }

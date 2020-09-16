@@ -233,6 +233,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
+  infinite_listview:
+    dependency: transitive
+    description:
+      name: infinite_listview
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1+1"
   intl:
     dependency: "direct main"
     description:
@@ -275,6 +282,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.4"
+  numberpicker:
+    dependency: "direct main"
+    description:
+      name: numberpicker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.2.1"
   path:
     dependency: transitive
     description:
@@ -399,13 +413,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.16"
-  timeline_tile:
-    dependency: "direct main"
-    description:
-      name: timeline_tile
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.2"
   transformer_page_view:
     dependency: transitive
     description:

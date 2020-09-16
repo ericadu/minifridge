@@ -27,7 +27,6 @@ class _HomePageState extends State<HomePage> {
     user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
     final PushNotificationService _notificationService = PushNotificationService(user.id);
     _notificationService.init();
-
     Provider.of<AnalyticsService>(context, listen: false).setUserId(user.id);
   }
 
