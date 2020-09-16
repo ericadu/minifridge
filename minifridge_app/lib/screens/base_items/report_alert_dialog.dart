@@ -120,6 +120,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                 Padding(
                   padding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
                   child: TextFormField(
+                    controller: _reasonController,
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12.0),
@@ -160,7 +161,7 @@ class _ReportAlertDialogState extends State<ReportAlertDialog> {
                   ),
                   onTap: () {
                     SignedInUser user = Provider.of<AuthNotifier>(context, listen: false).signedInUser;
-                    String extraReason = _reasonController.text != null && _reasonController.text.length > 0 ? " Extra: " + _reasonController.text : "";
+                    String extraReason = _reasonController.text != null ? "\nExtra: " + _reasonController.text : "";
                     Report report = Report(
                       reportedBy: user.id,
                       baseId: user.baseId,

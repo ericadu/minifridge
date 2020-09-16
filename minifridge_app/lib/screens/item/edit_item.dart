@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
-import 'package:minifridge_app/providers/single_item_notifier.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/buttons/report_button.dart';
 import 'package:minifridge_app/widgets/category_dropdown.dart';
-import 'package:minifridge_app/widgets/freshness/meter.dart';
 import 'package:numberpicker/numberpicker.dart';
-import 'package:provider/provider.dart';
 
 class EditItemPage extends StatefulWidget {
   final BaseItem item;
@@ -47,16 +44,7 @@ class _EditItemPageState extends State<EditItemPage> {
   void _resetControllers() {
     _current = widget.item;
     _itemNameController.text = _current.displayName;
-    // _isSwitched = _current.shelfLife.perishable;
     _purchasedController.text = DateFormat.yMMMEd().format(_current.buyDatetime);
-
-    // if (widget.item.shelfLife.perishable && widget.item.isValidFreshness()) {
-    //   _dateController.text = DateFormat.yMMMEd().format(widget.item.rangeStartDate);
-
-    //   if (widget.item.hasRange) {
-    //     _endDateController.text = DateFormat.yMMMEd().format(widget.item.rangeEndDate);
-    //   }
-    // }
   }
 
   void _callDatePicker() async {
@@ -149,87 +137,81 @@ class _EditItemPageState extends State<EditItemPage> {
           color: Colors.white
         ),
         onPressed: () => {
-          // Navigator.of(context).pop()
-          print(_current.toJson())
+          widget.api.updateBaseItem(_current.id, _current.toJson()).then((resp) {
+            Navigator.of(context).pop();
+          })
         }
       ),
       body: Container(
         color: Colors.white,
-        child: ChangeNotifierProvider(
-          create: (_) => SingleItemNotifier(widget.api, widget.item),
-          child: Consumer(
-            builder: (BuildContext context, SingleItemNotifier edit, _) {
-              return Form(
-                key: _formKey,
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          padding: EdgeInsets.only(top: 20),
-                          child: TextFormField(
-                            style: TextStyle(fontSize: 20),
-                            controller: _itemNameController
-                          )
-                        ),
-                        Container(
-                          padding: EdgeInsets.only(top: 20, bottom: 20),
-                          child: CategoryDropdown(
-                            value: _current.category,
-                            onChanged: (value) {
-                              setState(() {
-                                _current.newCategory = value;
-                              });
-                            },
-                          )
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text("Purchased on", style: TextStyle(fontSize: 18)),
-                            Container(
-                              padding: EdgeInsets.only(left: 10),
-                              width: 180,
-                              child: TextField(
-                                textAlign: TextAlign.end,
-                                style: TextStyle(fontSize: 18),
-                                controller: _purchasedController,
-                                onTap: () => _callDatePicker()
-                              )
-                            )
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Padding(
-                              child: Text('Perishable', style: TextStyle(fontSize: 18)),
-                              padding: EdgeInsets.only(right: 10)
-                            ),
-                            Container(
-                              child: Switch(
-                                value: _current.shelfLife.perishable,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _current.shelfLife.perishable = value;
-                                  });
-                                }
-                              ),
-                            )
-                          ],
-                        ),
-                        if (_current.shelfLife.perishable)
-                          _renderPerishable()
-                      ]
+        child: Form(
+          key: _formKey,
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(top: 20),
+                    child: TextFormField(
+                      style: TextStyle(fontSize: 20),
+                      controller: _itemNameController
                     )
-                  )
-                )
-              );
-            }
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 20, bottom: 20),
+                    child: CategoryDropdown(
+                      value: _current.category,
+                      onChanged: (value) {
+                        setState(() {
+                          _current.newCategory = value;
+                        });
+                      },
+                    )
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text("Reference Date", style: TextStyle(fontSize: 18)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10),
+                        width: 180,
+                        child: TextField(
+                          textAlign: TextAlign.end,
+                          style: TextStyle(fontSize: 18),
+                          controller: _purchasedController,
+                          onTap: () => _callDatePicker()
+                        )
+                      )
+                    ],
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        child: Text('Perishable', style: TextStyle(fontSize: 18)),
+                        padding: EdgeInsets.only(right: 10)
+                      ),
+                      Container(
+                        child: Switch(
+                          value: _current.shelfLife.perishable,
+                          onChanged: (value) {
+                            setState(() {
+                              _current.shelfLife.perishable = value;
+                            });
+                          }
+                        ),
+                      )
+                    ],
+                  ),
+                  if (_current.shelfLife.perishable)
+                    _renderPerishable()
+                ]
+              )
+            )
           )
         )
       )
