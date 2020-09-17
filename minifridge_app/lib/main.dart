@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Minifridge',
+        title: 'foodbase',
         theme: AppTheme.lightTheme,
         home: LandingPage(),
         // navigatorObservers: [

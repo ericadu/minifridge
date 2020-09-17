@@ -9,6 +9,7 @@ class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (BuildContext context, AuthNotifier user, _) {
+        print(user.status);
         switch (user.status) {
           case Status.Unauthenticated:
           case Status.Authenticating:
@@ -29,7 +30,7 @@ class Splash extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       child: Center(
-        child: Text("Splash Screen"),
+        child: CircularProgressIndicator(),
       ),
     );
   }

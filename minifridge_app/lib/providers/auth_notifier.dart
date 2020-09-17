@@ -17,7 +17,7 @@ class AuthNotifier with ChangeNotifier {
   FirebaseAuth _auth;
   FirebaseUser _user;
   SignedInUser _signedInUser;
-  Status _status = Status.Unauthenticated;
+  Status _status = Status.Uninitialized;
 
   AuthNotifier.instance() : _auth = FirebaseAuth.instance {
     _auth.onAuthStateChanged.listen(_onAuthStateChanged);
@@ -151,6 +151,11 @@ class AuthNotifier with ChangeNotifier {
     return Future.delayed(Duration.zero);
   }
 
+  void authenticate() {
+    _status = Status.Authenticated;
+    notifyListeners();
+  }
+
   Future<void> _onAuthStateChanged(FirebaseUser firebaseUser) async {
     if (firebaseUser == null) {
       _status = Status.Unauthenticated;
@@ -158,10 +163,11 @@ class AuthNotifier with ChangeNotifier {
       notifyListeners();
     } else {
       _user = firebaseUser;
-      _status = Status.Authenticated;
       _getSignedInUser(_user.uid)
         .then((val) => _signedInUser = val)
-        .whenComplete(() => notifyListeners());
+        .whenComplete(
+          () => authenticate()
+        );
     }
   }
 
