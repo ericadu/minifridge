@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/freshness.dart';
-import 'package:minifridge_app/screens/base_items/report_alert_dialog.dart';
+import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/freshness/meter.dart';
+import 'package:provider/provider.dart';
 
 class ViewItemTile extends StatefulWidget {
   final BaseItem item;
@@ -30,6 +31,16 @@ class _ViewItemTileState extends State<ViewItemTile> {
     );
   }
 
+  void edit() {
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'launch_edit', {
+        'item': widget.item.id
+      }
+    );
+
+    widget.openContainer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ExpansionTile(
@@ -54,11 +65,11 @@ class _ViewItemTileState extends State<ViewItemTile> {
         setState(() {
           expanded = expanded;
         });
-        // Provider.of<AnalyticsService>(context, listen: false).logEvent(
-        //   'toggle_tile', {
-        //     'type': expanded ? 'expand' : 'collapse'
-        //   }
-        // );
+        Provider.of<AnalyticsService>(context, listen: false).logEvent(
+          'toggle_tile', {
+            'type': expanded ? 'expand' : 'collapse'
+          }
+        );
       },
       // trailing: Icon(Icons.unfold_more),
       children: <Widget>[
@@ -80,7 +91,7 @@ class _ViewItemTileState extends State<ViewItemTile> {
                 children: [
                   RawMaterialButton(
                     child: Icon(Icons.edit, color: Colors.white),
-                    onPressed: widget.openContainer,
+                    onPressed: edit,
                     fillColor: AppTheme.themeColor,
                     shape: CircleBorder(),
                     constraints: BoxConstraints(

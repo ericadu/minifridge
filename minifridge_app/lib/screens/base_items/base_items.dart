@@ -9,6 +9,7 @@ import 'package:minifridge_app/screens/base_items/categories/tabbed_categories_b
 import 'package:minifridge_app/screens/base_items/empty_base.dart';
 import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/screens/base_items/expiring/base_items_list.dart';
+import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
 // import 'package:minifridge_app/widgets/add_item_button.dart';
@@ -59,12 +60,24 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
     setState(() {
       currentTab = _controller.index;
     });
+
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'click_tab', {
+        'tab': _controller.index == 0 ? 'Expiring' : 'All',
+      }
+    );
   }
 
   void _handleCategorySelect(int idx) {
     setState(() {
       selectedCategory = idx;
     });
+
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'click_category', {
+        'category': groupings[idx].name
+      }
+    );
   }
 
   bool _validItem(BaseItem item) {

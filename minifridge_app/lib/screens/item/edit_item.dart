@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/buttons/report_button.dart';
 import 'package:minifridge_app/widgets/category_dropdown.dart';
 import 'package:numberpicker/numberpicker.dart';
+import 'package:provider/provider.dart';
 
 class EditItemPage extends StatefulWidget {
   final BaseItem item;
@@ -65,7 +67,37 @@ class _EditItemPageState extends State<EditItemPage> {
     }
   }
 
+  void _save() {
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'close_edit', {
+        'item': widget.item.id,
+        'type': 'save'
+      }
+    );
+
+    widget.api.updateBaseItem(_current.id, _current.toJson()).then((resp) {
+      Navigator.of(context).pop();
+    });
+  }
+
+  void _close() {
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'close_edit', {
+        'item': widget.item.id,
+        'type': 'cancel'
+      }
+    );
+
+    Navigator.of(context).pop();
+  }
+
   void _updateName() {
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'edit_item', {
+        'item': widget.item.id,
+        'property': 'name'
+      }
+    );
     setState(() {
       _current.name = _itemNameController.text;
     });
@@ -75,12 +107,25 @@ class _EditItemPageState extends State<EditItemPage> {
     setState(() {
       _current.shelfLife.dayRangeStart = new Duration(days: number);
     });
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'edit_item', {
+        'item': widget.item.id,
+        'property': 'shelf_life_start'
+      }
+    );
   }
 
   void _handleChangeEnd(num number) {
     setState(() {
       _current.shelfLife.dayRangeEnd = new Duration(days: number);
     });
+
+    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+      'edit_item', {
+        'item': widget.item.id,
+        'property': 'shelf_life_end'
+      }
+    );
   }
 
   Widget _renderPerishable() {
@@ -118,8 +163,9 @@ class _EditItemPageState extends State<EditItemPage> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.close, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+          tooltip: 'Cancel',
+          icon: Icon(Icons.close, color: Colors.white, semanticLabel: 'Cancel'),
+          onPressed: _close,
         ),
         shadowColor: Colors.white,
         backgroundColor: AppTheme.themeColor,
@@ -136,11 +182,7 @@ class _EditItemPageState extends State<EditItemPage> {
           Icons.check,
           color: Colors.white
         ),
-        onPressed: () => {
-          widget.api.updateBaseItem(_current.id, _current.toJson()).then((resp) {
-            Navigator.of(context).pop();
-          })
-        }
+        onPressed: _save
       ),
       body: Container(
         color: Colors.white,
@@ -167,6 +209,13 @@ class _EditItemPageState extends State<EditItemPage> {
                         setState(() {
                           _current.newCategory = value;
                         });
+
+                        Provider.of<AnalyticsService>(context, listen: false).logEvent(
+                          'edit_item', {
+                            'item': widget.item.id,
+                            'property': 'category'
+                          }
+                        );
                       },
                     )
                   ),
@@ -202,6 +251,13 @@ class _EditItemPageState extends State<EditItemPage> {
                             setState(() {
                               _current.shelfLife.perishable = value;
                             });
+
+                            Provider.of<AnalyticsService>(context, listen: false).logEvent(
+                              'edit_item', {
+                                'item': widget.item.id,
+                                'property': 'shelf_life_perishability'
+                              }
+                            );
                           }
                         ),
                       )
