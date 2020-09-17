@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
+import 'package:minifridge_app/services/amplitude.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsMenu extends StatelessWidget {
-  void launchURL(String url) async {
+  void launchURL(String url, BuildContext context) async {
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -28,7 +29,13 @@ class SettingsMenu extends StatelessWidget {
                 ListTile(
                   title: Text("🍑  What's in season?"),
                   onTap: () {
-                    launchURL("https://www.seasonalfoodguide.org");
+                    Provider.of<AnalyticsService>(context, listen: false).logEvent(
+                      'click_link', {
+                        'link': 'seasonal_produce',
+                      }
+                    );
+
+                    launchURL("https://www.seasonalfoodguide.org", context);
                   }
                 ),
                 ListTile(
