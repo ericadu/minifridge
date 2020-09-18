@@ -20,7 +20,7 @@ class CategoryDropdown extends StatelessWidget {
             backgroundColor: Colors.grey[300],
             child: Text(categoryMapping[name]),
           ),
-          label: Text(name, style: TextStyle(fontSize: 16)),
+          label: Text(name, style: TextStyle(fontSize: 14)),
           labelPadding: EdgeInsets.only(
             top: 2, bottom: 2, right: 8
           ),

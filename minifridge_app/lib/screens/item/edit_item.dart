@@ -46,7 +46,7 @@ class _EditItemPageState extends State<EditItemPage> {
   void _resetControllers() {
     _current = widget.item;
     _itemNameController.text = _current.displayName;
-    _purchasedController.text = DateFormat.yMMMEd().format(_current.buyDatetime);
+    _purchasedController.text = DateFormat.yMMMEd().format(_current.referenceDatetime);
   }
 
   void _callDatePicker() async {
@@ -129,6 +129,9 @@ class _EditItemPageState extends State<EditItemPage> {
   }
 
   Widget _renderPerishable() {
+    int initialStart = _current.shelfLife.dayRangeStart != null ? _current.shelfLife.dayRangeStart.inDays : 5;
+    int initialEnd = _current.shelfLife.dayRangeEnd != null ? _current.shelfLife.dayRangeEnd.inDays : initialStart + 2;
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
@@ -137,14 +140,14 @@ class _EditItemPageState extends State<EditItemPage> {
         Row(
           children: [
             NumberPicker.integer(
-              initialValue: _current.shelfLife.dayRangeStart.inDays,
+              initialValue: initialStart,
               minValue: 0,
               maxValue: 1000,
               onChanged: _handleChangeStart
             ),
             Text('to'),
             NumberPicker.integer(
-              initialValue: _current.shelfLife.dayRangeEnd != null ? _current.shelfLife.dayRangeEnd.inDays : _current.shelfLife.dayRangeStart.inDays,
+              initialValue: initialEnd,
               minValue: 0,
               maxValue: 1000,
               onChanged: _handleChangeEnd
@@ -195,9 +198,9 @@ class _EditItemPageState extends State<EditItemPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.only(top: 20),
+                    padding: EdgeInsets.only(top: 15),
                     child: TextFormField(
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(fontSize: 18),
                       controller: _itemNameController
                     )
                   ),
@@ -223,13 +226,13 @@ class _EditItemPageState extends State<EditItemPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     mainAxisSize: MainAxisSize.max,
                     children: [
-                      Text("Reference Date", style: TextStyle(fontSize: 18)),
+                      Text("Reference Date", style: TextStyle(fontSize: 16)),
                       Container(
                         padding: EdgeInsets.only(left: 10),
                         width: 180,
                         child: TextField(
                           textAlign: TextAlign.end,
-                          style: TextStyle(fontSize: 18),
+                          style: TextStyle(fontSize: 16),
                           controller: _purchasedController,
                           onTap: () => _callDatePicker()
                         )
@@ -241,7 +244,7 @@ class _EditItemPageState extends State<EditItemPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Padding(
-                        child: Text('Perishable', style: TextStyle(fontSize: 18)),
+                        child: Text('Perishable', style: TextStyle(fontSize: 16)),
                         padding: EdgeInsets.only(right: 10)
                       ),
                       Container(

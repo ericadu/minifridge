@@ -109,8 +109,8 @@ class BaseItem {
     category = newCategory;
   }
 
-  set end(EndType endType) {
-    endType = endType;
+  set end(EndType newEndType) {
+    endType = newEndType;
     endTimestamp = Timestamp.fromDate(DateTime.now());
   }
 
