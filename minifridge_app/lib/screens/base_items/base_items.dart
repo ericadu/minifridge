@@ -12,6 +12,7 @@ import 'package:minifridge_app/screens/base_items/expiring/base_items_list.dart'
 import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
+import 'package:minifridge_app/widgets/add_item_button.dart';
 // import 'package:minifridge_app/widgets/add_item_button.dart';
 import 'package:minifridge_app/widgets/settings_menu.dart';
 import 'package:provider/provider.dart';
@@ -81,7 +82,7 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
   }
 
   bool _validItem(BaseItem item) {
-    return item.endType == EndType.alive && item.quantity > 0;
+    return item.endType == EndType.alive;
   }
 
   Widget _buildBody(BaseNotifier base) {
@@ -181,8 +182,8 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
       builder: (BuildContext context, BaseNotifier base, _) {
         return Scaffold(
           body: _buildBody(base),
-          // floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          // floatingActionButton: AddItemButton(),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButton: AddItemButton(),
         );
       }
     );

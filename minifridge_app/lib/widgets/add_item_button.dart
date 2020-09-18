@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:minifridge_app/providers/image_picker_notifier.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
 import 'package:minifridge_app/theme.dart';

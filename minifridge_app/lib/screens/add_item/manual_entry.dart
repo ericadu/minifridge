@@ -1,11 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/models/shelf_life.dart';
+import 'package:minifridge_app/providers/auth_notifier.dart';
+import 'package:minifridge_app/providers/base_notifier.dart';
 import 'package:minifridge_app/providers/manual_entry_notifier.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/category_dropdown.dart';
-import 'package:minifridge_app/widgets/manual_right_button.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:provider/provider.dart';
-import 'package:quiver/strings.dart';
 
 class ManualEntryPage extends StatefulWidget {
   static const routeName = '/manual';
@@ -17,10 +22,17 @@ class ManualEntryPage extends StatefulWidget {
 class _ManualEntryPageState extends State<ManualEntryPage> {
   final _itemNameController = TextEditingController();
   final _dateController = TextEditingController();
+  BaseItem _current = BaseItem(
+    shelfLife: ShelfLife(perishable: false),
+    category: 'Uncategorized'
+  );
 
   @override
   void initState() {
     super.initState();
+    _current.reference = DateTime.now();
+    _dateController.text = DateFormat.yMMMEd().format(_current.referenceDatetime);
+    _itemNameController.addListener(_updateName);
   }
 
   void dispose() {
@@ -29,19 +41,38 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
     super.dispose();
   }
 
+  void _handleChangeStart(num number) {
+      setState(() {
+        _current.shelfLife.dayRangeStart = new Duration(days: number);
+      });
+  }
+
+  void _updateName() {
+    setState(() {
+      _current.name = _itemNameController.text;
+    });
+  }
+
+  void _handleChangeEnd(num number) {
+    setState(() {
+      _current.shelfLife.dayRangeEnd = new Duration(days: number);
+    });
+  }
+
   void _callDatePicker(BuildContext context, ManualEntryNotifier manual) async {
     DateTime today = DateTime.now();
-    DateTime newExp = await showDatePicker(
+    DateTime newRef = await showDatePicker(
       context: context,
       initialDate: today,
       firstDate: today.subtract(Duration(days: 30)),
       lastDate: today.add(new Duration(days: 3650)),
     );
     
-    if (newExp != null) {
-      manual.setDate(newExp);
+    if (newRef != null) {
+      // manual.setDate(newExp);
       setState(() {
-        _dateController.text = DateFormat.yMMMEd().format(newExp);
+        _dateController.text = DateFormat.yMMMEd().format(newRef);
+        _current.reference = newRef;
       });
     }
   }
@@ -64,8 +95,65 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
     );
   }
 
+  Widget _buildRightButton(VoidCallback callback, ManualEntryNotifier manual) {
+    if (manual.currentStep + 1 == manual.stepLength) {
+      return Container(
+        color: AppTheme.lightTheme.accentColor,
+        child: FlatButton(
+          child: Text("Submit", style: TextStyle(color: Colors.white)),
+          onPressed: () {
+            // DateTime today = DateTime.now();
+            // ShelfLife shelfLife = ShelfLife(perishable: false);
+            // if (isNotEmpty(manual.expDate)) {
+            //   shelfLife = ShelfLife(
+            //     dayRangeStart: DateFormat.yMMMEd().parse(manual.expDate).difference(today),
+            //     perishable: true
+            //   );
+            // }
+            _current.addedByUserId = Provider.of<AuthNotifier>(context, listen: false).user.uid;
+            _current.endType = EndType.alive;
+            _current.buyTimestamp = Timestamp.fromDate(DateTime.now());
+            // BaseItem item = BaseItem(
+            //   displayName: manual.itemName,
+            //   category: manual.category,
+            //   quantity: 1,
+            //   unit: 'item',
+            //   buyTimestamp: Timestamp.fromDate(today),
+            //   referenceTimestamp: Timestamp.fromDate(),
+            //   addedByUserId: Provider.of<AuthNotifier>(context, listen: false).user.uid,
+            //   shelfLife: shelfLife,
+            //   endType: EndType.alive,
+            // );
+
+            Provider.of<BaseNotifier>(context, listen:false).addNewItem(_current.toJson()).then((doc) {
+              // TODO: figure out why this doesn't work
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  backgroundColor: Colors.green,
+                  content: Text("Success! 🎉 ${_current.displayName} added to base."),
+                )
+              );
+              manual.reset();
+            });
+
+          }
+        )
+      );
+    }
+
+    return Container(
+      color: AppTheme.themeColor,
+      child: FlatButton(
+        child: Text("Next", style: TextStyle(color: Colors.white)),
+        onPressed: callback
+      )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    int initialStart = _current.shelfLife.dayRangeStart != null ? _current.shelfLife.dayRangeStart.inDays : 5;
+    int initialEnd = _current.shelfLife.dayRangeEnd != null ? _current.shelfLife.dayRangeEnd.inDays : initialStart + 2;
     return Consumer(
       builder: (BuildContext context, ManualEntryNotifier manual, _) {
         List<Step> steps = [
@@ -95,27 +183,82 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
             content: Column(
               children: <Widget>[
                 CategoryDropdown(
-                  value: manual.category,
+                  value: _current.category,
                   onChanged: (value) {
-                    manual.setCategory(value);
+                    // manual.setCategory(value);
+                    _current.category = value;
                   }
                 )
               ]
             )
           ),
           Step(
-            title: const Text('Set Expiration Date'),
+            title: const Text('Set Shelf Life'),
             isActive: false,
             state: StepState.editing,
             content: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Text("If item is non-perishable, please leave blank."),
-                TextFormField(
-                  controller: _dateController,
-                  onTap: () {
-                    _callDatePicker(context, manual);
-                  }
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Padding(
+                      child: Text('Perishable'),
+                      padding: EdgeInsets.only(right: 10)
+                    ),
+                    Container(
+                      child: Switch(
+                        value: _current.shelfLife.perishable,
+                        onChanged: (value) {
+                          setState(() {
+                            _current.shelfLife.perishable = value;
+                          });
+                        }
+                      ),
+                    )
+                  ],
+                ),
+                if (_current.shelfLife.perishable)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text("Reference Date"),
+                      Container(
+                        width: 150,
+                        child: TextFormField(
+                          controller: _dateController,
+                          onTap: () {
+                            _callDatePicker(context, manual);
+                          }
+                        )
+                      )
+                    ],
+                  ),
+                SizedBox(height: 20),
+                if (_current.shelfLife.perishable)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      NumberPicker.integer(
+                        initialValue: initialStart,
+                        minValue: 0,
+                        maxValue: 1000,
+                        onChanged: _handleChangeStart
+                      ),
+                      Text('to'),
+                      NumberPicker.integer(
+                        initialValue: initialEnd,
+                        minValue: 0,
+                        maxValue: 1000,
+                        onChanged: _handleChangeEnd
+                      ),
+                      Text('days'),
+                    ],
+                  )
+                
               ]
             )
           ),
@@ -145,7 +288,7 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
                       children: <Widget>[
                         _buildLeftButton(onStepCancel, manual),
                         SizedBox(height: 100, width: 20),
-                        ManualAddRightButton(callback: onStepContinue)
+                        _buildRightButton(onStepContinue, manual)
                       ]
                     );
                   },

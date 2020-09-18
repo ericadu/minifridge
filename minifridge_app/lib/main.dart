@@ -8,8 +8,10 @@ import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/providers/auth_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_core/core.dart';
 
 void main() {
+  SyncfusionLicense.registerLicense("NT8mJyc2IWhia31hfWN9Z2doYmF8YGJ8ampqanNiYmlmamlmanMDHmg2ITowMn0wfTcmEzQ+Mjo/fTA8Pg==");
   runApp(MyApp());
 }
 

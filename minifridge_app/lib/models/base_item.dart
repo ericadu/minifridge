@@ -24,8 +24,8 @@ class BaseItem {
 
   BaseItem({
     this.id,
-    @required this.addedByUserId,
-    @required this.buyTimestamp,
+    this.addedByUserId,
+    this.buyTimestamp,
     this.displayName,
     this.endTimestamp,
     this.endType,

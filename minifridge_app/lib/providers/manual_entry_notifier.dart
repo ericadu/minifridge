@@ -9,7 +9,9 @@ class ManualEntryNotifier extends ChangeNotifier {
   int _stepLength;
   String _itemName = "";
   String _category = "Uncategorized";
-  String _expDate = "";
+  String _refDate = DateFormat.yMMMEd().format(DateTime.now());
+  bool _perishable = false;
+  List<int> _range = [5, 7];
   // static final _itemNameController = TextEditingController();
   // static final _dateController = TextEditingController();
 
@@ -18,7 +20,8 @@ class ManualEntryNotifier extends ChangeNotifier {
   bool get complete => _complete;
   String get itemName => _itemName;
   String get category => _category;
-  String get expDate => _expDate;
+  // String get expDate => _expDate;
+  String get refDate => _refDate;
   int get stepLength => _stepLength;
   // TextEditingController get itemNameController => _itemNameController;
   // TextEditingController get dateController => _dateController;
@@ -28,7 +31,7 @@ class ManualEntryNotifier extends ChangeNotifier {
   }
 
   void setDate(DateTime newExp) {
-    _expDate = DateFormat.yMMMEd().format(newExp);
+    _refDate = DateFormat.yMMMEd().format(newExp);
     notifyListeners();
   }
 
