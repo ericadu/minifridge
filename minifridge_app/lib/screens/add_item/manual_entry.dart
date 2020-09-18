@@ -102,37 +102,11 @@ class _ManualEntryPageState extends State<ManualEntryPage> {
         child: FlatButton(
           child: Text("Submit", style: TextStyle(color: Colors.white)),
           onPressed: () {
-            // DateTime today = DateTime.now();
-            // ShelfLife shelfLife = ShelfLife(perishable: false);
-            // if (isNotEmpty(manual.expDate)) {
-            //   shelfLife = ShelfLife(
-            //     dayRangeStart: DateFormat.yMMMEd().parse(manual.expDate).difference(today),
-            //     perishable: true
-            //   );
-            // }
             _current.addedByUserId = Provider.of<AuthNotifier>(context, listen: false).user.uid;
             _current.endType = EndType.alive;
             _current.buyTimestamp = Timestamp.fromDate(DateTime.now());
-            // BaseItem item = BaseItem(
-            //   displayName: manual.itemName,
-            //   category: manual.category,
-            //   quantity: 1,
-            //   unit: 'item',
-            //   buyTimestamp: Timestamp.fromDate(today),
-            //   referenceTimestamp: Timestamp.fromDate(),
-            //   addedByUserId: Provider.of<AuthNotifier>(context, listen: false).user.uid,
-            //   shelfLife: shelfLife,
-            //   endType: EndType.alive,
-            // );
 
             Provider.of<BaseNotifier>(context, listen:false).addNewItem(_current.toJson()).then((doc) {
-              // TODO: figure out why this doesn't work
-              Scaffold.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.green,
-                  content: Text("Success! 🎉 ${_current.displayName} added to base."),
-                )
-              );
               manual.reset();
             });
 
