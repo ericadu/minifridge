@@ -22,7 +22,7 @@ class EmptyBase extends StatelessWidget {
                   Text("You do-nut have any items!", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 45, right: 20),
-                    child: Text("📷  Upload a photo of your last grocery receipt to add food.",
+                    child: Text("Make an order through Instacart/Amazon or manually add your item here",
                       style: TextStyle(fontSize: 16)),
                   ),
                   Padding(
