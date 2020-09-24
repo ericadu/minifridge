@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:minifridge_app/models/base_item.dart';
+import 'package:minifridge_app/models/shelf_life.dart';
 import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
@@ -253,6 +254,18 @@ class _EditItemPageState extends State<EditItemPage> {
                           onChanged: (value) {
                             setState(() {
                               _current.shelfLife.perishable = value;
+
+                              if (value) {
+                                _current.shelfLife = ShelfLife(
+                                  perishable: value,
+                                  dayRangeStart: Duration(days: 5),
+                                  dayRangeEnd: Duration(days: 7)
+                                );
+                              } else {
+                                _current.shelfLife = ShelfLife(
+                                  perishable: value
+                                );
+                              }
                             });
 
                             Provider.of<AnalyticsService>(context, listen: false).logEvent(

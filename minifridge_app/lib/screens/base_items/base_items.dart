@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:minifridge_app/models/base_item.dart';
 import 'package:minifridge_app/models/end_type.dart';
+import 'package:minifridge_app/models/freshness.dart';
 import 'package:minifridge_app/screens/base_items/categories/categorized_groups.dart';
 import 'package:minifridge_app/screens/base_items/categories/category_header.dart';
 import 'package:minifridge_app/screens/base_items/categories/constants.dart';
@@ -13,7 +14,6 @@ import 'package:minifridge_app/services/amplitude.dart';
 import 'package:minifridge_app/services/food_base_api.dart';
 import 'package:minifridge_app/theme.dart';
 import 'package:minifridge_app/widgets/add_item_button.dart';
-// import 'package:minifridge_app/widgets/add_item_button.dart';
 import 'package:minifridge_app/widgets/settings_menu.dart';
 import 'package:provider/provider.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -82,7 +82,9 @@ class _BaseItemsPageState extends State<BaseItemsPage> with TickerProviderStateM
   }
 
   bool _validItem(BaseItem item) {
-    return item.endType == EndType.alive;
+    bool alive = (!item.shelfLife.perishable) || (item.shelfLife.perishable && item.daysPast < 14);
+    
+    return item.endType == EndType.alive && alive;
   }
 
   Widget _buildBody(BaseNotifier base) {
